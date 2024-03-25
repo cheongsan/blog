@@ -42,7 +42,7 @@ const StyledWrapper = styled.div`
   flex-direction: column;
   border-radius: 1rem;
   background-color: ${({ theme }) =>
-    theme.scheme === "light" ? "white" : theme.colors.gray4};
+    theme.scheme === "light" ? "white" : theme.colors.card};
   > a {
     display: flex;
     padding: 0.75rem;

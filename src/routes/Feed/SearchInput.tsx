@@ -40,6 +40,6 @@ const StyledWrapper = styled.div`
     border-radius: 1rem;
     outline-style: none;
     width: 100%;
-    background-color: ${({ theme }) => theme.colors.gray4};
+    background-color: ${({ theme }) => theme.colors.card};
   }
 `

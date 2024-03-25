@@ -68,5 +68,5 @@ const StyledMain = styled.main`
   margin: 0 auto;
   width: 100%;
   max-width: 1120px;
-  padding: 0 1rem;
+  padding: 0 1.5rem;
 `

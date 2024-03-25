@@ -13,4 +13,5 @@ export default Logo
 
 const StyledWrapper = styled.a`
   font-weight: 900;
+  color: ${({ theme }) => theme.colors.nav_logo};
 `
