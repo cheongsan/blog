@@ -1,2 +1,2 @@
-export * from './pretendard'
-export * from './roboto'
+export * from './redhat'
+export * from './notosanskorean'
