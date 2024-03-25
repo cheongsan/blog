@@ -28,19 +28,20 @@ const StyledWrapper = styled.div`
   z-index: ${zIndexes.header};
   position: sticky;
   top: 0;
-  background-color: ${({ theme }) => theme.colors.gray2};
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  background-color: ${({ theme }) => theme.colors.nav};
+  backdrop-filter: saturate(180%) blur(20px);
 
   .container {
     display: flex;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
     justify-content: space-between;
     align-items: center;
     width: 100%;
     max-width: 1120px;
-    height: 3rem;
+    height: 5rem;
     margin: 0 auto;
+    font-size: 1.5rem;
     &[data-full-width="true"] {
       @media (min-width: 768px) {
         padding-left: 6rem;

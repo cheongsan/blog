@@ -15,10 +15,10 @@ export const Global = () => {
           margin: 0;
           padding: 0;
           color: ${theme.colors.gray12};
-          background-color: ${theme.colors.gray2};
+          background-color: ${theme.colors.body};
           font-family: ${redhatdisplay.style.fontFamily}, ${notosans.style.fontFamily};
-          font-weight: ${redhatdisplay.style.fontWeight}, ${notosans.style.fontWeight};
-          font-style: ${redhatdisplay.style.fontStyle}, ${notosans.style.fontStyle};
+          font-weight: 500;
+          font-style: normal;
         }
 
         * {
