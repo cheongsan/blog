@@ -1,8 +1,11 @@
 import styled from "@emotion/styled"
 import Image from "next/image"
 import React from "react"
+import Gravatar from 'react-gravatar';
 import { CONFIG } from "site.config"
 import { Emoji } from "src/components/Emoji"
+import { IconBrandGravatar } from '@tabler/icons-react';
+import Link from "next/link";
 
 type Props = {}
 
@@ -12,12 +15,16 @@ const ProfileCard: React.FC<Props> = () => {
       <div className="title">
         <Emoji>💻</Emoji> Profile
       </div>
-      <div className="content">
+      <div className="content"> 
         <div className="top">
-          <Image src={CONFIG.profile.image} fill alt="" />
+          <Gravatar email={CONFIG.profile.email} size={200} rating="pg" default="identicon" />
         </div>
         <div className="mid">
-          <div className="name">{CONFIG.profile.name}</div>
+          <Link href="https://www.gravatar.com/cheongsando" target="_blank" className="name">
+            <IconBrandGravatar color="gray" size={15} />
+            &nbsp;
+            {CONFIG.profile.name}
+          </Link>
           <div className="role">{CONFIG.profile.role}</div>
           <div className="text-sm mb-2">{CONFIG.profile.bio}</div>
         </div>
@@ -48,10 +55,9 @@ const StyledWrapper = styled.div`
     .top {
       position: relative;
       width: 100%;
-      &:after {
-        content: "";
+      .react-gravatar {
         display: block;
-        padding-bottom: 100%;
+        border-radius: 50%;
       }
     }
     .mid {
