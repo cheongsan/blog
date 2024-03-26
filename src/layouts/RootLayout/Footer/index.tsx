@@ -1,5 +1,5 @@
-import NavBar from "./NavBar"
-import Logo from "./Logo"
+import Copyright from "./Copyright"
+import ThemeToggle from "./ThemeToggle"
 import styled from "@emotion/styled"
 import { zIndexes } from "src/styles/zIndexes"
 
@@ -7,22 +7,24 @@ type Props = {
   fullWidth: boolean
 }
 
-const Header: React.FC<Props> = ({ fullWidth }) => {
+const Footer: React.FC<Props> = ({ fullWidth }) => {
   return (
     <StyledWrapper>
       <div data-full-width={fullWidth} className="container">
-        <Logo />
         <div className="nav">
-          <NavBar />
+          <Copyright />
+        </div>
+        <div className="d-flex">
+          <ThemeToggle />
         </div>
       </div>
     </StyledWrapper>
   )
 }
 
-export default Header
+export default Footer
 
-const StyledWrapper = styled.header`
+const StyledWrapper = styled.footer`
   z-index: ${zIndexes.header};
   position: sticky;
   top: 0;
@@ -37,9 +39,9 @@ const StyledWrapper = styled.header`
     align-items: center;
     width: 100%;
     max-width: 1120px;
-    line-height: 1rem;
+    height: 5rem;
     margin: 0 auto;
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     &[data-full-width="true"] {
       @media (min-width: 768px) {
         padding-left: 6rem;

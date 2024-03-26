@@ -69,7 +69,7 @@ const StyledWrapper = styled(Link)`
     border-radius: 1rem;
     background-color: ${({ theme }) =>
       theme.scheme === "light" ? "white" : theme.colors.card};
-    transition-property: box-shadow;
+    transition-property: scale;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 300ms;
 
@@ -78,8 +78,7 @@ const StyledWrapper = styled(Link)`
     }
 
     :hover {
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      scale: 0.97
     }
     > .category {
       position: absolute;
