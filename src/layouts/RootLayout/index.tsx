@@ -2,9 +2,11 @@ import React, { ReactNode, useEffect } from "react"
 import { ThemeProvider } from "./ThemeProvider"
 import useScheme from "src/hooks/useScheme"
 import Header from "./Header"
+import Footer from "./Footer"
 import styled from "@emotion/styled"
 import Scripts from "src/layouts/RootLayout/Scripts"
 import useGtagEffect from "./useGtagEffect"
+import 'bootstrap/dist/css/bootstrap-grid.min.css';
 import Prism from "prismjs/prism"
 import 'prismjs/components/prism-markup-templating.js'
 import 'prismjs/components/prism-markup.js'
@@ -58,6 +60,7 @@ const RootLayout = ({ children }: Props) => {
       {/* {metaConfig.type !== "Paper" && <Header />} */}
       <Header fullWidth={false} />
       <StyledMain>{children}</StyledMain>
+      <Footer fullWidth={false} />
     </ThemeProvider>
   )
 }
@@ -68,5 +71,5 @@ const StyledMain = styled.main`
   margin: 0 auto;
   width: 100%;
   max-width: 1120px;
-  padding: 0 1.5rem;
+  padding: 0 1rem;
 `

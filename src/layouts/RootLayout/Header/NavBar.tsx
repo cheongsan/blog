@@ -1,8 +1,9 @@
 import styled from "@emotion/styled"
 import Link from "next/link"
+import { IconUserCircle } from '@tabler/icons-react';
 
 const NavBar: React.FC = () => {
-  const links = [{ id: 1, name: "About", to: "/about" }]
+  const links = [{ id: 1, name: < IconUserCircle size="33" />, to: "/about" }]
   return (
     <StyledWrapper className="">
       <ul>
