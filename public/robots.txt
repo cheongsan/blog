@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://blog.cheongsan.do
+Host: https://cheongsando.vercel.app
 
 # Sitemaps
-Sitemap: https://blog.cheongsan.do/sitemap.xml
+Sitemap: https://cheongsando.vercel.app/sitemap.xml
