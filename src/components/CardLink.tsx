@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import styled from "@emotion/styled"
 
 interface CardLinkProps {
@@ -7,6 +7,7 @@ interface CardLinkProps {
     className?: string;
     rel?: string;
     target?: string;
+    children?: ReactNode;
 }
 
 export const CardLink: React.FC<CardLinkProps> = ({ href, className, rel, target, children }) => {
