@@ -3,6 +3,7 @@ import Tag from "src/components/Tag"
 import { TPost } from "src/types"
 import { formatDate } from "src/libs/utils"
 import Image from "next/image"
+import Gravatar from 'react-gravatar';
 import React from "react"
 import styled from "@emotion/styled"
 
@@ -20,13 +21,7 @@ const PostHeader: React.FC<Props> = ({ data }) => {
             {data.author && data.author[0] && data.author[0].name && (
               <>
                 <div className="author">
-                  <Image
-                    css={{ borderRadius: "50%" }}
-                    src={data.author[0].profile_photo || CONFIG.profile.image}
-                    alt="profile_photo"
-                    width={24}
-                    height={24}
-                  />
+                  <Gravatar email={CONFIG.profile.email} size={24} rating="pg" default="identicon" />
                   <div className="">{data.author[0].name}</div>
                 </div>
                 <div className="hr"></div>
@@ -84,6 +79,9 @@ const StyledWrapper = styled.div`
         display: flex;
         gap: 0.5rem;
         align-items: center;
+        .react-gravatar {
+          border-radius: 1rem;
+        }
       }
       .hr {
         margin-top: 0.25rem;
