@@ -33,6 +33,9 @@ const StyledWrapper = styled.div`
       margin-left: 1rem;
       color: ${({ theme }) => theme.colors.nav_item};
       border-radius: 0.75rem;
+      transition-property: scale;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      transition-duration: 300ms;
       &:hover {
         scale: 0.9;
         background-color: ${({ theme }) => theme.colors.card_link_click};
