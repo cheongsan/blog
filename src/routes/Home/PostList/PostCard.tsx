@@ -70,6 +70,7 @@ const StyledWrapper = styled(Link)`
     overflow: hidden;
     position: relative;
     margin-bottom: 1.5rem;
+    flex-wrap: wrap;
     border-radius: 1rem;
     background-color: ${({ theme }) => theme.colors.card};
     transition-property: scale;
@@ -93,12 +94,12 @@ const StyledWrapper = styled(Link)`
 
     > .thumbnail {
       position: relative;
-      width: 100%;
+      flex-basis: 100%;
       background-color: ${({ theme }) => theme.colors.gray2};
-      padding-bottom: 66%;
+      padding-bottom: 50%;
 
       @media (min-width: 1024px) {
-        width: 35%;
+        flex-basis: 35%;
         padding-bottom: 20%;
       }
     }
