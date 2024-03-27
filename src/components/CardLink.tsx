@@ -8,7 +8,7 @@ interface Props {
   rel?: string;
   target?: string;
   children?: ReactNode;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export const CardLink: React.FC<Props> = ({ href, className, rel, target, children, onClick }) => {
