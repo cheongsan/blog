@@ -8,7 +8,7 @@ import { CardLink } from "src/components/CardLink"
 import { IconChevronRight } from "@tabler/icons-react"
 
 type Props = {
-  q: string
+  q?: string
 }
 
 const PostList: React.FC<Props> = ({ q }) => {
