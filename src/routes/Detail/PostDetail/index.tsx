@@ -58,7 +58,7 @@ const StyledWrapper = styled.div`
   padding-right: 1.5rem;
   padding-top: 3rem;
   padding-bottom: 3rem;
-  border-radius: 1.5rem;
+  border-radius: 1rem;
   background-color: ${({ theme }) => theme.colors.card};
   > article {
     margin: 0 auto;
