@@ -1,4 +1,4 @@
-import Home from "src/routes/Home"
+import Feed from "src/routes/Feed"
 import { CONFIG } from "../../site.config"
 import { NextPageWithLayout } from "../types"
 import { getPosts } from "../apis"
@@ -21,7 +21,7 @@ export const getStaticProps: GetStaticProps = async () => {
   }
 }
 
-const HomePage: NextPageWithLayout = () => {
+const FeedPage: NextPageWithLayout = () => {
   const meta = {
     title: CONFIG.blog.title,
     description: CONFIG.blog.description,
@@ -32,9 +32,9 @@ const HomePage: NextPageWithLayout = () => {
   return (
     <>
       <MetaConfig {...meta} />
-      <Home />
+      <Feed />
     </>
   )
 }
 
-export default HomePage
+export default FeedPage
