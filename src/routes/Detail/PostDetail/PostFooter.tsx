@@ -1,6 +1,8 @@
 import styled from "@emotion/styled"
 import { useRouter } from "next/router"
 import React from "react"
+import { CardLinkALT } from "src/components/CardLinkALT"
+import { IconChevronLeft, IconArrowUp } from "@tabler/icons-react"
 
 type Props = {}
 
@@ -8,10 +10,12 @@ const Footer: React.FC<Props> = () => {
   const router = useRouter()
   return (
     <StyledWrapper>
-      <a onClick={() => router.push("/")}>← Back</a>
-      <a onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
-        ↑ Top
-      </a>
+      <CardLinkALT onClick={() => router.push("/")}>
+        <IconChevronLeft />&nbsp;Back
+        </CardLinkALT>
+      <CardLinkALT onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+        <IconArrowUp />&nbsp;Back to Up
+      </CardLinkALT>
     </StyledWrapper>
   )
 }

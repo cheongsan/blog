@@ -7,16 +7,22 @@ import styled from "@emotion/styled"
 import NotionRenderer from "../components/NotionRenderer"
 import usePostQuery from "src/hooks/usePostQuery"
 
+const commonStyles = `
+  max-width: 56rem;
+  margin: 0 auto;
+`;
+
 type Props = {}
 
 const PostDetail: React.FC<Props> = () => {
-  const data = usePostQuery()
+  const data = usePostQuery();
 
-  if (!data) return null
+  if (!data) return null;
 
-  const category = (data.category && data.category?.[0]) || undefined
+  const category = (data.category && data.category?.[0]) || undefined;
 
   return (
+    <>
     <StyledWrapper>
       <article>
         {category && (
@@ -32,29 +38,37 @@ const PostDetail: React.FC<Props> = () => {
         </div>
         {data.type[0] === "Post" && (
           <>
-            <Footer />
             <CommentBox data={data} />
           </>
         )}
       </article>
-    </StyledWrapper>
-  )
-}
+      </StyledWrapper>
+      <StyledFooter>
+        <Footer />
+      </StyledFooter>
+    </>
+  );
+};
 
-export default PostDetail
+export default PostDetail;
 
 const StyledWrapper = styled.div`
+  ${commonStyles}
   padding-left: 1.5rem;
   padding-right: 1.5rem;
   padding-top: 3rem;
   padding-bottom: 3rem;
   border-radius: 1.5rem;
-  max-width: 56rem;
-  background-color: ${({ theme }) =>
-    theme.scheme === "light" ? "white" : theme.colors.card};
-  margin: 0 auto;
+  background-color: ${({ theme }) => theme.colors.card};
   > article {
     margin: 0 auto;
     max-width: 42rem;
   }
-`
+`;
+
+const StyledFooter = styled.div`
+  ${commonStyles}
+  > a.card-link-alt:hover{
+    scale: 0.85;
+  }
+`;
