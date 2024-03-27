@@ -4,15 +4,15 @@ import { IconInbox, IconUserCircle } from '@tabler/icons-react';
 
 const NavBar: React.FC = () => {
   const links = [
-    { id: 1, name: < IconInbox size="33" />, to: "/archive" },
-    { id: 2, name: < IconUserCircle size="33" />, to: "/about" }
+    { id: 1, name: < IconInbox size="33" />, to: "/archive", title: "Archive" },
+    { id: 2, name: < IconUserCircle size="33" />, to: "/about", title: "Profile" }
   ]
   return (
     <StyledWrapper className="">
       <ul>
         {links.map((link) => (
           <li key={link.id}>
-            <Link href={link.to}>{link.name}</Link>
+            <Link href={link.to} title={link.title}>{link.name}</Link>
           </li>
         ))}
       </ul>
