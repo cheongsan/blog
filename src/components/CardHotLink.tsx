@@ -3,7 +3,7 @@ import styled from "@emotion/styled"
 
 interface CardHotLinkProps {
     href: string;
-    text: string;
+    text?: string;
     className?: string;
     rel?: string;
     target?: string;
