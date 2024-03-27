@@ -106,7 +106,14 @@ const StyledWrapper = styled(Link)`
 
     > .content {
       padding: 1rem;
+      flex-basis: 90%;
 
+      &[data-thumb="true"] {
+        @media (min-width: 1024px) {
+          flex-basis: 60%;
+        }
+      }
+      
       &[data-category="false"] {
         padding-top: 1.5rem;
       }
