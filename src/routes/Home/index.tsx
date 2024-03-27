@@ -1,7 +1,6 @@
 import { useState } from "react"
 
 import styled from "@emotion/styled"
-import MobileProfileCard from "./MobileProfileCard"
 import ProfileCard from "./ProfileCard"
 import ServiceCard from "./ServiceCard"
 import PostList from "./PostList"
