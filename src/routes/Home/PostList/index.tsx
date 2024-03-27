@@ -45,7 +45,7 @@ const PostList: React.FC<Props> = ({ q }) => {
           <PostCard key={post.id} data={post} />
         ))}
         <hr />
-        <CardLink href="archive" className="d-flex justify-content-center">
+        <CardLink href="/archive" className="d-flex justify-content-center">
           <div className="archive-link d-flex align-items-center">
             블로그 게시글 더보기&nbsp;<IconChevronRight size="30" />
           </div>
