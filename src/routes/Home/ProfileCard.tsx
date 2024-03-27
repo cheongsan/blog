@@ -1,5 +1,4 @@
 import styled from "@emotion/styled"
-import Image from "next/image"
 import React from "react"
 import Gravatar from 'react-gravatar';
 import { CONFIG } from "site.config"
