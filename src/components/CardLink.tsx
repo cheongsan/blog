@@ -1,23 +1,24 @@
 import React, { ReactNode } from 'react';
 import styled from "@emotion/styled"
 
-interface CardLinkProps {
-    href: string;
-    text?: string;
-    className?: string;
-    rel?: string;
-    target?: string;
-    children?: ReactNode;
+interface Props {
+  href?: string;
+  text?: string;
+  className?: string;
+  rel?: string;
+  target?: string;
+  children?: ReactNode;
+  onClick: () => void;
 }
 
-export const CardLink: React.FC<CardLinkProps> = ({ href, className, rel, target, children }) => {
+export const CardLink: React.FC<Props> = ({ href, className, rel, target, children, onClick }) => {
     const defaultClassName = 'card-link';
     const combinedClassName = className ? `${defaultClassName} ${className}` : defaultClassName;
 
     return (
-        <StyledWrapper href={href} className={combinedClassName} rel={rel} target={target}>
-            {children}
-        </StyledWrapper>
+      <StyledWrapper href={href} className={combinedClassName} rel={rel} target={target} onClick={onClick}>
+        {children}
+      </StyledWrapper>
     );
 };
 

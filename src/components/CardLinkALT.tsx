@@ -1,8 +1,8 @@
 import React, { ReactNode } from 'react';
 import styled from "@emotion/styled"
 
-interface CardLinkALTProps {
-    href: string;
+interface Props {
+    href?: string;
     text?: string;
     className?: string;
     rel?: string;
@@ -11,14 +11,14 @@ interface CardLinkALTProps {
     onClick: () => void;
 }
 
-export const CardLinkALT: React.FC<CardLinkALTProps> = ({ href, className, rel, target, children, onClick }) => {
+export const CardLinkALT: React.FC<Props> = ({ href, className, rel, target, children, onClick }) => {
     const defaultClassName = 'card-link-alt';
     const combinedClassName = className ? `${defaultClassName} ${className}` : defaultClassName;
 
     return (
-        <StyledWrapper href={href} className={combinedClassName} rel={rel} target={target} onClick={onClick}>
-            {children}
-        </StyledWrapper>
+      <StyledWrapper href={href} className={combinedClassName} rel={rel} target={target} onClick={onClick}>
+        {children}
+      </StyledWrapper>
     );
 };
 
