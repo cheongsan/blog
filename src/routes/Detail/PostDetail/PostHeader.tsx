@@ -117,7 +117,7 @@ const StyledWrapper = styled.div`
       border-radius: 1.5rem;
       width: 100%;
       background-color: ${({ theme }) => theme.colors.gray4};
-      padding-bottom: 66%;
+      padding-bottom: 55%;
 
       @media (min-width: 1024px) {
         padding-bottom: 50%;
