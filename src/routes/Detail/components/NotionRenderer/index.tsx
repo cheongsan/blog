@@ -49,17 +49,16 @@ const Modal = dynamic(
 
 type Props = {
   recordMap: ExtendedRecordMap
-  pageID : string
 }
 
 const NotionRenderer: FC<Props> = ({ recordMap }) => {
   const [scheme] = useScheme()
 
-  const mapPageUrl = (id: string) => {
+  const MapPageUrl = (id: string) => {
     const router = useRouter();
     const currentPath = router.asPath.split("#")[0];
     const NotionPageID = Object.keys(recordMap.block)[0];
-    return NotionPageID == id ? currentPath : "https://www.notion.so/" + id.replace(/-/g, '');
+    return NotionPageID === id ? currentPath : "https://www.notion.so/" + id.replace(/-/g, '');
   }
 
   return (
@@ -76,7 +75,7 @@ const NotionRenderer: FC<Props> = ({ recordMap }) => {
           nextImage: Image,
           nextLink: Link,
         }}
-        mapPageUrl={mapPageUrl}
+        mapPageUrl={MapPageUrl}
       />
     </StyledWrapper>
   )
