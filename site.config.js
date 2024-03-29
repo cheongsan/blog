@@ -12,11 +12,11 @@ const CONFIG = {
   projects: [
     {
       name: `VEGECRAFT`,
-      href: "https://proj.cheongsan.do/vegecraft",
+      href: "/after-completing-the-seoul-software-academy-review#2b15994264d64c31a1c44f9bbdb442f2",
     },
     {
       name: `KOONGRAIL`,
-      href: "https://proj.cheongsan.do/koongrail",
+      href: "/after-completing-the-seoul-software-academy-review#eced5c2859484b6fb11e61add1740ef1",
     },
   ],
   // blog setting (required)
