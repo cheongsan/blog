@@ -59,8 +59,6 @@ const NotionRenderer: FC<Props> = ({ recordMap }) => {
     const router = useRouter();
     const currentPath = router.asPath.split("#")[0];
     const NotionPageID = Object.keys(recordMap.block)[0];
-    console.log(NotionPageID)
-    console.log(id)
     return NotionPageID == id ? currentPath : "https://www.notion.so/" + id.replace(/-/g, '');
   }
 
