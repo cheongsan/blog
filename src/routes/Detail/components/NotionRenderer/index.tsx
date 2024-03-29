@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from 'next/router';
 import { ExtendedRecordMap } from "notion-types"
 import useScheme from "src/hooks/useScheme"
 
@@ -46,16 +47,23 @@ const Modal = dynamic(
   }
 )
 
-const mapPageUrl = (id: string) => {
-  return "https://www.notion.so/" + id.replace(/-/g, "")
-}
-
 type Props = {
   recordMap: ExtendedRecordMap
+  pageID : string
 }
 
 const NotionRenderer: FC<Props> = ({ recordMap }) => {
   const [scheme] = useScheme()
+
+  const mapPageUrl = (id: string) => {
+    const router = useRouter();
+    const currentPath = router.asPath.split("#")[0];
+    const NotionPageID = Object.keys(recordMap.block)[0];
+    console.log(NotionPageID)
+    console.log(id)
+    return NotionPageID == id ? currentPath : "https://www.notion.so/" + id.replace(/-/g, '');
+  }
+
   return (
     <StyledWrapper>
       <_NotionRenderer
