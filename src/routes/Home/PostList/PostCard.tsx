@@ -168,6 +168,7 @@ const StyledWrapper = styled(Link)`
       }
       > .tags {
         display: flex;
+        flex-wrap: wrap;
         gap: 0.5rem;
       }
     }
