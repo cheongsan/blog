@@ -17,7 +17,6 @@ const ServiceCard: React.FC = () => {
             key={idx}
             href={`${project.href}`}
             rel="noreferrer"
-            target="_blank"
           >
             <AiFillCodeSandboxCircle className="icon" />
             <div className="name">{project.name}</div>
