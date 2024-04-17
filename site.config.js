@@ -3,7 +3,7 @@ const CONFIG = {
   profile: {
     name: "KIM, CHEONGSAN",
     image: "/avatar.svg", // If you want to create your own notion avatar, check out https://notion-avatar.vercel.app
-    role: "Cloud Engineer | BE",
+    role: "Cloud Engineer(SRE) | BE",
     email: "cheongsando@hotmail.com",
     linkedin: "cheongsando",
     github: "cheongsando",
@@ -12,11 +12,11 @@ const CONFIG = {
   projects: [
     {
       name: `VEGECRAFT`,
-      href: "/after-completing-the-seoul-software-academy-review#2b15994264d64c31a1c44f9bbdb442f2",
+      href: "/vegecraft",
     },
     {
       name: `KOONGRAIL`,
-      href: "/after-completing-the-seoul-software-academy-review#eced5c2859484b6fb11e61add1740ef1",
+      href: "/koongrail",
     },
   ],
   // blog setting (required)
