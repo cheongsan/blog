@@ -10,7 +10,7 @@ const Tag: React.FC<Props> = ({ children }) => {
   const router = useRouter()
 
   const handleClick = (value: string) => {
-    router.push(`/?tag=${value}`)
+    router.push(`/archive?tag=${value}`)
   }
   return (
     <StyledWrapper onClick={() => handleClick(children)}>
