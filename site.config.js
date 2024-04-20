@@ -21,7 +21,7 @@ const CONFIG = {
   ],
   // blog setting (required)
   blog: {
-    title: "CHEONGSAN.DO",
+    title: "CHEONGSANDO",
     description: "desertisland",
   },
 
