@@ -3,6 +3,7 @@ import { Global as _Global, css, useTheme } from "@emotion/react"
 import { ThemeProvider as _ThemeProvider } from "@emotion/react"
 import { red } from "@radix-ui/colors"
 import { notosans } from "src/assets"
+import { notocoloremoji } from "src/assets"
 import { redhatdisplay } from "src/assets"
 
 export const Global = () => {
@@ -21,7 +22,7 @@ export const Global = () => {
         }
 
         body, .notion-text{
-          font-family: ${redhatdisplay.style.fontFamily}, ${notosans.style.fontFamily};
+          font-family: ${redhatdisplay.style.fontFamily}, ${notosans.style.fontFamily}, ${notocoloremoji.style.fontFamily};
         }
 
         * {
