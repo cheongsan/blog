@@ -27,7 +27,7 @@ const Category: React.FC<Props> = ({ readOnly = false, children }) => {
 
   const handleClick = (value: string) => {
     if (readOnly) return
-    router.push(`/?category=${value}`)
+    router.push(`/archive?category=${value}`)
   }
   return (
     <StyledWrapper
