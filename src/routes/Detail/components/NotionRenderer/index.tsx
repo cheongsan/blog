@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useRouter } from 'next/router';
 import { ExtendedRecordMap } from "notion-types"
 import useScheme from "src/hooks/useScheme"
+import { notocoloremoji } from "src/assets"
 
 // core styles shared by all of react-notion-x (required)
 import "react-notion-x/src/styles.css"
@@ -90,5 +91,8 @@ const StyledWrapper = styled.div`
   }
   .notion-page {
     padding: 0;
+  }
+  .notion-page-icon {
+    ${notocoloremoji.style}
   }
 `
