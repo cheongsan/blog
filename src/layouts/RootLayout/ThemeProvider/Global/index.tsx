@@ -16,9 +16,12 @@ export const Global = () => {
           padding: 0;
           color: ${theme.colors.gray12};
           background-color: ${theme.colors.body};
-          font-family: ${redhatdisplay.style.fontFamily}, ${notosans.style.fontFamily};
           font-weight: 500;
           font-style: normal;
+        }
+
+        body, .notion-text{
+          font-family: ${redhatdisplay.style.fontFamily}, ${notosans.style.fontFamily};
         }
 
         * {
