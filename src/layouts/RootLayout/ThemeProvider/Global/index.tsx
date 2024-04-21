@@ -21,7 +21,11 @@ export const Global = () => {
           font-style: normal;
         }
 
-        body, .notion-text{
+        body, 
+        .notion-list,
+        .notion-text,
+        .notion-h-title,
+        .notion-callout-text{
           font-family: ${redhatdisplay.style.fontFamily}, ${notosans.style.fontFamily}, ${notocoloremoji.style.fontFamily};
         }
 
