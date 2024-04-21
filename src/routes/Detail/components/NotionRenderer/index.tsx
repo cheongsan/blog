@@ -95,7 +95,4 @@ const StyledWrapper = styled.div`
   .notion-page-icon {
     ${notocoloremoji.style}
   }
-  .notion-list-disc > *:not(:first-child) {
-    padding-left: 0;
-  }
 `
