@@ -23,6 +23,7 @@ const CONFIG = {
   blog: {
     title: "CHEONGSANDO",
     description: "desertisland",
+    scheme: "dark", // 'light' | 'dark' | 'system'
   },
 
   // CONFIG configration (required)
