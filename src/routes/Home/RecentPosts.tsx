@@ -36,7 +36,7 @@ const RecentPosts: React.FC<Props> = ({ q }) => {
     <>
       <StyledWrapper className="my-2">
         <StyledTitle>
-          Recent Posts
+          {filteredPosts.length > 1 ? "Recent Posts" : "Recent Post"}
         </StyledTitle>
         {!filteredPosts.length && (
           <p className="text-gray-500 dark:text-gray-300">Nothing! 😺</p>
