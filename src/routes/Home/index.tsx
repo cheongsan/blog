@@ -3,7 +3,8 @@ import { useState } from "react"
 import styled from "@emotion/styled"
 import ProfileCard from "./ProfileCard"
 import ServiceCard from "./ServiceCard"
-import PostList from "./PostList"
+import RecentPosts from "./RecentPosts"
+import PinnedPosts from "./PinnedPosts"
 
 const HEADER_HEIGHT = 73
 
@@ -22,7 +23,10 @@ const Feed: React.FC<Props> = () => {
           <ServiceCard />
         </div>
         <div className="col-12">
-          <PostList />
+          <PinnedPosts />
+        </div>
+        <div className="col-12">
+          <RecentPosts />
         </div>
       </div>
     </StyledWrapper>
