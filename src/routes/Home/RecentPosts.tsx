@@ -11,7 +11,7 @@ type Props = {
   q?: string
 }
 
-const PostList: React.FC<Props> = ({ q }) => {
+const RecentPosts: React.FC<Props> = ({ q }) => {
   const router = useRouter()
   const data = usePostsQuery()
   const [filteredPosts, setFilteredPosts] = useState(data)
@@ -55,7 +55,7 @@ const PostList: React.FC<Props> = ({ q }) => {
   )
 }
 
-export default PostList
+export default RecentPosts
 
 const StyledTitle = styled.h3`
   padding: 0.25rem;
