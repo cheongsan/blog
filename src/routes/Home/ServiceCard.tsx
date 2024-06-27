@@ -10,7 +10,7 @@ const ServiceCard: React.FC = () => {
     <>
       <StyledWrapper className="card">
       <StyledTitle>
-        Project
+        {CONFIG.projects.length > 1 ? "Projects" : "Project"}
       </StyledTitle>
         {CONFIG.projects.map((project, idx) => (
           <CardLink

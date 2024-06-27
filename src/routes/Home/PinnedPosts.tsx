@@ -30,11 +30,15 @@ const PinnedPosts: React.FC<Props> = ({ q }) => {
     })
   }, [q, currentTag, currentCategory, currentStatus, currentOrder, setFilteredPosts])
 
+  if (filteredPosts.length === 0) {
+    return null
+  }
+
   return (
     <>
       <StyledWrapper className="my-2">
         <StyledTitle>
-          Pinned Posts
+          {filteredPosts.length > 1 ? "Pinned Posts" : "Pinned Post"}
         </StyledTitle>
         {!filteredPosts.length && (
           <p className="text-gray-500 dark:text-gray-300">Nothing! 😺</p>
