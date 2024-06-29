@@ -8,7 +8,7 @@ import {
   IconDeviceDesktop,
   IconFileZip,
   IconCpu,
-  IconBulbFilled,
+  IconChartHistogram
 } from "@tabler/icons-react"
 
 export const emojiIconMap: { [key: string]: React.ElementType } = {
@@ -20,5 +20,5 @@ export const emojiIconMap: { [key: string]: React.ElementType } = {
   "🖥": IconDeviceDesktop,
   "📑": IconFileZip,
   "💡": IconCpu,
-  "🤖": IconBulbFilled,
+  "🤖": IconChartHistogram,
 }
