@@ -2,6 +2,8 @@ import Copyright from "./Copyright"
 import ThemeToggle from "./ThemeToggle"
 import styled from "@emotion/styled"
 import { zIndexes } from "src/styles/zIndexes"
+import React from "react"
+import { CONFIG } from "../../../../site.config"
 
 type Props = {
   fullWidth: boolean
@@ -18,17 +20,28 @@ const Footer: React.FC<Props> = ({ fullWidth }) => {
           <ThemeToggle />
         </div>
       </div>
+      <div data-full-width={fullWidth} className="container">
+        <p>
+          This blog works by importing posts written in&nbsp;
+          <a href="https://notion.com" target="_blank" className="notion-link">Notion</a>.
+          &nbsp;It is adapted from the&nbsp;
+          <a href="https://github.com/morethanmin/morethan-log" target="_blank" className="notion-link">
+            morethan-log project</a>
+          &nbsp;and hosted by <a href="https://vercel.com" target="_blank" className="notion-link">
+            Vercel</a>.
+        </p>
+      </div>
     </StyledWrapper>
-  )
+)
 }
 
 export default Footer
 
 const StyledWrapper = styled.footer`
-  z-index: ${zIndexes.header};
-  position: sticky;
-  top: 0;
-  background-color: ${({ theme }) => theme.colors.nav};
+z-index: ${zIndexes.header};
+    position: sticky;
+    top: 0;
+    background-color: ${({ theme }) => theme.colors.nav};
   backdrop-filter: saturate(180%) blur(20px);
 
   .container {
@@ -53,5 +66,14 @@ const StyledWrapper = styled.footer`
       gap: 0.75rem;
       align-items: center;
     }
+      >p {
+          margin-top: 0.75rem;
+          font-size: 0.875rem;
+          line-height: 1.25rem;
+          color: ${({ theme }) => theme.colors.gray10};
+          >a{
+              text-decoration: underline;
+          }
+      }
   }
 `
