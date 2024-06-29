@@ -31,7 +31,10 @@ const StyledWrapper = styled.div`
   > .top {
     display: flex;  
     padding: 0.25rem;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.75rem; 
+      >svg{
+          margin-right: 0.2rem;
+      }
   }
   > .mid {
     padding-top: 0.5rem;
