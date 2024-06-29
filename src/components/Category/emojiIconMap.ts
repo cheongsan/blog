@@ -2,6 +2,7 @@ import React from "react"
 import {
   IconFolderOpen,
   IconBook2,
+  IconSeeding,
   IconCloud,
   IconServerBolt,
   IconDeviceDesktop,
@@ -13,6 +14,7 @@ import {
 export const emojiIconMap: { [key: string]: React.ElementType } = {
   "📂": IconFolderOpen,
   "📕": IconBook2,
+  "😎": IconSeeding,
   "☁": IconCloud,
   "💾": IconServerBolt,
   "🖥": IconDeviceDesktop,
