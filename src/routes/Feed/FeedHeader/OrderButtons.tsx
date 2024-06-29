@@ -1,7 +1,7 @@
 import styled from "@emotion/styled"
 import { useRouter } from "next/router"
 import React from "react"
-import { IconSortDescending, IconSortAscending, IconSearch } from "@tabler/icons-react"
+import { IconSortDescending, IconSortAscending } from "@tabler/icons-react"
 
 type TOrder = "asc" | "desc"
 
