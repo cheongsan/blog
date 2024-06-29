@@ -1,7 +1,7 @@
 import styled from "@emotion/styled"
 import { useRouter } from "next/router"
 import React from "react"
-import { Emoji } from "src/components/Emoji"
+import { IconTags } from "@tabler/icons-react"
 import { useTagsQuery } from "src/hooks/useTagsQuery"
 
 type Props = {}
@@ -34,8 +34,8 @@ const TagList: React.FC<Props> = () => {
 
   return (
     <StyledWrapper>
-      <div className="top">
-        <Emoji>🏷️</Emoji> Tags
+      <div className="top d-flex">
+        < IconTags size="23" /> Tags
       </div>
       <div className="list">
         {Object.keys(data).map((key) => (
