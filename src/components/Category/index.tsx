@@ -3,6 +3,7 @@ import React from "react"
 import { COLOR_SET } from "./constants"
 import styled from "@emotion/styled"
 import { colors } from "src/styles"
+import IconRenderer from "src/components/Category/IconRenderer"
 
 export const getColorClassByName = (name: string): string => {
   try {
@@ -37,7 +38,7 @@ const Category: React.FC<Props> = ({ readOnly = false, children }) => {
         cursor: readOnly ? "default" : "pointer",
       }}
     >
-      {children}
+      <IconRenderer category={children} />
     </StyledWrapper>
   )
 }
@@ -45,6 +46,7 @@ const Category: React.FC<Props> = ({ readOnly = false, children }) => {
 export default Category
 
 const StyledWrapper = styled.div`
+  display: flex;  
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
   padding-left: 0.5rem;
@@ -55,4 +57,8 @@ const StyledWrapper = styled.div`
   line-height: 1.25rem;
   opacity: 0.9;
   color: ${colors.dark.gray1};
+  
+  >svg{
+      margin-right: 0.25rem;
+  }  
 `

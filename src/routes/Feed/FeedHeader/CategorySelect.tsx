@@ -5,6 +5,7 @@ import { MdExpandMore } from "react-icons/md"
 import { DEFAULT_CATEGORY } from "src/constants"
 import styled from "@emotion/styled"
 import { useCategoriesQuery } from "src/hooks/useCategoriesQuery"
+import IconRenderer from "src/components/Category/IconRenderer"
 
 type Props = {}
 
@@ -26,7 +27,7 @@ const CategorySelect: React.FC<Props> = () => {
   return (
     <StyledWrapper>
       <div ref={dropdownRef} className="wrapper" onClick={handleOpen}>
-        {currentCategory} Posts <MdExpandMore />
+        <IconRenderer category={currentCategory} /> Posts <MdExpandMore />
       </div>
       {opened && (
         <div className="content">
@@ -36,7 +37,7 @@ const CategorySelect: React.FC<Props> = () => {
               key={idx}
               onClick={() => handleOptionClick(key)}
             >
-              {`${key} (${data[key]})`}
+              <IconRenderer category={key} /> ({data[key]})
             </div>
           ))}
         </div>
@@ -70,6 +71,7 @@ const StyledWrapper = styled.div`
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
       0 2px 4px -1px rgba(0, 0, 0, 0.06);
     > .item {
+      display: flex;  
       padding: 0.25rem;
       padding-left: 0.5rem;
       padding-right: 0.5rem;
@@ -82,6 +84,10 @@ const StyledWrapper = styled.div`
       :hover {
         background-color: ${({ theme }) => theme.colors.gray4};
       }
+        
+      >svg{
+          margin-right: 0.25rem;
+      }  
     }
   }
 `
