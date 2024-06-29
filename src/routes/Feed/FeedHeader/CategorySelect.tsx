@@ -27,7 +27,7 @@ const CategorySelect: React.FC<Props> = () => {
   return (
     <StyledWrapper>
       <div ref={dropdownRef} className="wrapper" onClick={handleOpen}>
-        <IconRenderer category={currentCategory} /> Posts <MdExpandMore />
+        <IconRenderer category={currentCategory} size={27}/> Posts <MdExpandMore />
       </div>
       {opened && (
         <div className="content">
