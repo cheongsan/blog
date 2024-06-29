@@ -5,7 +5,7 @@ import PostCard from "./PostCard"
 import { DEFAULT_CATEGORY } from "src/constants"
 import usePostsQuery from "src/hooks/usePostsQuery"
 import { CardLink } from "src/components/CardLink"
-import { IconChevronRight } from "@tabler/icons-react"
+import { IconChevronRight, IconRotateClockwise2 } from "@tabler/icons-react"
 
 type Props = {
   q?: string
@@ -36,7 +36,7 @@ const RecentPosts: React.FC<Props> = ({ q }) => {
     <>
       <StyledWrapper className="my-2">
         <StyledTitle>
-          {filteredPosts.length > 1 ? "Recent Posts" : "Recent Post"}
+          < IconRotateClockwise2 size="24" /> {filteredPosts.length > 1 ? "Recent Posts" : "Recent Post"}
         </StyledTitle>
         {!filteredPosts.length && (
           <p className="text-gray-500 dark:text-gray-300">Nothing! 😺</p>
@@ -58,9 +58,13 @@ const RecentPosts: React.FC<Props> = ({ q }) => {
 export default RecentPosts
 
 const StyledTitle = styled.h3`
-  padding: 0.25rem;
-  margin-bottom: 0.75rem;
-  color: ${({ theme }) => theme.colors.gray11};
+    display: flex;
+    padding: 0.25rem;
+    margin-bottom: 0.75rem;
+    color: ${({ theme }) => theme.colors.gray11};
+    >svg{
+        margin-right: 0.5rem;
+    }
 `
 
 const StyledWrapper = styled.div`

@@ -3,6 +3,7 @@ import React from "react"
 import { AiFillCodeSandboxCircle } from "react-icons/ai"
 import styled from "@emotion/styled"
 import { CardLink } from "src/components/CardLink"
+import { Icon3dCubeSphere } from "@tabler/icons-react"
 
 const ServiceCard: React.FC = () => {
   if (!CONFIG.projects) return null
@@ -10,7 +11,7 @@ const ServiceCard: React.FC = () => {
     <>
       <StyledWrapper className="card">
       <StyledTitle>
-        {CONFIG.projects.length > 1 ? "Projects" : "Project"}
+        < Icon3dCubeSphere size="24" /> {CONFIG.projects.length > 1 ? "Projects" : "Project"}
       </StyledTitle>
         {CONFIG.projects.map((project, idx) => (
           <CardLink
@@ -30,10 +31,14 @@ const ServiceCard: React.FC = () => {
 export default ServiceCard
 
 const StyledTitle = styled.h3`
-  padding-top: 0.95rem;
-  padding-left: 0.75rem;
-  margin-bottom: 0.75rem;
-  color: ${({ theme }) => theme.colors.gray11};
+    display: flex;
+    padding-top: 0.95rem;
+    padding-left: 0.75rem;
+    margin-bottom: 0.75rem;
+    color: ${({ theme }) => theme.colors.gray11};
+    >svg{
+        margin-right: 0.5rem;
+    }
 `
 
 const StyledWrapper = styled.div`
