@@ -34,7 +34,7 @@ const TagList: React.FC<Props> = () => {
 
   return (
     <StyledWrapper>
-      <div className="top d-flex">
+      <div className="top">
         < IconTags size="23" /> Tags
       </div>
       <div className="list">
@@ -61,7 +61,7 @@ const StyledWrapper = styled.div`
     margin-bottom: 0.75rem;
 
     @media (min-width: 1024px) {
-      display: block;
+      display: flex;
     }
   }
 

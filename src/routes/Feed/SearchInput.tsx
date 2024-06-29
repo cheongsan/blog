@@ -7,7 +7,7 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {}
 const SearchInput: React.FC<Props> = ({ ...props }) => {
   return (
     <StyledWrapper>
-      <div className="top d-flex">
+      <div className="top">
         < IconSearch size="23" /> Search
       </div>
       <input
@@ -29,6 +29,7 @@ const StyledWrapper = styled.div`
     margin-bottom: 2rem;
   }
   > .top {
+    display: flex;  
     padding: 0.25rem;
     margin-bottom: 0.75rem;
   }
