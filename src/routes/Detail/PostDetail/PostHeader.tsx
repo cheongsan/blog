@@ -72,6 +72,8 @@ const StyledWrapper = styled.div`
     color: ${({ theme }) => theme.colors.gray11};
     > .top {
       display: flex;
+      overflow-x: auto;
+      flex-wrap: wrap;
       margin-bottom: 0.75rem;
       gap: 0.75rem;
       align-items: center;
@@ -105,7 +107,7 @@ const StyledWrapper = styled.div`
       .tags {
         display: flex;
         overflow-x: auto;
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
         gap: 0.5rem;
         max-width: 100%;
       }
