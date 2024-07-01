@@ -65,9 +65,10 @@ const StyledTitle = styled.h3`
 `
 
 const StyledWrapper = styled.div`
-  margin-bottom: 2.25rem;
-  padding: 1rem;
-  border-radius: 1rem;
-  width: 100%;
-  background-color: ${({ theme }) => theme.colors.card};
+    padding: 1rem;
+    padding-bottom: 0;
+    border-radius: 1rem;
+    width: 100%;
+    height: calc(100% - 1.5rem);
+    background-color: ${({ theme }) => theme.colors.card};
 `
