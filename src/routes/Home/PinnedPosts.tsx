@@ -69,6 +69,5 @@ const StyledWrapper = styled.div`
     padding-bottom: 0;
     border-radius: 1rem;
     width: 100%;
-    height: calc(100% - 1.5rem);
     background-color: ${({ theme }) => theme.colors.card};
 `
