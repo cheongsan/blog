@@ -47,7 +47,7 @@ const RecentPosts: React.FC<Props> = ({ q }) => {
         <hr />
         <CardLink href="/archive" className="d-flex justify-content-center">
           <div className="archive-link d-flex align-items-center">
-            블로그 게시글 더보기&nbsp;<IconChevronRight size="30" />
+            View Archive&nbsp;<IconChevronRight size="30" />
           </div>
         </CardLink>
       </StyledWrapper>
