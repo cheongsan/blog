@@ -72,7 +72,10 @@ z-index: ${zIndexes.header};
           line-height: 1.25rem;
           color: ${({ theme }) => theme.colors.gray10};
           >a{
-              text-decoration: underline;
+              text-decoration: inherit;
+              border-bottom: .05em solid;
+              border-color: var(--fg-color-2);
+              opacity: 1;
           }
       }
   }
