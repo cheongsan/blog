@@ -22,7 +22,7 @@ const Detail: React.FC<Props> = () => {
 export default Detail
 
 const StyledWrapper = styled.div`
-  padding: 1rem 0;
+  padding-bottom: 1rem;
 
   &[data-type="Paper"] {
     padding: 40px 0;
