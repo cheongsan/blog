@@ -6,7 +6,7 @@ const CONFIG = {
     role: "Cloud Engineer(SRE) | BE",
     email: "cheongsando@hotmail.com",
     linkedin: "cheongsando",
-    github: "cheongsando",
+    github: "cheongsan",
     instagram: "cheongsando_",
   },
   projects: [
