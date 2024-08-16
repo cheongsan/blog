@@ -2,10 +2,10 @@ const CONFIG = {
   // profile setting (required)
   profile: {
     name: "KIM, CHEONGSAN",
+    gravatar: process.env.GRAVATAR_PROFILE_EMAIL || "",
     image: "/avatar.svg", // If you want to create your own notion avatar, check out https://notion-avatar.vercel.app
     role: "Cloud Engineer(SRE) | BE",
-    email: "cheongsando@hotmail.com",
-    gravatar: "cheongsando",
+    email: "cheongsan@cheongsan.com",
     linkedin: "cheongsan",
     github: "cheongsan",
     instagram: "cheongsando_",
@@ -60,7 +60,7 @@ const CONFIG = {
   utterances: {
     enable: true,
     config: {
-      repo: process.env.NEXT_PUBLIC_UTTERANCES_REPO || "cheongsando/blog",
+      repo: process.env.NEXT_PUBLIC_UTTERANCES_REPO || "cheongsan/blog",
       "issue-term": "og:title",
       label: "💬 Utterances",
     },
