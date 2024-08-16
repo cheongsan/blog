@@ -14,7 +14,7 @@ const ProfileCard: React.FC<Props> = () => {
       <div className="content">
         <div className="row">
           <div className="col-12 col-md-5 col-lg-4 col-xl-3 top">
-            <Gravatar email={CONFIG.profile.email} size={150} rating="pg" default="identicon" />
+            <Gravatar email={CONFIG.profile.gravatar} size={150} rating="pg" default="identicon" />
           </div>
           <div className="col-12 col-md-7 col-lg-8 col-xl-9 mid">
             <div className="name row">
