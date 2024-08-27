@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { CONFIG } from 'site.config';
 
+import { ScrollArea, ScrollBar } from "src/components/ui/scroll-area"
+
 interface ContributionDay {
   date: string | null;
   contributionCount: number;
@@ -105,34 +107,37 @@ export default function Home() {
       </div>
 
       {/* 기여도 그리드 */}
-      <div style={{ overflowX: 'auto', width: '100%' }}>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: `repeat(53, 14px)`, // 53주는 가로로 배치
-            gridTemplateRows: `repeat(7, 14px)`,    // 7일은 세로로 배치
-            gap: '4px',
-            minWidth: '750px', // 최소 너비 설정
-          }}
-        >
-          {filteredContributions.map((week, weekIndex) =>
-            week.map((day, dayIndex) => (
-              <div
-                key={`${weekIndex}-${dayIndex}`}
-                title={`${day.date || ''}: ${day.contributionCount || 0} contributions`}
-                style={{
-                  gridColumnStart: weekIndex + 1, // 주는 가로로 배치
-                  gridRowStart: dayIndex + 1,    // 요일은 세로로 배치
-                  width: '14px',
-                  height: '14px',
-                  backgroundColor: day.color || '#ebedf0',
-                  borderRadius: '3px',
-                }}
-              ></div>
-            ))
-          )}
+      <ScrollArea className="w-96 whitespace-nowrap rounded-md border">
+        <div style={{ overflowX: 'auto', width: '100%' }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: `repeat(53, 11px)`, // 53주는 가로로 배치
+              gridTemplateRows: `repeat(7, 11px)`,    // 7일은 세로로 배치
+              gap: '4px',
+              minWidth: '750px', // 최소 너비 설정
+            }}
+          >
+            {filteredContributions.map((week, weekIndex) =>
+              week.map((day, dayIndex) => (
+                <div
+                  key={`${weekIndex}-${dayIndex}`}
+                  title={`${day.date || ''}: ${day.contributionCount || 0} contributions`}
+                  style={{
+                    gridColumnStart: weekIndex + 1, // 주는 가로로 배치
+                    gridRowStart: dayIndex + 1,    // 요일은 세로로 배치
+                    width: '10px',
+                    height: '10px',
+                    backgroundColor: day.color || '#ebedf0',
+                    borderRadius: '3px',
+                  }}
+                ></div>
+              ))
+            )}
+          </div>
         </div>
-      </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
     </div>
   );
 }
