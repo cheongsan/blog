@@ -1,7 +1,7 @@
 import styled from "@emotion/styled"
 import { useRouter } from "next/router"
 import React from "react"
-import { IconSortDescending, IconSortAscending } from "@tabler/icons-react"
+import { TbSortDescending, TbSortAscending } from "react-icons/tb"
 
 type TOrder = "asc" | "desc"
 
@@ -26,13 +26,13 @@ const OrderButtons: React.FC<Props> = () => {
         data-active={currentOrder === "desc"}
         onClick={() => handleClickOrderBy("desc")}
       >
-        < IconSortDescending size="17" /> Desc
+        < TbSortDescending size="17" /> Desc
       </a>
       <a
         data-active={currentOrder === "asc"}
         onClick={() => handleClickOrderBy("asc")}
       >
-        < IconSortAscending size="17" /> Asc
+        < TbSortAscending size="17" /> Asc
       </a>
     </StyledWrapper>
   )

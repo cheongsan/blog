@@ -2,7 +2,7 @@ import styled from "@emotion/styled"
 import { useRouter } from "next/router"
 import React from "react"
 import { CardLinkALT } from "src/components/CardLinkALT"
-import { IconChevronLeft, IconArrowUp } from "@tabler/icons-react"
+import { TbChevronLeft, TbArrowUp } from "react-icons/tb"
 
 type Props = {}
 
@@ -11,10 +11,10 @@ const Footer: React.FC<Props> = () => {
   return (
     <StyledWrapper>
       <CardLinkALT onClick={() => router.push("/")}>
-        <IconChevronLeft />&nbsp;Back
+        <TbChevronLeft />&nbsp;Back
         </CardLinkALT>
       <CardLinkALT onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
-        <IconArrowUp />&nbsp;Back to Up
+        <TbArrowUp />&nbsp;Back to Up
       </CardLinkALT>
     </StyledWrapper>
   )

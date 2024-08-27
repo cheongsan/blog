@@ -1,11 +1,11 @@
 import styled from "@emotion/styled"
 import Link from "next/link"
-import { IconInbox, IconUserCircle } from '@tabler/icons-react';
+import { TbInbox, TbUserCircle } from 'react-icons/tb';
 
 const NavBar: React.FC = () => {
   const links = [
-    { id: 1, name: < IconInbox size="33" />, to: "/archive", title: "Archive" },
-    { id: 2, name: < IconUserCircle size="33" />, to: "/about", title: "Profile" }
+    { id: 1, name: < TbInbox size="33" />, to: "/archive", title: "Archive" },
+    { id: 2, name: < TbUserCircle size="33" />, to: "/about", title: "Profile" }
   ]
   return (
     <StyledWrapper className="">

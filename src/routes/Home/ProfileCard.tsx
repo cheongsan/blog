@@ -1,9 +1,9 @@
 import styled from "@emotion/styled"
 import React from "react"
-import Gravatar from 'src/components/Gravatar';
 import { CONFIG } from "site.config"
+import Gravatar from 'src/components/Gravatar';
 import { CardHotLink } from "src/components/CardHotLink"
-import { IconBrandGravatar } from "@tabler/icons-react"
+import { TbBrandGravatar } from "react-icons/tb"
 import ContactCard from "./ContactCard"
 
 type Props = {}
@@ -24,7 +24,7 @@ const ProfileCard: React.FC<Props> = () => {
                   href={`https://www.gravatar.com/${CONFIG.profile.gravatar}`}
                   target="_blank"
                 >
-                  <IconBrandGravatar color="gray" size={15} />
+                  <TbBrandGravatar color="gray" size={15} />
                   &nbsp;View on Gravatar
                 </CardHotLink>
               </div>

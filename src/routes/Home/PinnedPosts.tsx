@@ -4,7 +4,7 @@ import styled from "@emotion/styled"
 import PostCard from "./PostCard"
 import { DEFAULT_CATEGORY } from "src/constants"
 import usePostsQuery from "src/hooks/usePostsQuery"
-import { IconPin } from "@tabler/icons-react"
+import { TbPin } from "react-icons/tb"
 
 type Props = {
   q?: string
@@ -39,7 +39,7 @@ const PinnedPosts: React.FC<Props> = ({ q }) => {
     <>
       <StyledWrapper className="my-2">
         <StyledTitle>
-          < IconPin size="24" /> {filteredPosts.length > 1 ? "Pinned Posts" : "Pinned Post"}
+          < TbPin size="24" /> {filteredPosts.length > 1 ? "Pinned Posts" : "Pinned Post"}
         </StyledTitle>
         {!filteredPosts.length && (
           <p className="text-gray-500 dark:text-gray-300">Nothing! 😺</p>

@@ -1,7 +1,7 @@
 import styled from "@emotion/styled"
 import { useRouter } from "next/router"
 import React from "react"
-import { IconTags } from "@tabler/icons-react"
+import { TbTags } from "react-icons/tb"
 import { useTagsQuery } from "src/hooks/useTagsQuery"
 
 type Props = {}
@@ -35,7 +35,7 @@ const TagList: React.FC<Props> = () => {
   return (
     <StyledWrapper>
       <div className="top">
-        < IconTags size="23" /> Tags
+        < TbTags size="23" /> Tags
       </div>
       <div className="list">
         {Object.keys(data).map((key) => (

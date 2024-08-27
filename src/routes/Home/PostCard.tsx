@@ -6,7 +6,7 @@ import { TPost } from "../../types"
 import Image from "next/image"
 import Category from "../../components/Category"
 import styled from "@emotion/styled"
-import { IconChevronRight } from "@tabler/icons-react"
+import { TbChevronRight } from "react-icons/tb"
 
 type Props = {
   data: TPost
@@ -56,7 +56,7 @@ const PostCard: React.FC<Props> = ({ data }) => {
           </div>
         </div>
         <div className="read-more ms-auto">
-            <IconChevronRight size="30" />
+            <TbChevronRight size="30" />
           </div>
       </article>
     </StyledWrapper>
