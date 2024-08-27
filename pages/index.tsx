@@ -1,13 +1,13 @@
 import Home from "routes/Home"
 import { CONFIG } from "../site.config"
 import { NextPageWithLayout } from "../types"
-import { getPosts } from "../libs/apis"
+import { getPosts } from "../lib/apis"
 import MetaConfig from "components/MetaConfig"
-import { queryClient } from "libs/react-query"
+import { queryClient } from "lib/react-query"
 import { queryKey } from "constants/queryKey"
 import { GetStaticProps } from "next"
 import { dehydrate } from "@tanstack/react-query"
-import { filterPosts } from "libs/utils/notion"
+import { filterPosts } from "lib/utils/notion"
 
 export const getStaticProps: GetStaticProps = async () => {
   const posts = filterPosts(await getPosts())

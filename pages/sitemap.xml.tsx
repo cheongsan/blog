@@ -1,4 +1,4 @@
-import { getPosts } from "../libs/apis/notion-client/getPosts"
+import { getPosts } from "../lib/apis/notion-client/getPosts"
 import { CONFIG } from "site.config"
 import { getServerSideSitemap, ISitemapField } from "next-sitemap"
 import { GetServerSideProps } from "next"

@@ -3,7 +3,7 @@ import { Hydrate, QueryClientProvider } from "@tanstack/react-query"
 import { RootLayout } from "layouts"
 import 'bootstrap/dist/css/bootstrap-grid.min.css';
 import "styles/global.css";
-import { queryClient } from "libs/react-query"
+import { queryClient } from "lib/react-query"
 
 function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout || ((page) => page)
