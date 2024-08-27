@@ -1,26 +1,26 @@
 import React from "react"
 import {
-  IconFolderOpen,
-  IconBook2,
-  IconSeeding,
-  IconCloud,
-  IconServerBolt,
-  IconDeviceDesktop,
-  IconFileZip,
-  IconCpu,
-  IconChartHistogram,
-  IconSpeakerphone
-} from "@tabler/icons-react"
+  TbFolderOpen,
+  TbBook2,
+  TbSeeding,
+  TbCloud,
+  TbServerBolt,
+  TbDeviceDesktop,
+  TbFileZip,
+  TbCpu,
+  TbChartHistogram,
+  TbSpeakerphone
+} from "react-icons/tb"
 
 export const emojiIconMap: { [key: string]: React.ElementType } = {
-  "📂": IconFolderOpen,
-  "📕": IconBook2,
-  "😎": IconSeeding,
-  "☁": IconCloud,
-  "💾": IconServerBolt,
-  "🖥": IconDeviceDesktop,
-  "📑": IconFileZip,
-  "💡": IconCpu,
-  "📊": IconChartHistogram,
-  "📢": IconSpeakerphone
+  "📂": TbFolderOpen,
+  "📕": TbBook2,
+  "😎": TbSeeding,
+  "☁": TbCloud,
+  "💾": TbServerBolt,
+  "🖥": TbDeviceDesktop,
+  "📑": TbFileZip,
+  "💡": TbCpu,
+  "📊": TbChartHistogram,
+  "📢": TbSpeakerphone
 }

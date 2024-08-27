@@ -3,26 +3,26 @@ import React from "react"
 import { AiFillCodeSandboxCircle } from "react-icons/ai"
 import styled from "@emotion/styled"
 import { CardLink } from "src/components/CardLink"
-import { Icon3dCubeSphere } from "@tabler/icons-react"
+import { Tb3DCubeSphere } from "react-icons/tb"
 
 const ServiceCard: React.FC = () => {
   if (!CONFIG.projects) return null
   return (
     <>
       <StyledWrapper className="card">
-      <StyledTitle>
-        < Icon3dCubeSphere size="24" /> {CONFIG.projects.length > 1 ? "Projects" : "Project"}
-      </StyledTitle>
-        {CONFIG.projects.map((project, idx) => (
-          <CardLink
-            key={idx}
-            href={`${project.href}`}
-            rel="noreferrer"
-          >
-            <AiFillCodeSandboxCircle className="icon" />
-            <div className="name">{project.name}</div>
-          </CardLink>
-        ))}
+        <StyledTitle>
+          < Tb3DCubeSphere size="24" /> {CONFIG.projects.length > 1 ? "Projects" : "Project"}
+        </StyledTitle>
+          {CONFIG.projects.map((project, idx) => (
+            <CardLink
+              key={idx}
+              href={`${project.href}`}
+              rel="noreferrer"
+            >
+              <AiFillCodeSandboxCircle className="icon" />
+              <div className="name">{project.name}</div>
+            </CardLink>
+          ))}
       </StyledWrapper>
     </>
   )

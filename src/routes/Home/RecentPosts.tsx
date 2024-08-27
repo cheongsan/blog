@@ -5,7 +5,7 @@ import PostCard from "./PostCard"
 import { DEFAULT_CATEGORY } from "src/constants"
 import usePostsQuery from "src/hooks/usePostsQuery"
 import { CardLink } from "src/components/CardLink"
-import { IconChevronRight, IconRotateClockwise2 } from "@tabler/icons-react"
+import { TbChevronRight, TbRotateClockwise2 } from "react-icons/tb"
 
 type Props = {
   q?: string
@@ -36,7 +36,7 @@ const RecentPosts: React.FC<Props> = ({ q }) => {
     <>
       <StyledWrapper className="my-2">
         <StyledTitle>
-          < IconRotateClockwise2 size="24" /> {filteredPosts.length > 1 ? "Recent Posts" : "Recent Post"}
+          < TbRotateClockwise2 size="24" /> {filteredPosts.length > 1 ? "Recent Posts" : "Recent Post"}
         </StyledTitle>
         {!filteredPosts.length && (
           <p className="text-gray-500 dark:text-gray-300">Nothing! 😺</p>
@@ -47,7 +47,7 @@ const RecentPosts: React.FC<Props> = ({ q }) => {
         <hr />
         <CardLink href="/archive" className="d-flex justify-content-center">
           <div className="archive-link d-flex align-items-center">
-            View Archive&nbsp;<IconChevronRight size="30" />
+            View Archive&nbsp;<TbChevronRight size="30" />
           </div>
         </CardLink>
       </StyledWrapper>

@@ -1,6 +1,6 @@
 import styled from "@emotion/styled"
 import React from "react"
-import { IconMoon, IconSun } from '@tabler/icons-react';
+import { TbMoon, TbSun } from 'react-icons/tb';
 import useScheme from "src/hooks/useScheme"
 
 type Props = {}
@@ -14,7 +14,7 @@ const ThemeToggle: React.FC<Props> = () => {
 
   return (
     <StyledWrapper onClick={handleClick}>
-      {scheme === "light" ? <IconSun /> : <IconMoon />}
+      {scheme === "light" ? <TbSun /> : <TbMoon />}
     </StyledWrapper>
   )
 }

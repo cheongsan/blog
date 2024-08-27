@@ -1,6 +1,6 @@
 import styled from "@emotion/styled"
 import React, { InputHTMLAttributes, ReactNode } from "react"
-import { IconSearch } from "@tabler/icons-react"
+import { TbSearch } from "react-icons/tb"
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {}
 
@@ -8,7 +8,7 @@ const SearchInput: React.FC<Props> = ({ ...props }) => {
   return (
     <StyledWrapper>
       <div className="top">
-        < IconSearch size="23" /> Search
+        < TbSearch size="23" /> Search
       </div>
       <input
         className="mid"
