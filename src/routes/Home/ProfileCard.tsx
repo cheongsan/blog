@@ -1,10 +1,12 @@
 import styled from "@emotion/styled"
 import React from "react"
 import { CONFIG } from "site.config"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "src/components/ui/tabs"
 import Gravatar from 'src/components/Gravatar';
 import { CardHotLink } from "src/components/CardHotLink"
 import { TbBrandGravatar } from "react-icons/tb"
 import ContactCard from "./ContactCard"
+import ContributionsCard from "./ContributionsCard";
 
 type Props = {}
 
@@ -30,7 +32,18 @@ const ProfileCard: React.FC<Props> = () => {
               </div>
             </div>
             <div className="role">{CONFIG.profile.role}</div>
-            <ContactCard />
+            <Tabs defaultValue="contact" className="w-100">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="contact">Contact</TabsTrigger>
+                <TabsTrigger value="contribution">Contribution</TabsTrigger>
+              </TabsList>
+              <TabsContent value="contact">
+                <ContactCard />
+              </TabsContent>
+              <TabsContent value="contribution" style={{ maxWidth: "500px" }}>
+                <ContributionsCard />
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
       </div>
