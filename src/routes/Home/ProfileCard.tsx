@@ -1,6 +1,6 @@
 import styled from "@emotion/styled"
 import React from "react"
-import Gravatar from "react-gravatar"
+import Gravatar from 'src/components/Gravatar';
 import { CONFIG } from "site.config"
 import { CardHotLink } from "src/components/CardHotLink"
 import { IconBrandGravatar } from "@tabler/icons-react"
@@ -14,16 +14,18 @@ const ProfileCard: React.FC<Props> = () => {
       <div className="content">
         <div className="row">
           <div className="col-12 col-md-5 col-lg-4 col-xl-3 top">
-            <Gravatar email={CONFIG.profile.gravatar_email} size={150} rating="pg" default="identicon" alt="Gravatar Profile"/>
+            <Gravatar size={150}/>
           </div>
           <div className="col-12 col-md-7 col-lg-8 col-xl-9 mid">
             <div className="name row">
-              <div className="col-12 col-lg-7">
-                {CONFIG.profile.name}
-              </div>
+              <div className="col-12 col-lg-7">{CONFIG.profile.name}</div>
               <div className="col-12 col-lg-5">
-                <CardHotLink href={`https://www.gravatar.com/${CONFIG.profile.gravatar}`} target="_blank">
-                  <IconBrandGravatar color="gray" size={15} />&nbsp;View on Gravatar
+                <CardHotLink
+                  href={`https://www.gravatar.com/${CONFIG.profile.gravatar}`}
+                  target="_blank"
+                >
+                  <IconBrandGravatar color="gray" size={15} />
+                  &nbsp;View on Gravatar
                 </CardHotLink>
               </div>
             </div>
