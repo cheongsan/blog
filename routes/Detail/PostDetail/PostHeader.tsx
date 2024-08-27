@@ -1,7 +1,7 @@
 import { CONFIG } from "site.config"
 import Tag from "components/Tag"
 import { TPost } from "types"
-import { formatDate } from "libs/utils"
+import { formatDate } from "lib/utils"
 import Image from "next/image"
 import Gravatar from 'components/Gravatar';
 import React from "react"
