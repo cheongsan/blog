@@ -1,10 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { CONFIG } from "site.config";
+import { CONFIG } from 'site.config';
+
+interface ContributionDay {
+  date: string | null;
+  contributionCount: number;
+  color: string;
+}
+
+interface Contributions {
+  github: ContributionDay[][];
+  gitlab: ContributionDay[][];
+  bitbucket: ContributionDay[][];
+}
 
 export default function Home() {
-  const [contributions, setContributions] = useState({ github: [], gitlab: [], bitbucket: [] });
-  const [filteredContributions, setFilteredContributions] = useState([]);
-  const [filter, setFilter] = useState('all');
+  const [contributions, setContributions] = useState<Contributions>({
+    github: [],
+    gitlab: [],
+    bitbucket: [],
+  });
+
+  const [filteredContributions, setFilteredContributions] = useState<ContributionDay[][]>([]);
+  const [filter, setFilter] = useState<string>('all');
 
   useEffect(() => {
     const fetchContributions = async () => {
@@ -17,10 +34,10 @@ export default function Home() {
         const gitlabData = await gitlabRes.json();
         const bitbucketData = await bitbucketRes.json();
 
-        const allContributions = {
+        const allContributions: Contributions = {
           github: Array.isArray(githubData) ? parseGitHubData(githubData) : [],
           gitlab: Array.isArray(gitlabData) ? parseGitLabData(gitlabData) : [],
-          bitbucket: bitbucketData.values ? parseBitbucketData(bitbucketData) : [],
+          bitbucket: bitbucketData.values ? parseBitbucketData(bitbucketData.values) : [],
         };
 
         setContributions(allContributions);
@@ -37,11 +54,11 @@ export default function Home() {
     if (filter === 'all') {
       setFilteredContributions(combineContributions(contributions));
     } else {
-      setFilteredContributions(contributions[filter] || []);
+      setFilteredContributions(contributions[filter as keyof Contributions] || []);
     }
   }, [filter, contributions]);
 
-  const handleFilterChange = (event) => {
+  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(event.target.value);
   };
 
@@ -121,9 +138,9 @@ export default function Home() {
 }
 
 // 각 플랫폼에서 가져온 데이터를 일관된 형식으로 변환하는 함수들
-function parseGitHubData(data) {
-  return data.map((week) =>
-    week.contributionDays.map((day) => ({
+function parseGitHubData(data: any): ContributionDay[][] {
+  return data.map((week: any) =>
+    week.contributionDays.map((day: any) => ({
       date: day.date,
       contributionCount: day.contributionCount,
       color: day.color,
@@ -131,9 +148,9 @@ function parseGitHubData(data) {
   );
 }
 
-function parseGitLabData(data) {
+function parseGitLabData(data: any): ContributionDay[][] {
   const contributions = Array.from({ length: 53 }, () => Array(7).fill({ date: null, contributionCount: 0, color: '#ebedf0' }));
-  data.forEach((event) => {
+  data.forEach((event: any) => {
     const date = event.created_at.split('T')[0];
     const dayOfWeek = new Date(date).getDay();
     const weekNumber = getWeekNumber(new Date(date));
@@ -147,9 +164,9 @@ function parseGitLabData(data) {
   return contributions;
 }
 
-function parseBitbucketData(data) {
+function parseBitbucketData(data: any): ContributionDay[][] {
   const contributions = Array.from({ length: 53 }, () => Array(7).fill({ date: null, contributionCount: 0, color: '#ebedf0' }));
-  data.forEach((commit) => {
+  data.forEach((commit: any) => {
     const date = commit.date.split('T')[0];
     const dayOfWeek = new Date(date).getDay();
     const weekNumber = getWeekNumber(new Date(date));
@@ -164,11 +181,11 @@ function parseBitbucketData(data) {
 }
 
 // 각 플랫폼의 기여도를 병합하는 함수
-function combineContributions(contributions) {
+function combineContributions(contributions: Contributions): ContributionDay[][] {
   const combined = Array.from({ length: 53 }, () => Array(7).fill({ date: null, contributionCount: 0, color: '#ebedf0' }));
   ['github', 'gitlab', 'bitbucket'].forEach((platform) => {
-    if (contributions[platform]) {
-      contributions[platform].forEach((week, weekIndex) => {
+    if (contributions[platform as keyof Contributions]) {
+      contributions[platform as keyof Contributions].forEach((week, weekIndex) => {
         week.forEach((day, dayIndex) => {
           if (day.contributionCount > 0) {
             combined[weekIndex][dayIndex].contributionCount += day.contributionCount;
@@ -183,8 +200,8 @@ function combineContributions(contributions) {
 }
 
 // 주 번호를 계산하는 함수
-function getWeekNumber(date) {
+function getWeekNumber(date: Date): number {
   const startOfYear = new Date(date.getFullYear(), 0, 1);
-  const pastDaysOfYear = (date - startOfYear) / 86400000;
+  const pastDaysOfYear = (date.getTime() - startOfYear.getTime()) / 86400000;
   return Math.floor((pastDaysOfYear + startOfYear.getDay() + 1) / 7);
 }
