@@ -21,7 +21,7 @@ const PostHeader: React.FC<Props> = ({ data }) => {
             {data.author && data.author[0] && data.author[0].name && (
               <>
                 <div className="author">
-                  <Gravatar email={CONFIG.profile.gravatar} size={24} rating="pg" default="identicon" />
+                  <Gravatar email={CONFIG.profile.gravatar_email} size={24} rating="pg" default="identicon" alt="Gravatar Profile" />
                   <div className="">{data.author[0].name}</div>
                 </div>
                 <div className="hr"></div>
