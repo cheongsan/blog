@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "@emotion/styled"
-import NotionRenderer from "../components/NotionRenderer"
+import NotionRenderer from "@/components/NotionRenderer"
 import usePostQuery from "hooks/usePostQuery"
 type Props = {}
 

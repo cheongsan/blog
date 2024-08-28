@@ -3,8 +3,8 @@ import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from 'next/router';
 import { ExtendedRecordMap } from "notion-types"
-import useScheme from "hooks/useScheme"
-import { notocoloremoji } from "assets"
+import useScheme from "@/hooks/useScheme"
+import { notocoloremoji } from "@/assets"
 
 // core styles shared by all of react-notion-x (required)
 import "react-notion-x/src/styles.css"
