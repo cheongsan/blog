@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { CONFIG } from 'site.config';
+import { CONFIG } from '@/site.config';
 
-import { ScrollArea, ScrollBar } from "components/ui/scroll-area"
-import { Skeleton } from "components/ui/skeleton"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { Skeleton } from "@/components/ui/skeleton"
 
 interface ContributionDay {
   date: string | null;

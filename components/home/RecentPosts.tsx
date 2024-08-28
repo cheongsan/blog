@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react"
 import styled from "@emotion/styled"
 import PostCard from "./PostCard"
 import { DEFAULT_CATEGORY } from "@/constants"
-import usePostsQuery from "hooks/usePostsQuery"
-import { CardLink } from "components/CardLink"
+import usePostsQuery from "@/hooks/usePostsQuery"
+import { CardLink } from "@/components/CardLink"
 import { TbChevronRight, TbRotateClockwise2 } from "react-icons/tb"
 
 type Props = {

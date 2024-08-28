@@ -1,9 +1,9 @@
 import styled from "@emotion/styled"
 import React from "react"
-import { CONFIG } from "site.config"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs"
-import Gravatar from 'components/Gravatar';
-import { CardHotLink } from "components/CardHotLink"
+import { CONFIG } from "@/site.config"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Gravatar from '@/components/Gravatar';
+import { CardHotLink } from "@/components/CardHotLink"
 import { TbBrandGravatar } from "react-icons/tb"
 import ContactCard from "./ContactCard"
 import ContributionsCard from "./ContributionsCard";
