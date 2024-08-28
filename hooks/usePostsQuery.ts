@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { queryKey } from "constants/queryKey"
+import { queryKey } from "@/constants"
 import { TPost } from "types"
 
 const usePostsQuery = () => {

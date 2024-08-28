@@ -2,7 +2,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { getCookie, setCookie } from "cookies-next"
 import { useEffect } from "react"
 import { CONFIG } from "site.config"
-import { queryKey } from "constants/queryKey"
+import { queryKey } from "@/constants"
 import { SchemeType } from "types"
 
 type SetScheme = (scheme: SchemeType) => void
