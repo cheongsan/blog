@@ -6,8 +6,8 @@ import {
   AiOutlineInstagram,
   AiOutlineMail,
 } from "react-icons/ai"
-import { CONFIG } from "site.config"
-import { CardLink } from "components/CardLink"
+import { CONFIG } from "@/site.config"
+import { CardLink } from "@/components/CardLink"
 
 const ContactCard: React.FC = () => {
   return (

@@ -1,10 +1,10 @@
 import { useState } from "react"
 
 import styled from "@emotion/styled"
-import ProfileCard from "./ProfileCard"
-import ServiceCard from "./ServiceCard"
-import RecentPosts from "./RecentPosts"
-import PinnedPosts from "./PinnedPosts"
+import ProfileCard from "@/components/home/ProfileCard"
+import ServiceCard from "@/components/home/ServiceCard"
+import RecentPosts from "@/components/home/RecentPosts"
+import PinnedPosts from "@/components/home/PinnedPosts"
 
 const HEADER_HEIGHT = 73
 

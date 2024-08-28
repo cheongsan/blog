@@ -1,4 +1,4 @@
-import Home from "routes/Home"
+import Home from "@/pages/home"
 import { CONFIG } from "../site.config"
 import { NextPageWithLayout } from "../types"
 import { getPosts } from "../lib/apis"

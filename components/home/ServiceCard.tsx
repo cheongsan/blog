@@ -1,8 +1,8 @@
-import { CONFIG } from "site.config"
+import { CONFIG } from "@/site.config"
 import React from "react"
 import { AiFillCodeSandboxCircle } from "react-icons/ai"
 import styled from "@emotion/styled"
-import { CardLink } from "components/CardLink"
+import { CardLink } from "@/components/CardLink"
 import { Tb3DCubeSphere } from "react-icons/tb"
 
 const ServiceCard: React.FC = () => {
