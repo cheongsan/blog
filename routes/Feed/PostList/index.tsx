@@ -1,6 +1,7 @@
 import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
 import PostCard from "routes/Feed/PostList/PostCard"
+import { DEFAULT_CATEGORY } from "@/constants"
 import usePostsQuery from "hooks/usePostsQuery"
 
 type Props = {
@@ -10,7 +11,7 @@ type Props = {
 const PostList: React.FC<Props> = ({ q }) => {
   const router = useRouter()
   const data = usePostsQuery()
-  const DEFAULT_CATEGORY = "📂 All" as string
+
   const [filteredPosts, setFilteredPosts] = useState(data)
 
   const currentTag = `${router.query.tag || ``}` || undefined
