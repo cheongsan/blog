@@ -35,7 +35,7 @@ const StyledTitle = styled.h3`
     padding-top: 0.95rem;
     padding-left: 0.75rem;
     margin-bottom: 0.75rem;
-    color: ${({ theme }) => theme.colors.gray11};
+    color: var(--gray-11);
     >svg{
         margin-right: 0.5rem;
     }
@@ -47,18 +47,18 @@ const StyledWrapper = styled.div`
   margin-bottom: 2.25rem;
   flex-direction: column;
   border-radius: 1rem;
-  background-color: ${({ theme }) => theme.colors.card};
+  background-color: var(--card);
   > a {
     display: flex;
     padding: 0.75rem;
     gap: 0.75rem;
     align-items: center;
     border-radius: 1rem;
-    color: ${({ theme }) => theme.colors.gray11};
+    color: var(--gray-11);
     cursor: pointer;
 
     :hover {
-      color: ${({ theme }) => theme.colors.gray12};
+      color: var(--gray-12);
     }
     .icon {
       font-size: 1.5rem;

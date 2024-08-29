@@ -48,12 +48,12 @@ const StyledWrapper = styled.div`
   a {
     display: flex;  
     cursor: pointer;
-    color: ${({ theme }) => theme.colors.gray10};
+    color: var(--gray-10);
 
     &[data-active="true"] {
       font-weight: 700;
 
-      color: ${({ theme }) => theme.colors.gray12};
+      color: var(--gray-12);
     }
   }
 `

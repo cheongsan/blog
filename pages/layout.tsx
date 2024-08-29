@@ -1,11 +1,11 @@
 import React, { ReactNode, useEffect } from "react"
-import { ThemeProvider } from "./ThemeProvider"
-import useScheme from "hooks/useScheme"
-import Header from "./Header"
-import Footer from "./Footer"
+import { ThemeProvider } from "@/components/layout/ThemeProvider"
+import useScheme from "@/hooks/useScheme"
+import Header from "@/components/layout/header"
+import Footer from "@/components/layout/footer"
 import styled from "@emotion/styled"
-import Scripts from "layouts/RootLayout/Scripts"
-import useGtagEffect from "./useGtagEffect"
+import Scripts from "@/components/layout/Scripts"
+import useGtagEffect from "../hooks/useGtagEffect"
 import Prism from "prismjs/prism"
 import 'prismjs/components/prism-markup-templating.js'
 import 'prismjs/components/prism-markup.js'
@@ -54,7 +54,12 @@ const RootLayout = ({ children }: Props) => {
   }, []);
 
   return (
-    <ThemeProvider scheme={scheme}>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
       <Scripts />
       {/* // TODO: replace react query */}
       {/* {metaConfig.type !== "Paper" && <Header />} */}

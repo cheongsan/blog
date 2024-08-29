@@ -31,14 +31,14 @@ const StyledWrapper = styled.div`
       display: block;
       padding: 0.5rem;
       margin-left: 1rem;
-      color: ${({ theme }) => theme.colors.nav_item};
+      color: var(--nav-item);
       border-radius: 0.75rem;
       transition-property: scale;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
       transition-duration: 300ms;
       &:hover {
         scale: 0.9;
-        background-color: ${({ theme }) => theme.colors.card_link_click};
+        background-color: var(--card-link-click);
       }
     }
   }

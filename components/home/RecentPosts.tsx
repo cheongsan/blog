@@ -61,7 +61,7 @@ const StyledTitle = styled.h3`
     display: flex;
     padding: 0.25rem;
     margin-bottom: 0.75rem;
-    color: ${({ theme }) => theme.colors.gray11};
+    color: var(--gray-11);
     >svg{
         margin-right: 0.5rem;
     }
@@ -72,13 +72,13 @@ const StyledWrapper = styled.div`
   padding: 1rem;
   border-radius: 1rem;
   width: 100%;
-  background-color: ${({ theme }) => theme.colors.card};
+  background-color: var(--card);
 
   >.card-link {
     margin: 0.75rem auto;
     padding: 0.5rem;
     text-align: center;
-    color: ${({ theme }) => theme.colors.gray10};
+    color: var(--gray-10);
     border-radius: 0.95rem;
   }
 `

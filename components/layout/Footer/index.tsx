@@ -1,9 +1,8 @@
 import Copyright from "./Copyright"
 import ThemeToggle from "./ThemeToggle"
 import styled from "@emotion/styled"
-import { zIndexes } from "styles/zIndexes"
+import { zIndexes } from "@/styles/zIndexes"
 import React from "react"
-import { CONFIG } from "../../../site.config"
 
 type Props = {
   fullWidth: boolean
@@ -41,7 +40,7 @@ const StyledWrapper = styled.footer`
 z-index: ${zIndexes.header};
     position: sticky;
     top: 0;
-    background-color: ${({ theme }) => theme.colors.nav};
+    background-color: var(--nav);
   backdrop-filter: saturate(180%) blur(20px);
 
   .container {
@@ -70,7 +69,7 @@ z-index: ${zIndexes.header};
           margin-top: 0.75rem;
           font-size: 0.875rem;
           line-height: 1.25rem;
-          color: ${({ theme }) => theme.colors.gray10};
+          color: var(--gray-10);
           >a{
               text-decoration: inherit;
               border-bottom: .05em solid;

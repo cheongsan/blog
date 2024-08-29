@@ -45,7 +45,7 @@ const StyledWrapper = styled.div`
     > .text {
       font-size: 1.875rem;
       line-height: 2.25rem;
-      color: ${({ theme }) => theme.colors.gray11};
+      color: var(--gray-11);
     }
   }
 `
