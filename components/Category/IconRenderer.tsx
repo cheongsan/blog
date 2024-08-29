@@ -1,5 +1,5 @@
 import React from "react"
-import { emojiIconMap } from "./emojiIconMap"
+import { emojiIconMap } from "@/components/category/emojiIconMap"
 
 interface IconRendererProps {
   category: string

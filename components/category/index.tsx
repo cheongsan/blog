@@ -3,7 +3,7 @@ import React from "react"
 import { COLOR_SET } from "./constants"
 import styled from "@emotion/styled"
 import { colors } from "styles"
-import IconRenderer from "components/Category/IconRenderer"
+import IconRenderer from "components/category/IconRenderer"
 
 export const getColorClassByName = (name: string): string => {
   try {
