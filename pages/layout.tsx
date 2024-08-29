@@ -1,11 +1,11 @@
 import React, { ReactNode, useEffect } from "react"
 import { ThemeProvider } from "@/components/layout/ThemeProvider"
-import useScheme from "@/hooks/useScheme"
+import useScheme from "@/lib/useScheme"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import styled from "@emotion/styled"
 import Scripts from "@/components/layout/Scripts"
-import useGtagEffect from "../hooks/useGtagEffect"
+import useGtagEffect from "../lib/useGtagEffect"
 import Prism from "prismjs/prism"
 import 'prismjs/components/prism-markup-templating.js'
 import 'prismjs/components/prism-markup.js'
