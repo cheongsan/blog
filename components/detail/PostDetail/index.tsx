@@ -4,7 +4,7 @@ import Footer from "./PostFooter"
 import CommentBox from "./CommentBox"
 import Category from "@/components/category"
 import styled from "@emotion/styled"
-import NotionRenderer from "@/components/NotionRenderer"
+import NotionRenderer from "lib/notion-renderer"
 import usePostQuery from "@/lib/usePostQuery"
 
 const commonStyles = `

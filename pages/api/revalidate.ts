@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import { getPosts } from "../../lib/apis"
+import { getPosts } from "lib/notion-client"
 
 // for all path revalidate, https://<your-site.com>/api/revalidate?secret=<token>
 // for specific path revalidate, https://<your-site.com>/api/revalidate?secret=<token>&path=<path>
