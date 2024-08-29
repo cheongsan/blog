@@ -1,4 +1,4 @@
-import Feed from "routes/Feed"
+import Feed from "components/feed"
 import { CONFIG } from "site.config"
 import { NextPageWithLayout } from "types"
 import { getPosts } from "lib/apis"

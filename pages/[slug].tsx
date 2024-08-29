@@ -1,4 +1,4 @@
-import Detail from "routes/Detail"
+import Detail from "components/detail"
 import { filterPosts } from "lib/utils/notion"
 import { CONFIG } from "site.config"
 import { NextPageWithLayout } from "../types"

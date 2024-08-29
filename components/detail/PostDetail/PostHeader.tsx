@@ -1,9 +1,9 @@
-import { CONFIG } from "site.config"
-import Tag from "components/Tag"
-import { TPost } from "types"
-import { formatDate } from "lib/utils"
+import { CONFIG } from "@/site.config"
+import Tag from "@/components/Tag"
+import { TPost } from "@/types"
+import { formatDate } from "@/lib/utils"
 import Image from "next/image"
-import Gravatar from 'components/Gravatar';
+import Gravatar from '@/components/Gravatar';
 import React from "react"
 import styled from "@emotion/styled"
 

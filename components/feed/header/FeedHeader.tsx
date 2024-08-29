@@ -1,4 +1,4 @@
-import { TCategories } from "types"
+import { TCategories } from "@/types"
 import React from "react"
 import CategorySelect from "./CategorySelect"
 import OrderButtons from "./OrderButtons"
