@@ -1,10 +1,10 @@
 import Link from "next/link"
 import { CONFIG } from "site.config"
+import { TPost } from "types"
 import { formatDate } from "lib/utils"
-import Tag from "../../../components/Tag"
-import { TPost } from "../../../types"
 import Image from "next/image"
-import Category from "../../../components/Category"
+import Tag from "@/components/Tag"
+import Category from "@/components/category"
 import styled from "@emotion/styled"
 
 type Props = {
