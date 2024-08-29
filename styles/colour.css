@@ -12,7 +12,7 @@
     --card-link-alt-click: hsl(220, 14%, 87%);
 }
 
-[data-theme='dark'] {
+.dark {
     --body: hsl(240, 6%, 10%);
     --nav: hsl(240, 6%, 10%, 0.87);
     --nav-logo: hsl(240, 4%, 40%);
