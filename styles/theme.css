@@ -20,7 +20,6 @@ body {
 }
 
 * {
-  color-scheme: var(--scheme);
   box-sizing: border-box;
 }
 
