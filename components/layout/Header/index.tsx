@@ -23,33 +23,34 @@ const Header: React.FC<Props> = ({ fullWidth }) => {
 export default Header
 
 const StyledWrapper = styled.header`
-  z-index: ${zIndexes.header};
-  position: sticky;
-  top: 0;
-  background-color: var(--nav);
-  backdrop-filter: saturate(180%) blur(20px);
+    z-index: ${zIndexes.header};
+    position: sticky;
+    top: 0;
+    background-color: var(--nav);
+    backdrop-filter: saturate(180%) blur(20px);
 
-  .container {
-    display: flex;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    max-width: 1120px;
-    line-height: 1rem;
-    margin: 0 auto;
-    font-size: 1.3rem;
-    &[data-full-width="true"] {
-      @media (min-width: 768px) {
-        padding-left: 6rem;
-        padding-right: 6rem;
-      }
+    .container {
+        display: flex;
+        padding: 1.33rem 1.5rem;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 1120px;
+        line-height: 1rem;
+        margin: 0 auto;
+        font-size: 1.3rem;
+
+        &[data-full-width="true"] {
+            @media (min-width: 768px) {
+                padding-left: 6rem;
+                padding-right: 6rem;
+            }
+        }
+
+        .nav {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
     }
-    .nav {
-      display: flex;
-      gap: 0.75rem;
-      align-items: center;
-    }
-  }
 `
