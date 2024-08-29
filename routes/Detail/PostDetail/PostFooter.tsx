@@ -26,13 +26,13 @@ const StyledWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   font-weight: 500;
-  color: ${({ theme }) => theme.colors.gray10};
+  color: var(--gray-10);
   a {
     margin-top: 0.5rem;
     cursor: pointer;
 
     :hover {
-      color: ${({ theme }) => theme.colors.gray12};
+      color: var(--gray-12);
     }
   }
 `

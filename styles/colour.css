@@ -1,0 +1,75 @@
+:root {
+    --body: hsl(210, 18%, 96%);
+    --nav: hsl(210, 18%, 96%, 0.8);
+    --nav-logo: hsl(217, 9%, 72%);
+    --nav-item: hsl(216, 10%, 72%);
+    --card: white;
+    --card-click: hsl(210, 8%, 95%);
+    --card-link: hsl(210, 18%, 96%);
+    --card-link-click: hsl(220, 14%, 91%);
+    --card-read-more: hsl(214, 10%, 72%);
+    --card-link-alt: hsl(214, 16%, 91%);
+    --card-link-alt-click: hsl(220, 14%, 87%);
+}
+
+[data-theme='dark'] {
+    --body: hsl(240, 6%, 10%);
+    --nav: hsl(240, 6%, 10%, 0.87);
+    --nav-logo: hsl(240, 4%, 40%);
+    --nav-item: hsl(240, 5%, 40%);
+    --card: hsl(240, 6%, 12%);
+    --card-click: hsl(240, 8%, 16%);
+    --card-link: hsl(240, 7%, 20%);
+    --card-link-click: hsl(240, 8%, 23%);
+    --card-read-more: hsl(240, 5%, 40%);
+    --card-link-alt: hsl(240, 6%, 12%);
+    --card-link-alt-click: hsl(240, 8%, 16%);
+}
+
+body {
+    background-color: var(--body);
+}
+
+.nav {
+    background-color: var(--nav);
+}
+
+.nav-logo {
+    color: var(--nav-logo);
+}
+
+.nav-item {
+    color: var(--nav-item);
+}
+
+.card {
+    background-color: var(--card);
+}
+
+.card-click {
+    background-color: var(--card-click);
+}
+
+.card-link {
+    background-color: var(--card-link);
+}
+
+.card-link-click {
+    background-color: var(--card-link-click);
+}
+
+.card-read-more {
+    color: var(--card-read-more);
+}
+
+.card-link-alt {
+    background-color: var(--card-link-alt);
+}
+
+.card-link-alt-click {
+    background-color: var(--card-link-alt-click);
+}
+
+.category{
+    color: var(--gray1);
+}

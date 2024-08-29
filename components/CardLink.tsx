@@ -24,14 +24,14 @@ export const CardLink: React.FC<Props> = ({ href, className, rel, target, childr
 
 const StyledWrapper = styled.a`
   &.card-link {
-    background: ${({ theme }) => theme.colors.card}};
+    background: var(--card);
     transition-property: scale;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 300ms;
 
     &:hover {
       scale: 0.97;
-      background-color: ${({ theme }) => theme.colors.card_click}};
+      background-color: var(--card-click);
     }
   }
 `

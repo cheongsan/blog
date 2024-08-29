@@ -1,0 +1,73 @@
+:root {
+  --font-family-redhat: "Red Hat Display", sans-serif; /* Replace with the appropriate font-family */
+  --font-family-notosans: "Noto Sans", sans-serif; /* Replace with the appropriate font-family */
+  --font-family-notocoloremoji: "Noto Color Emoji", sans-serif; /* Replace with the appropriate font-family */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  color: var(--gray-12);
+  font-weight: 500;
+  font-style: normal;
+}
+
+body,
+.notion-list,
+.notion-text,
+.notion-h-title,
+.notion-callout-text {
+  font-family: var(--font-family-redhat), var(--font-family-notosans), var(--font-family-notocoloremoji);
+}
+
+* {
+  color-scheme: var(--scheme);
+  box-sizing: border-box;
+}
+
+h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+  margin: 0;
+  font-weight: inherit;
+  font-style: inherit;
+}
+
+a {
+  all: unset;
+  cursor: pointer;
+}
+
+ul {
+  padding: 0;
+}
+
+button {
+  all: unset;
+  cursor: pointer;
+}
+
+input {
+  all: unset;
+  box-sizing: border-box;
+}
+
+textarea {
+  border: none;
+  background-color: transparent;
+  font-family: inherit;
+  padding: 0;
+  outline: none;
+  resize: none;
+  color: inherit;
+}
+
+hr {
+  width: 100%;
+  border: none;
+  margin: 0;
+  border-top: 1px solid var(--gray-6);
+}

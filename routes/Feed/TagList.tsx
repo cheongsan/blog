@@ -95,19 +95,19 @@ const StyledWrapper = styled.div`
       border-radius: 0.75rem;
       font-size: 0.875rem;
       line-height: 1.25rem;
-      color: ${({ theme }) => theme.colors.gray10};
+      color: var(--gray-10);
       flex-shrink: 0;
       cursor: pointer;
 
       :hover {
-        background-color: ${({ theme }) => theme.colors.card};
+        background-color: var(--card);
       }
       &[data-active="true"] {
-        color: ${({ theme }) => theme.colors.gray12};
-        background-color: ${({ theme }) => theme.colors.card};
+        color: var(--gray-12);
+        background-color: var(--card);
 
         :hover {
-          background-color: ${({ theme }) => theme.colors.card};
+          background-color: var(--card);
         }
       }
     }

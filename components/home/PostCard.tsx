@@ -72,7 +72,7 @@ const StyledWrapper = styled(Link)`
     margin-bottom: 1.5rem;
     flex-wrap: wrap;
     border-radius: 1rem;
-    background-color: ${({ theme }) => theme.colors.card};
+    background-color: var(--card);
     transition-property: scale;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 300ms;
@@ -83,7 +83,7 @@ const StyledWrapper = styled(Link)`
 
     :hover {
       scale: 0.97;
-      background-color: ${({ theme }) => theme.colors.card_click};
+      background-color: var(--card-click);
     }
     > .category {
       position: absolute;
@@ -95,7 +95,7 @@ const StyledWrapper = styled(Link)`
     > .thumbnail {
       position: relative;
       flex-basis: 100%;
-      background-color: ${({ theme }) => theme.colors.gray2};
+      background-color: var(--gray-2);
       padding-bottom: 50%;
 
       @media (min-width: 1024px) {
@@ -148,7 +148,7 @@ const StyledWrapper = styled(Link)`
         .content {
           font-size: 0.875rem;
           line-height: 1.25rem;
-          color: ${({ theme }) => theme.colors.gray10};
+          color: var(--gray-10);
           @media (min-width: 768px) {
             margin-left: 0;
           }
@@ -159,7 +159,7 @@ const StyledWrapper = styled(Link)`
         p {
           display: none;
           line-height: 2rem;
-          color: ${({ theme }) => theme.colors.gray11};
+          color: var(--gray-11);
 
           @media (min-width: 768px) {
             display: block;
@@ -175,7 +175,7 @@ const StyledWrapper = styled(Link)`
 
     > .read-more {
       align-self: center;
-      color: ${({ theme }) => theme.colors.card_read_more};
+      color: var(--card-read-more);
     }
   }
 `

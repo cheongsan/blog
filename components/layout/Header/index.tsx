@@ -1,7 +1,7 @@
 import NavBar from "./NavBar"
 import Logo from "./Logo"
 import styled from "@emotion/styled"
-import { zIndexes } from "styles/zIndexes"
+import { zIndexes } from "@/styles/zIndexes"
 
 type Props = {
   fullWidth: boolean
@@ -26,7 +26,7 @@ const StyledWrapper = styled.header`
   z-index: ${zIndexes.header};
   position: sticky;
   top: 0;
-  background-color: ${({ theme }) => theme.colors.nav};
+  background-color: var(--nav);
   backdrop-filter: saturate(180%) blur(20px);
 
   .container {

@@ -1,4 +1,4 @@
-import useMermaidEffect from "./hooks/useMermaidEffect"
+import useMermaidEffect from "hooks/useMermaidEffect"
 import PostDetail from "./PostDetail"
 import PageDetail from "./PageDetail"
 import styled from "@emotion/styled"

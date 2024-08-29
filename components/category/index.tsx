@@ -2,7 +2,6 @@ import { useRouter } from "next/router"
 import React from "react"
 import { COLOR_SET } from "./constants"
 import styled from "@emotion/styled"
-import { colors } from "styles"
 import IconRenderer from "components/category/IconRenderer"
 
 export const getColorClassByName = (name: string): string => {
@@ -33,6 +32,7 @@ const Category: React.FC<Props> = ({ readOnly = false, children }) => {
   return (
     <StyledWrapper
       onClick={() => handleClick(children)}
+      className="category"
       css={{
         backgroundColor: getColorClassByName(children),
         cursor: readOnly ? "default" : "pointer",
@@ -56,7 +56,6 @@ const StyledWrapper = styled.div`
   font-size: 0.875rem;
   line-height: 1.25rem;
   opacity: 0.9;
-  color: ${colors.dark.gray1};
   
   >svg{
       margin-right: 0.25rem;

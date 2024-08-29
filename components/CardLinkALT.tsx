@@ -29,7 +29,7 @@ const StyledWrapper = styled.a`
     font-size: 0.95rem;
     font-weight: 500;
     align-items: center;
-    background-color: ${({ theme }) => theme.colors.card_link_alt}};
+    background-color: var(--card-link-alt);
     border-radius: 0.75rem;
     transition-property: scale;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -37,7 +37,7 @@ const StyledWrapper = styled.a`
 
     &:hover {
       scale: 0.97;
-      background-color: ${({ theme }) => theme.colors.card_link_alt_click}};
+      background-color: var(--card-link-alt-click);
     }
   }
 `
