@@ -7,7 +7,7 @@ import { queryClient } from "lib/react-query"
 import { queryKey } from "@/constants"
 import { GetStaticProps } from "next"
 import { dehydrate } from "@tanstack/react-query"
-import { filterPosts } from "lib/utils/notion"
+import { filterPosts } from "lib/notion"
 
 export const getStaticProps: GetStaticProps = async () => {
   const posts = filterPosts(await getPosts())

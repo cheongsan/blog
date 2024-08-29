@@ -1,5 +1,5 @@
 import usePostsQuery from "./usePostsQuery"
-import { getAllSelectItemsFromPosts } from "lib/utils/notion"
+import { getAllSelectItemsFromPosts } from "@/lib/notion"
 
 export const useTagsQuery = () => {
   const posts = usePostsQuery()

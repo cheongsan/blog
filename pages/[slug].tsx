@@ -1,5 +1,5 @@
 import Detail from "components/detail"
-import { filterPosts } from "lib/utils/notion"
+import { filterPosts } from "lib/notion"
 import { CONFIG } from "site.config"
 import { NextPageWithLayout } from "../types"
 import CustomError from "@/pages/error"
@@ -9,8 +9,8 @@ import { GetStaticProps } from "next"
 import { queryClient } from "lib/react-query"
 import { queryKey } from "@/constants"
 import { dehydrate } from "@tanstack/react-query"
-import usePostQuery from "hooks/usePostQuery"
-import { FilterPostsOptions } from "lib/utils/notion/filterPosts"
+import usePostQuery from "@/lib/usePostQuery"
+import { FilterPostsOptions } from "@/lib/notion/filterPosts"
 
 const filter: FilterPostsOptions = {
   acceptStatus: ["Public", "PublicOnDetail", "Pinned"],

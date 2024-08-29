@@ -1,8 +1,8 @@
-import useMermaidEffect from "@/hooks/useMermaidEffect"
+import useMermaidEffect from "@/lib/useMermaidEffect"
 import PostDetail from "./PostDetail"
 import PageDetail from "./PageDetail"
 import styled from "@emotion/styled"
-import usePostQuery from "@/hooks/usePostQuery"
+import usePostQuery from "@/lib/usePostQuery"
 
 type Props = {}
 

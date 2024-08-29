@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import { queryKey } from "@/constants"
-import { TPost } from "types"
+import { TPost } from "@/types"
 
 const usePostsQuery = () => {
   const { data } = useQuery({

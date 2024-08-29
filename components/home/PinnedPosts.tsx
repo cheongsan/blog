@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react"
 import styled from "@emotion/styled"
 import PostCard from "./PostCard"
 import { DEFAULT_CATEGORY } from "@/constants"
-import usePostsQuery from "@/hooks/usePostsQuery"
+import usePostsQuery from "@/lib/usePostsQuery"
 import { TbPin } from "react-icons/tb"
 
 type Props = {

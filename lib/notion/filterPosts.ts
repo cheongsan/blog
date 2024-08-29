@@ -1,4 +1,4 @@
-import { TPosts, TPostStatus, TPostType } from "types"
+import { TPosts, TPostStatus, TPostType } from "@/types"
 
 export type FilterPostsOptions = {
   acceptStatus?: TPostStatus[]
