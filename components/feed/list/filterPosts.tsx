@@ -1,5 +1,5 @@
 import { DEFAULT_CATEGORY } from "@/constants"
-import { TPost } from "types"
+import { TPost } from "@/types"
 
 interface FilterPostsParams {
   posts: TPost[]

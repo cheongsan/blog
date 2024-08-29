@@ -1,7 +1,7 @@
 import styled from "@emotion/styled"
 import { useRouter } from "next/router"
 import React from "react"
-import { CardLinkALT } from "components/CardLinkALT"
+import { CardLinkALT } from "@/components/CardLinkALT"
 import { TbChevronLeft, TbArrowUp } from "react-icons/tb"
 
 type Props = {}

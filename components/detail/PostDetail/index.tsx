@@ -5,7 +5,7 @@ import CommentBox from "./CommentBox"
 import Category from "@/components/category"
 import styled from "@emotion/styled"
 import NotionRenderer from "@/components/NotionRenderer"
-import usePostQuery from "hooks/usePostQuery"
+import usePostQuery from "@/hooks/usePostQuery"
 
 const commonStyles = `
   max-width: 56rem;

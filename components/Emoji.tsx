@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react"
-import { notocoloremoji } from "assets"
+import { notocoloremoji } from "@/constants"
 
 type Props = {
   className?: string

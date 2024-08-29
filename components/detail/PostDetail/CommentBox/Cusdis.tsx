@@ -1,8 +1,8 @@
-import { CONFIG } from "site.config"
+import { CONFIG } from "@/site.config"
 import { ReactCusdis } from "react-cusdis"
 import { useCallback, useEffect, useState } from "react"
 import styled from "@emotion/styled"
-import useScheme from "hooks/useScheme"
+import useScheme from "@/hooks/useScheme"
 import { useRouter } from "next/router"
 
 type Props = {

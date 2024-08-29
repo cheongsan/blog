@@ -2,7 +2,7 @@ import styled from "@emotion/styled"
 import { useRouter } from "next/router"
 import React from "react"
 import { TbTags } from "react-icons/tb"
-import { useTagsQuery } from "hooks/useTagsQuery"
+import { useTagsQuery } from "@/hooks/useTagsQuery"
 
 type Props = {}
 

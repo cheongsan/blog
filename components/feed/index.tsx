@@ -1,10 +1,10 @@
 import { useState } from "react"
 
 import SearchInput from "./SearchInput"
-import { FeedHeader } from "./FeedHeader"
+import { FeedHeader } from "./header"
 import styled from "@emotion/styled"
 import TagList from "./TagList"
-import PostList from "./PostList"
+import PostList from "./list"
 
 const HEADER_HEIGHT = 73
 
