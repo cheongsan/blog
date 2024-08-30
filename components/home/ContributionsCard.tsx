@@ -2,14 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { CONFIG } from '@/site.config';
 
 import {
-  AiOutlineGithub,
-  AiFillGitlab,
-} from "react-icons/ai"
-import { FaLayerGroup, FaGithubAlt } from "react-icons/fa6";
-import { FaGitlab } from "react-icons/fa6";
-import { FaBitbucket } from "react-icons/fa";
-
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+  FaLayerGroup,
+  FaGithubAlt,
+  FaGitlab,
+  FaBitbucket
+} from "react-icons/fa";
+import { TbExternalLink } from "react-icons/tb";
+import {
+  ScrollArea, 
+  ScrollBar
+} from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Tabs,
@@ -102,72 +104,102 @@ export default function Home() {
   }
 
   return (
-      <div>
-        {/* 필터 Tabs */}
-        <Tabs defaultValue="all" value={filter} onValueChange={handleFilterChange}>
-          <TabsList className="space-x-2 bg-body">
-            <TabsTrigger
-                value="all"
-                className="px-4 py-2 rounded-full hover:bg-gray-300 dark:hover:bg-gray-900 focus:outline-none"
+    <div>
+      {/* 필터 Tabs */}
+      <Tabs
+        defaultValue="all"
+        value={filter}
+        onValueChange={handleFilterChange}
+      >
+        <TabsList className="space-x-2 bg-body">
+          <TabsTrigger
+            value="all"
+            className="px-4 py-2 rounded-full hover:bg-gray-300 dark:hover:bg-gray-900 focus:outline-none data-[state=active]:bg-gray-200 dark:data-[state=active]:bg-gray-800"
+          >
+            <FaLayerGroup className="me-1" /> All
+          </TabsTrigger>
+          <TabsTrigger
+            value="github"
+            className="px-4 py-2 rounded-full hover:bg-gray-300 dark:hover:bg-gray-900 focus:outline-none data-[state=active]:bg-black data-[state=active]:text-white"
+          >
+            <FaGithubAlt className="me-1" /> GitHub
+            <a
+              href={`https://github.com/${CONFIG.profile.github}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ml-2 text-blue-600 hover:underline"
             >
-              <FaLayerGroup className="me-1" /> All
-            </TabsTrigger>
-            <TabsTrigger
-                value="github"
-                className="px-4 py-2 rounded-full hover:bg-gray-300 dark:hover:bg-gray-900 focus:outline-none data-[state=active]:bg-black data-[state=active]:text-white"
+              <TbExternalLink />
+            </a>
+          </TabsTrigger>
+          <TabsTrigger
+            value="gitlab"
+            className="px-4 py-2 rounded-full hover:bg-orange-300 dark:hover:bg-orange-900 focus:outline-none data-[state=active]:bg-orange-600 data-[state=active]:text-white"
+          >
+            <FaGitlab className="me-1" /> GitLab
+            <a
+              href={`https://gitlab.com/${CONFIG.profile.gitlab}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ml-2 text-blue-600 hover:underline"
             >
-              <FaGithubAlt className="me-1" /> GitHub
-            </TabsTrigger>
-            <TabsTrigger
-                value="gitlab"
-                className="px-4 py-2 rounded-full hover:bg-orange-300 dark:hover:bg-orange-900 focus:outline-none data-[state=active]:bg-orange-600 data-[state=active]:text-white"
+              <TbExternalLink />
+            </a>
+          </TabsTrigger>
+          <TabsTrigger
+            value="bitbucket"
+            className="px-4 py-2 rounded-full hover:bg-blue-300 dark:hover:bg-blue-900 focus:outline-none data-[state=active]:bg-blue-500 data-[state=active]:text-white"
+          >
+            <FaBitbucket className="me-1" /> Bitbucket
+            <a
+              href={`https://bitbucket.org/${CONFIG.profile.bitbucket}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ml-2 text-blue-600 hover:underline"
             >
-              <FaGitlab className="me-1" /> GitLab
-            </TabsTrigger>
-            <TabsTrigger
-                value="bitbucket"
-                className="px-4 py-2 rounded-full hover:bg-blue-300 dark:hover:bg-blue-900 focus:outline-none data-[state=active]:bg-blue-500 data-[state=active]:text-white"
-            >
-              <FaBitbucket className="me-1" /> Bitbucket
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value={filter}>
-            {/* 기여도 그리드 */}
-            <ScrollArea className="w-96 whitespace-nowrap rounded-md border">
-              <div style={{ overflowX: 'auto', width: '100%' }}>
-                <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: `repeat(53, 11px)`, // 53주는 가로로 배치
-                      gridTemplateRows: `repeat(7, 11px)`,    // 7일은 세로로 배치
-                      gap: '4px',
-                      minWidth: '750px', // 최소 너비 설정
-                    }}
-                >
-                  {filteredContributions.map((week, weekIndex) =>
-                      week.map((day, dayIndex) => (
-                          <div
-                              key={`${weekIndex}-${dayIndex}`}
-                              title={`${day.date || ''}: ${day.contributionCount || 0} contributions`}
-                              style={{
-                                gridColumnStart: weekIndex + 1, // 주는 가로로 배치
-                                gridRowStart: dayIndex + 1,    // 요일은 세로로 배치
-                                width: '10px',
-                                height: '10px',
-                                backgroundColor: day.color || '#ebedf0',
-                                borderRadius: '3px',
-                              }}
-                          ></div>
-                      ))
-                  )}
-                </div>
+              <TbExternalLink />
+            </a>
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value={filter}>
+          {/* 기여도 그리드 */}
+          <ScrollArea className="w-96 whitespace-nowrap rounded-md border">
+            <div style={{ overflowX: "auto", width: "100%" }}>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: `repeat(53, 11px)`, // 53주는 가로로 배치
+                  gridTemplateRows: `repeat(7, 11px)`, // 7일은 세로로 배치
+                  gap: "4px",
+                  minWidth: "750px", // 최소 너비 설정
+                }}
+              >
+                {filteredContributions.map((week, weekIndex) =>
+                  week.map((day, dayIndex) => (
+                    <div
+                      key={`${weekIndex}-${dayIndex}`}
+                      title={`${day.date || ""}: ${
+                        day.contributionCount || 0
+                      } contributions`}
+                      style={{
+                        gridColumnStart: weekIndex + 1, // 주는 가로로 배치
+                        gridRowStart: dayIndex + 1, // 요일은 세로로 배치
+                        width: "10px",
+                        height: "10px",
+                        backgroundColor: day.color || "#ebedf0",
+                        borderRadius: "3px",
+                      }}
+                    ></div>
+                  ))
+                )}
               </div>
-              <ScrollBar orientation="horizontal" />
-            </ScrollArea>
-          </TabsContent>
-        </Tabs>
-      </div>
-  );
+            </div>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
+        </TabsContent>
+      </Tabs>
+    </div>
+  )
 }
 
 // 각 플랫폼에서 가져온 데이터를 일관된 형식으로 변환하는 함수들
