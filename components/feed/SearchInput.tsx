@@ -1,15 +1,11 @@
 import styled from "@emotion/styled"
 import React, { InputHTMLAttributes, ReactNode } from "react"
-import { TbSearch } from "react-icons/tb"
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {}
 
 const SearchInput: React.FC<Props> = ({ ...props }) => {
   return (
     <StyledWrapper>
-      <div className="top">
-        < TbSearch size="23" /> Search
-      </div>
       <input
         className="mid"
         type="text"
