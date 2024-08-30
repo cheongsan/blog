@@ -1,6 +1,6 @@
 import useMermaidEffect from "@/lib/useMermaidEffect"
-import PostDetail from "./PostDetail"
-import PageDetail from "./PageDetail"
+import PostDetail from "./post"
+import PageDetail from "./page"
 import styled from "@emotion/styled"
 import usePostQuery from "@/lib/usePostQuery"
 
