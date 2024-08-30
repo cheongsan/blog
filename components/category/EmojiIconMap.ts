@@ -12,7 +12,7 @@ import {
   TbSpeakerphone
 } from "react-icons/tb"
 
-export const emojiIconMap: { [key: string]: React.ElementType } = {
+export const EmojiIconMap: { [key: string]: React.ElementType } = {
   "📂": TbFolderOpen,
   "📕": TbBook2,
   "😎": TbSeeding,
