@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { CONFIG } from '@/site.config';
+import { CONFIG } from 'site.config';
 
 import {
   FaLayerGroup,
   FaGithubAlt,
   FaGitlab,
-  FaBitbucket
-} from "react-icons/fa";
+} from "react-icons/fa6";
 import { TbExternalLink } from "react-icons/tb";
 import {
-  ScrollArea, 
+  ScrollArea,
   ScrollBar
 } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -29,7 +28,6 @@ interface ContributionDay {
 interface Contributions {
   github: ContributionDay[][];
   gitlab: ContributionDay[][];
-  bitbucket: ContributionDay[][];
 }
 
 const CACHE_KEY = 'contributionsCache';
@@ -38,7 +36,6 @@ export default function Home() {
   const [contributions, setContributions] = useState<Contributions>({
     github: [],
     gitlab: [],
-    bitbucket: [],
   });
 
   const [filteredContributions, setFilteredContributions] = useState<ContributionDay[][]>([]);
@@ -69,16 +66,13 @@ export default function Home() {
     try {
       const githubRes = await fetch(`/api/github?username=${CONFIG.profile.github}`);
       const gitlabRes = await fetch(`/api/gitlab?username=${CONFIG.profile.gitlab}`);
-      const bitbucketRes = await fetch(`/api/bitbucket?username=${CONFIG.profile.bitbucket}`);
 
       const githubData = await githubRes.json();
       const gitlabData = await gitlabRes.json();
-      const bitbucketData = await bitbucketRes.json();
 
       const allContributions: Contributions = {
         github: Array.isArray(githubData) ? parseGitHubData(githubData) : [],
         gitlab: Array.isArray(gitlabData) ? parseGitLabData(gitlabData) : [],
-        bitbucket: bitbucketData.values ? parseBitbucketData(bitbucketData.values) : [],
       };
 
       setContributions(allContributions);
@@ -104,101 +98,87 @@ export default function Home() {
   }
 
   return (
-    <div>
-      {/* 필터 Tabs */}
-      <Tabs
-        defaultValue="all"
-        value={filter}
-        onValueChange={handleFilterChange}
-      >
-        <TabsList className="space-x-2 bg-body">
-          <TabsTrigger
-            value="all"
-            className="px-4 py-2 rounded-full hover:bg-gray-300 dark:hover:bg-gray-900 focus:outline-none data-[state=active]:bg-gray-200 dark:data-[state=active]:bg-gray-800"
-          >
-            <FaLayerGroup className="me-1" /> All
-          </TabsTrigger>
-          <TabsTrigger
-            value="github"
-            className="px-4 py-2 rounded-full hover:bg-gray-300 dark:hover:bg-gray-900 focus:outline-none data-[state=active]:bg-black data-[state=active]:text-white"
-          >
-            <FaGithubAlt className="me-1" /> GitHub
-            <a
-              href={`https://github.com/${CONFIG.profile.github}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ml-2 text-blue-600 hover:underline"
+      <div>
+        {/* 필터 Tabs */}
+        <Tabs
+            defaultValue="all"
+            value={filter}
+            onValueChange={handleFilterChange}
+        >
+          <TabsList className="space-x-2 bg-body">
+            <TabsTrigger
+                value="all"
+                className="px-4 py-2 rounded-full hover:bg-gray-300 dark:hover:bg-gray-900 focus:outline-none data-[state=active]:bg-gray-200 dark:data-[state=active]:bg-gray-800 data-[state=active]:shadow-none"
             >
-              <TbExternalLink />
-            </a>
-          </TabsTrigger>
-          <TabsTrigger
-            value="gitlab"
-            className="px-4 py-2 rounded-full hover:bg-orange-300 dark:hover:bg-orange-900 focus:outline-none data-[state=active]:bg-orange-600 data-[state=active]:text-white"
-          >
-            <FaGitlab className="me-1" /> GitLab
-            <a
-              href={`https://gitlab.com/${CONFIG.profile.gitlab}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ml-2 text-blue-600 hover:underline"
+              <FaLayerGroup className="me-1" /> All
+            </TabsTrigger>
+            <TabsTrigger
+                value="github"
+                className="px-4 py-2 rounded-full hover:bg-gray-300 dark:hover:bg-gray-900 focus:outline-none data-[state=active]:bg-black data-[state=active]:text-white"
             >
-              <TbExternalLink />
-            </a>
-          </TabsTrigger>
-          <TabsTrigger
-            value="bitbucket"
-            className="px-4 py-2 rounded-full hover:bg-blue-300 dark:hover:bg-blue-900 focus:outline-none data-[state=active]:bg-blue-500 data-[state=active]:text-white"
-          >
-            <FaBitbucket className="me-1" /> Bitbucket
-            <a
-              href={`https://bitbucket.org/${CONFIG.profile.bitbucket}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ml-2 text-blue-600 hover:underline"
-            >
-              <TbExternalLink />
-            </a>
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value={filter}>
-          {/* 기여도 그리드 */}
-          <ScrollArea className="w-96 whitespace-nowrap rounded-md border">
-            <div style={{ overflowX: "auto", width: "100%" }}>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: `repeat(53, 11px)`, // 53주는 가로로 배치
-                  gridTemplateRows: `repeat(7, 11px)`, // 7일은 세로로 배치
-                  gap: "4px",
-                  minWidth: "750px", // 최소 너비 설정
-                }}
+              <FaGithubAlt className="me-1" /> GitHub
+              <a
+                  href={`https://github.com/${CONFIG.profile.github}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ml-2 text-blue-600 hover:underline"
               >
-                {filteredContributions.map((week, weekIndex) =>
-                  week.map((day, dayIndex) => (
-                    <div
-                      key={`${weekIndex}-${dayIndex}`}
-                      title={`${day.date || ""}: ${
-                        day.contributionCount || 0
-                      } contributions`}
-                      style={{
-                        gridColumnStart: weekIndex + 1, // 주는 가로로 배치
-                        gridRowStart: dayIndex + 1, // 요일은 세로로 배치
-                        width: "10px",
-                        height: "10px",
-                        backgroundColor: day.color || "#ebedf0",
-                        borderRadius: "3px",
-                      }}
-                    ></div>
-                  ))
-                )}
+                <TbExternalLink />
+              </a>
+            </TabsTrigger>
+            <TabsTrigger
+                value="gitlab"
+                className="px-4 py-2 rounded-full hover:bg-orange-300 dark:hover:bg-orange-900 focus:outline-none data-[state=active]:bg-orange-600 data-[state=active]:text-white"
+            >
+              <FaGitlab className="me-1" /> GitLab
+              <a
+                  href={`https://gitlab.com/${CONFIG.profile.gitlab}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ml-2 text-blue-600 hover:underline"
+              >
+                <TbExternalLink />
+              </a>
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value={filter}>
+            {/* 기여도 그리드 */}
+            <ScrollArea className="w-96 whitespace-nowrap rounded-md border">
+              <div style={{ overflowX: "auto", width: "100%" }}>
+                <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: `repeat(53, 11px)`, // 53주는 가로로 배치
+                      gridTemplateRows: `repeat(7, 11px)`, // 7일은 세로로 배치
+                      gap: "4px",
+                      minWidth: "750px", // 최소 너비 설정
+                    }}
+                >
+                  {filteredContributions.map((week, weekIndex) =>
+                      week.map((day, dayIndex) => (
+                          <div
+                              key={`${weekIndex}-${dayIndex}`}
+                              title={`${day.date || ""}: ${
+                                  day.contributionCount || 0
+                              } contributions`}
+                              style={{
+                                gridColumnStart: weekIndex + 1, // 주는 가로로 배치
+                                gridRowStart: dayIndex + 1, // 요일은 세로로 배치
+                                width: "10px",
+                                height: "10px",
+                                backgroundColor: day.color || "#ebedf0",
+                                borderRadius: "3px",
+                              }}
+                          ></div>
+                      ))
+                  )}
+                </div>
               </div>
-            </div>
-            <ScrollBar orientation="horizontal" />
-          </ScrollArea>
-        </TabsContent>
-      </Tabs>
-    </div>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+          </TabsContent>
+        </Tabs>
+      </div>
   )
 }
 
@@ -229,26 +209,10 @@ function parseGitLabData(data: any): ContributionDay[][] {
   return contributions;
 }
 
-function parseBitbucketData(data: any): ContributionDay[][] {
-  const contributions = Array.from({ length: 53 }, () => Array(7).fill({ date: null, contributionCount: 0, color: '#ebedf0' }));
-  data.forEach((commit: any) => {
-    const date = commit.date.split('T')[0];
-    const dayOfWeek = new Date(date).getDay();
-    const weekNumber = getWeekNumber(new Date(date));
-
-    contributions[weekNumber][dayOfWeek] = {
-      date: date,
-      contributionCount: (contributions[weekNumber][dayOfWeek].contributionCount || 0) + 1,
-      color: '#40c463',
-    };
-  });
-  return contributions;
-}
-
 // 각 플랫폼의 기여도를 병합하는 함수
 function combineContributions(contributions: Contributions): ContributionDay[][] {
   const combined = Array.from({ length: 53 }, () => Array(7).fill({ date: null, contributionCount: 0, color: '#ebedf0' }));
-  ['github', 'gitlab', 'bitbucket'].forEach((platform) => {
+  ['github', 'gitlab'].forEach((platform) => {
     if (contributions[platform as keyof Contributions]) {
       contributions[platform as keyof Contributions].forEach((week, weekIndex) => {
         week.forEach((day, dayIndex) => {
