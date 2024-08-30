@@ -31,8 +31,8 @@ const ProfileCard: React.FC<Props> = () => {
             </div>
           </div>
           <div className="role">{CONFIG.profile.role}</div>
-          <Tabs defaultValue="contact" className="w-100">
-            <TabsList className="grid w-full grid-cols-2">
+          <Tabs defaultValue="contact">
+            <TabsList>
               <TabsTrigger value="contact">Contact</TabsTrigger>
               <TabsTrigger value="contribution">Contribution</TabsTrigger>
             </TabsList>
