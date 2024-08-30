@@ -1,5 +1,5 @@
 import React from "react"
-import { emojiIconMap } from "@/components/category/emojiIconMap"
+import { EmojiIconMap } from "@/components/category/EmojiIconMap"
 
 interface IconRendererProps {
   category: string
@@ -9,7 +9,7 @@ interface IconRendererProps {
 const IconRenderer: React.FC<IconRendererProps> = ({ category = "", size = 20 }) => {
   const [emoji, ...textParts] = category.split(" ")
   const text = textParts.join(" ")
-  const IconComponent = emojiIconMap[emoji] || null
+  const IconComponent = EmojiIconMap[emoji] || null
   return (
     <>
       {IconComponent ? React.createElement(IconComponent, { size }) : emoji} {text}
