@@ -143,7 +143,7 @@ export default function Home() {
           </TabsList>
           <TabsContent value={filter}>
             {/* 기여도 그리드 */}
-            <ScrollArea className="w-96 whitespace-nowrap rounded-md border">
+            <ScrollArea className="p-2 whitespace-nowrap rounded-md border">
               <div style={{ overflowX: "auto", width: "100%" }}>
                 <div
                     style={{

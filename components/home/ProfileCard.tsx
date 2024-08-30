@@ -39,7 +39,7 @@ const ProfileCard: React.FC<Props> = () => {
             <TabsContent value="contact">
               <ContactCard />
             </TabsContent>
-            <TabsContent value="contribution" style={{ maxWidth: "500px" }}>
+            <TabsContent value="contribution">
               <ContributionsCard />
             </TabsContent>
           </Tabs>
