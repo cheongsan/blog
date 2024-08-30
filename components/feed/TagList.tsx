@@ -1,7 +1,6 @@
 import styled from "@emotion/styled"
 import { useRouter } from "next/router"
 import React from "react"
-import { TbTags } from "react-icons/tb"
 import { useTagsQuery } from "@/lib/useTagsQuery"
 
 type Props = {}
@@ -34,40 +33,26 @@ const TagList: React.FC<Props> = () => {
 
   return (
     <StyledWrapper>
-      <div className="top">
-        < TbTags size="23" /> Tags
-      </div>
-      <div className="list">
-        {Object.keys(data).map((key) => (
-          <a
-            key={key}
-            data-active={key === currentTag}
-            onClick={() => handleClickTag(key)}
-          >
-            {key}
-          </a>
-        ))}
+      <div className="tags">
+        <div className="list flex-wrap">
+          {Object.keys(data).map((key) => (
+              <a
+                  key={key}
+                  data-active={key === currentTag}
+                  onClick={() => handleClickTag(key)}
+              >
+                {key}
+              </a>
+          ))}
+        </div>
       </div>
     </StyledWrapper>
-  )
+)
 }
 
 export default TagList
 
 const StyledWrapper = styled.div`
-  .top {
-    display: none;
-    padding: 0.25rem;
-    margin-bottom: 0.75rem;
-
-    @media (min-width: 1024px) {
-      display: flex;
-    }
-      >svg{
-          margin-right: 0.2rem;
-      }
-  }
-
   .list {
     display: flex;
     margin-bottom: 1.5rem;
@@ -82,7 +67,7 @@ const StyledWrapper = styled.div`
     }
 
     @media (min-width: 1024px) {
-      display: block;
+      display: inline-flex;
     }
 
     a {
