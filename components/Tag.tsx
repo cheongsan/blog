@@ -17,7 +17,7 @@ const Tag: React.FC<Props> = ({ children }) => {
   return (
       <StyledBadge
           onClick={() => handleClick(children)}
-                   className="flex rounded-full bg-stone-200 hover:bg-stone-300 text-stone-500 shadow-none">
+                   className="flex rounded-full bg-stone-200 dark:bg-stone-800 hover:bg-stone-300 text-stone-500 shadow-none">
         <FaHashtag className="me-1" />
         {children}
       </StyledBadge>

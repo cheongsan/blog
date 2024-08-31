@@ -1,11 +1,11 @@
 import Link from "next/link"
-import { CONFIG } from "@/site.config"
-import { formatDate } from "@/lib/utils"
-import Tag from "../Tag"
+import { CONFIG } from "site.config"
 import { TPost } from "types"
+import { formatDate } from "@/lib/utils"
 import Image from "next/image"
-import Category from "@/components/category"
 import styled from "@emotion/styled"
+import Tag from "@/components/Tag"
+import Category from "@/components/category"
 import { TbChevronRight } from "react-icons/tb"
 
 type Props = {
@@ -127,6 +127,7 @@ const StyledWrapper = styled(Link)`
           align-items: baseline;
         }
         h2 {
+          margin-top: 0.75rem;
           margin-bottom: 0.5rem;
           font-size: 1.125rem;
           line-height: 1.75rem;

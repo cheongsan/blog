@@ -35,6 +35,7 @@ const StyledTitle = styled.h3`
     padding-top: 0.95rem;
     padding-left: 0.75rem;
     margin-bottom: 0.75rem;
+    font-size: 1.17em;
     color: var(--gray-11);
     >svg{
         margin-right: 0.5rem;

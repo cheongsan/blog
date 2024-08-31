@@ -61,6 +61,7 @@ const StyledTitle = styled.h3`
     display: flex;
     padding: 0.25rem;
     margin-bottom: 0.75rem;
+    font-size: 1.17em;
     color: var(--gray-11);
     >svg{
         margin-right: 0.5rem;

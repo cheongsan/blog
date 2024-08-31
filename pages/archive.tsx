@@ -1,19 +1,26 @@
-import { CONFIG } from "site.config"
-import { NextPageWithLayout } from "types"
-import { getPosts } from "lib/notion-client"
-import MetaConfig from "lib/meta-config"
-import { queryClient } from "lib/react-query"
-import { queryKey } from "@/constants"
 import { GetStaticProps } from "next"
-import { dehydrate } from "@tanstack/react-query"
+import React, { useState } from "react"
+import styled from "@emotion/styled"
+
+import { CONFIG } from "site.config"
+import { queryKey } from "@/constants"
+import { NextPageWithLayout } from "types"
+
+import MetaConfig from "lib/meta-config"
 import { filterPosts } from "lib/notion"
+import { getPosts } from "lib/notion-client"
+
+import { queryClient } from "lib/react-query"
+import { dehydrate } from "@tanstack/react-query"
+
 import SearchInput from "@/components/feed/SearchInput"
 import TagList from "@/components/feed/TagList"
-import { TbSearch, TbTags, TbBooks, TbConfetti } from "react-icons/tb"
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import React, { useState } from "react"
 import { FeedHeader } from "@/components/feed/header"
 import PostList from "@/components/feed/list"
+
+import { TbSearch, TbTags, TbBooks, TbConfetti } from "react-icons/tb"
 
 export const getStaticProps: GetStaticProps = async () => {
   const posts = filterPosts(await getPosts())
@@ -47,7 +54,7 @@ const FeedPage: NextPageWithLayout = () => {
           <div className="grow">
             <SearchInput value={q} onChange={(e) => setQ(e.target.value)} />
           </div>
-          <TabsList className="flex space-x-2 ms-2">
+          <StyledTabsList className="flex space-x-2 ms-2 bg-body">
             <TabsTrigger
               value="tag"
               className="sm:px-4 sm:py-2 rounded-full bg-gray-200 hover:bg-gray-300 focus:outline-none"
@@ -66,7 +73,7 @@ const FeedPage: NextPageWithLayout = () => {
             >
               <TbConfetti size="23" /> Events
             </TabsTrigger>
-          </TabsList>
+          </StyledTabsList>
         </div>
         <TabsContent value="tag">
           <TagList />
@@ -83,3 +90,17 @@ const FeedPage: NextPageWithLayout = () => {
 }
 
 export default FeedPage
+
+const StyledTabsList = styled(TabsList)`
+  .dark & {
+    button {
+      background: var(--card);
+      color: var(--gray-10);
+
+      &[data-state="active"] {
+        background: black;
+        color: white;
+      }
+    }
+  }
+`
