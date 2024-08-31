@@ -34,7 +34,7 @@ const TagList: React.FC<Props> = () => {
   return (
     <StyledWrapper>
       <div className="tags">
-        <div className="list flex-wrap">
+        <div className="list lg:flex-wrap">
           {Object.keys(data).map((key) => (
               <a
                   key={key}

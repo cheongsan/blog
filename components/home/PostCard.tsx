@@ -17,7 +17,7 @@ const PostCard: React.FC<Props> = ({ data }) => {
 
   return (
     <StyledWrapper href={`/${data.slug}`}>
-      <article className="d-flex">
+      <article className="flex">
         {data.thumbnail && (
           <div className="thumbnail">
             <Image

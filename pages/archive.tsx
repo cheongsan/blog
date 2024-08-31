@@ -49,30 +49,30 @@ const FeedPage: NextPageWithLayout = () => {
   return (
       <>
         <MetaConfig {...meta} />
-        <div className="d-flex mb-3">
+        <div className="flex mb-3">
           < TbSearch size="23" className="me-1" /> Search
         </div>
         <Tabs defaultValue="tag">
-          <div className="d-flex align-self-stretch">
-            <div className="flex-grow-1">
+          <div className="flex flex-wrap md:flex-nowrap align-self-stretch">
+            <div className="grow">
               <SearchInput value={q} onChange={(e) => setQ(e.target.value)} />
             </div>
               <TabsList className="flex space-x-2">
                 <TabsTrigger
                     value="tag"
-                    className="px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300 focus:outline-none"
+                    className="sm:px-4 sm:py-2 rounded-full bg-gray-200 hover:bg-gray-300 focus:outline-none"
                 >
                   < TbTags size="23"/> Tags
                 </TabsTrigger>
                 <TabsTrigger
                     value="book"
-                    className="px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300 focus:outline-none"
+                    className="sm:px-4 sm:py-2 rounded-full bg-gray-200 hover:bg-gray-300 focus:outline-none"
                 >
                   < TbBooks size="23"/> Books
                 </TabsTrigger>
                 <TabsTrigger
                     value="event"
-                    className="px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300 focus:outline-none"
+                    className="sm:px-4 sm:py-2 rounded-full bg-gray-200 hover:bg-gray-300 focus:outline-none"
                 >
                   < TbConfetti size="23"/> Events
                 </TabsTrigger>
@@ -86,7 +86,7 @@ const FeedPage: NextPageWithLayout = () => {
               <TabsContent value="event"></TabsContent>
           </div>
         </Tabs>
-        <div className="container max-w-screen-md">
+        <div className="container-fluid md:container md:max-w-screen-md">
           <FeedHeader />
 
           <PostList q={q} />

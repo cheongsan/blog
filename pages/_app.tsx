@@ -3,7 +3,6 @@ import { Hydrate, QueryClientProvider } from "@tanstack/react-query"
 import RootLayout from "./layout"
 import "@radix-ui/colors/gray.css"
 import "@radix-ui/colors/gray-dark.css"
-import 'bootstrap/dist/css/bootstrap-grid.min.css';
 import "styles/global.css";
 import "styles/theme.css"
 import "styles/colour.css";
