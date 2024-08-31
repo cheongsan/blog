@@ -1,7 +1,9 @@
+import React, { useState } from "react"
 import styled from "@emotion/styled"
 import { useRouter } from "next/router"
-import React from "react"
-import { useTagsQuery } from "@/lib/useTagsQuery"
+import { useTagsQuery } from "lib/useTagsQuery"
+import { FaHashtag, FaPlus, FaCirclePlus, FaCircleMinus } from "react-icons/fa6"
+import { Badge } from "@/components/ui/badge"
 
 type Props = {}
 
@@ -9,6 +11,7 @@ const TagList: React.FC<Props> = () => {
   const router = useRouter()
   const currentTag = router.query.tag || undefined
   const data = useTagsQuery()
+  const [hoveredTag, setHoveredTag] = useState<string | null>(null)
 
   const handleClickTag = (value: any) => {
     // delete
@@ -36,18 +39,34 @@ const TagList: React.FC<Props> = () => {
       <div className="tags">
         <div className="list lg:flex-wrap">
           {Object.keys(data).map((key) => (
-              <a
-                  key={key}
-                  data-active={key === currentTag}
-                  onClick={() => handleClickTag(key)}
-              >
-                {key}
-              </a>
+            <StyledBadge
+              key={key}
+              variant="outline"
+              data-active={key === currentTag}
+              onClick={() => handleClickTag(key)}
+              onMouseEnter={() => setHoveredTag(key)}
+              onMouseLeave={() => setHoveredTag(null)}
+              className="flex rounded-full hover:bg-stone-300 text-stone-500
+                  data-[active=true]:bg-stone-500 data-[active=true]:hover:bg-stone-400 data-[active=true]:text-white"
+            >
+              {key === currentTag ? (
+                hoveredTag === key ? (
+                  <FaCircleMinus className="me-1" /> // 현재 선택된 태그이고, hover 상태일 때 아이콘
+                ) : (
+                  <FaCirclePlus className="me-1" /> // 현재 선택된 태그이고, 기본 아이콘
+                )
+              ) : hoveredTag === key ? (
+                <FaPlus className="me-1" /> // hover 상태일 때, 선택되지 않은 태그의 아이콘
+              ) : (
+                <FaHashtag className="me-1" /> // 선택되지 않았고, hover되지 않은 기본 아이콘
+              )}
+              {key}
+            </StyledBadge>
           ))}
         </div>
       </div>
     </StyledWrapper>
-)
+  )
 }
 
 export default TagList
@@ -61,6 +80,7 @@ const StyledWrapper = styled.div`
 
     scrollbar-width: none;
     -ms-overflow-style: none;
+
     ::-webkit-scrollbar {
       width: 0;
       height: 0;
@@ -69,32 +89,22 @@ const StyledWrapper = styled.div`
     @media (min-width: 1024px) {
       display: inline-flex;
     }
+  }
+`
 
-    a {
-      display: block;
-      padding: 0.25rem;
-      padding-left: 1rem;
-      padding-right: 1rem;
-      margin-top: 0.25rem;
-      margin-bottom: 0.25rem;
-      border-radius: 0.75rem;
-      font-size: 0.875rem;
-      line-height: 1.25rem;
-      color: var(--gray-10);
-      flex-shrink: 0;
-      cursor: pointer;
+const StyledBadge = styled(Badge)`
+  flex-shrink: 0;
+  padding: 0.25rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 400;
+  cursor: pointer;
 
-      :hover {
-        background-color: var(--card);
-      }
-      &[data-active="true"] {
-        color: var(--gray-12);
-        background-color: var(--card);
-
-        :hover {
-          background-color: var(--card);
-        }
-      }
-    }
+  :hover {
+    background-color: var(--card);
   }
 `

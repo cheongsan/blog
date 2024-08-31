@@ -1,6 +1,8 @@
+import React from "react"
 import styled from "@emotion/styled"
 import { useRouter } from "next/router"
-import React from "react"
+import { FaHashtag } from "react-icons/fa6";
+import { Badge } from "@/components/ui/badge";
 
 type Props = {
   children: string
@@ -8,29 +10,29 @@ type Props = {
 
 const Tag: React.FC<Props> = ({ children }) => {
   const router = useRouter()
-
   const handleClick = (value: string) => {
     router.push(`/archive?tag=${value}`)
   }
+
   return (
-    <StyledWrapper onClick={() => handleClick(children)}>
-      {children}
-    </StyledWrapper>
+      <StyledBadge
+          onClick={() => handleClick(children)}
+                   className="flex rounded-full bg-stone-200 hover:bg-stone-300 text-stone-500 shadow-none">
+        <FaHashtag className="me-1" />
+        {children}
+      </StyledBadge>
   )
 }
 
 export default Tag
 
-const StyledWrapper = styled.div`
+const StyledBadge = styled(Badge)`
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
-  border-radius: 50px;
   font-size: 0.75rem;
   line-height: 1rem;
   font-weight: 400;
-  color: var(--gray-10);
-  background-color: var(--gray-5);
   cursor: pointer;
 `
