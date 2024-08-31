@@ -37,7 +37,7 @@ const PinnedPosts: React.FC<Props> = ({ q }) => {
 
   return (
     <>
-      <StyledWrapper className="my-2">
+      <StyledWrapper className="card my-2">
         <StyledTitle>
           < TbPin size="24" /> {filteredPosts.length > 1 ? "Pinned Posts" : "Pinned Post"}
         </StyledTitle>
@@ -65,9 +65,5 @@ const StyledTitle = styled.h3`
 `
 
 const StyledWrapper = styled.div`
-    padding: 1rem;
-    padding-bottom: 0;
-    border-radius: 1rem;
-    width: 100%;
-    background-color: var(--card);
+    padding-bottom: 0.25rem;
 `

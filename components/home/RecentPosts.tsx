@@ -34,7 +34,7 @@ const RecentPosts: React.FC<Props> = ({ q }) => {
 
   return (
     <>
-      <StyledWrapper className="my-2">
+      <StyledWrapper className="card my-2">
         <StyledTitle>
           < TbRotateClockwise2 size="24" /> {filteredPosts.length > 1 ? "Recent Posts" : "Recent Post"}
         </StyledTitle>
@@ -45,8 +45,8 @@ const RecentPosts: React.FC<Props> = ({ q }) => {
           <PostCard key={post.id} data={post} />
         ))}
         <hr />
-        <CardLink href="/archive" className="d-flex justify-content-center">
-          <div className="archive-link d-flex align-items-center">
+        <CardLink href="/archive" className="flex justify-center">
+          <div className="archive-link flex">
             View Archive&nbsp;<TbChevronRight size="30" />
           </div>
         </CardLink>
@@ -68,12 +68,6 @@ const StyledTitle = styled.h3`
 `
 
 const StyledWrapper = styled.div`
-  margin-bottom: 2.25rem;
-  padding: 1rem;
-  border-radius: 1rem;
-  width: 100%;
-  background-color: var(--card);
-
   >.card-link {
     margin: 0.75rem auto;
     padding: 0.5rem;

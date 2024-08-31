@@ -7,9 +7,9 @@ type Props = {}
 
 const FeedHeader: React.FC<Props> = () => {
   return (
-      <div className="d-flex flex-wrap mb-4">
+      <div className="flex flex-wrap mb-4">
           <CategorySelect />
-          <div className="ms-auto align-self-end mb-2">
+          <div className="ms-auto content-end mb-2">
             <OrderButtons />
           </div>
           <Separator />

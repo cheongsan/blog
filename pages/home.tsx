@@ -15,19 +15,19 @@ const Feed: React.FC<Props> = () => {
 
   return (
     <StyledWrapper className="container-fulid">
-      <div className="row row-deck">
-        <div className="col-12 col-md-8">
+      <div className="grid grid-cols-12 gap-6 mb-6">
+        <div className="col-span-12 md:col-span-8 justify-self-stretch">
           <ProfileCard />
         </div>
-        <div className="col-12 col-md-4">
+        <div className="col-span-12 md:col-span-4 justify-self-stretch">
           <ServiceCard />
         </div>
-        <div className="col-12">
-          <PinnedPosts />
-        </div>
-        <div className="col-12">
-          <RecentPosts />
-        </div>
+      </div>
+      <div className="mb-6">
+        <PinnedPosts />
+      </div>
+      <div className="">
+        <RecentPosts />
       </div>
     </StyledWrapper>
   )
@@ -40,18 +40,6 @@ const StyledWrapper = styled.div`
     display: block;
   }
 
-  > .row-deck>.col, .row-deck>[class*=col-] {
-    display: flex;
-    align-items: stretch;
-  }
-
-  > .row-deck>.col .card, .row-deck>[class*=col-] .card{
-    flex: 1 1 auto;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-  }
-
   > .lt {
     display: none;
     overflow: scroll;
@@ -61,6 +49,7 @@ const StyledWrapper = styled.div`
 
     scrollbar-width: none;
     -ms-overflow-style: none;
+
     &::-webkit-scrollbar {
       display: none;
     }
@@ -96,6 +85,7 @@ const StyledWrapper = styled.div`
   > .rt {
     scrollbar-width: none;
     -ms-overflow-style: none;
+
     &::-webkit-scrollbar {
       display: none;
     }
