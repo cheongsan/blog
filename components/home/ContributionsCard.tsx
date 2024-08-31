@@ -1,95 +1,88 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react"
 import styled from "@emotion/styled"
-import { CONFIG } from 'site.config';
+import { CONFIG } from "site.config"
 
-import {
-  FaLayerGroup,
-  FaGithubAlt,
-  FaGitlab,
-} from "react-icons/fa6";
-import { TbExternalLink } from "react-icons/tb";
-import {
-  ScrollArea,
-  ScrollBar
-} from "@/components/ui/scroll-area";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { FaLayerGroup, FaGithubAlt, FaGitlab } from "react-icons/fa6"
+import { TbExternalLink } from "react-icons/tb"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 
-interface ContributionDay {
-  date: string | null;
-  githubCount: number;
-  gitlabCount: number;
-  color: string;
+interface Contribution {
+  date: string | null
+  count: number
+  color: string
 }
 
 interface Contributions {
-  github: ContributionDay[][];
-  gitlab: ContributionDay[][];
+  github: Contribution[][]
+  gitlab: Contribution[][]
 }
 
-const CACHE_KEY = 'contributionsCache';
+const CACHE_KEY = "contributionsCache"
 
 export default function Home() {
   const [contributions, setContributions] = useState<Contributions>({
     github: [],
     gitlab: [],
-  });
+  })
 
-  const [filteredContributions, setFilteredContributions] = useState<ContributionDay[][]>([]);
-  const [filter, setFilter] = useState<string>('all');
-  const [loading, setLoading] = useState<boolean>(true);
+  const [filteredContributions, setFilteredContributions] = useState<Contribution[][]>([])
+  const [filter, setFilter] = useState<string>("all")
+  const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
-    const cachedData = localStorage.getItem(CACHE_KEY);
+    const cachedData = localStorage.getItem(CACHE_KEY)
     if (cachedData) {
-      const parsedData = JSON.parse(cachedData);
-      setContributions(parsedData);
-      setFilteredContributions(combineContributions(parsedData));
-      setLoading(false);
+      const parsedData: Contributions = JSON.parse(cachedData)
+      setContributions(parsedData)
+      setFilteredContributions(combineContributions(parsedData))
+      setLoading(false)
     } else {
-      fetchContributions();
+      fetchContributions()
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
-    if (filter === 'all') {
-      setFilteredContributions(combineContributions(contributions));
+    if (filter === "all") {
+      setFilteredContributions(combineContributions(contributions))
     } else {
-      setFilteredContributions(contributions[filter as keyof Contributions] || []);
+      setFilteredContributions(
+          contributions[filter as keyof Contributions] || []
+      )
     }
-  }, [filter, contributions]);
+  }, [filter, contributions])
 
   const fetchContributions = async () => {
     try {
-      const githubRes = await fetch(`/api/github?username=${CONFIG.profile.github}`);
-      const gitlabRes = await fetch(`/api/gitlab?username=${CONFIG.profile.gitlab}`);
+      const githubRes = await fetch(
+          `/api/github?username=${CONFIG.profile.github}`
+      )
+      const gitlabRes = await fetch(
+          `/api/gitlab?username=${CONFIG.profile.gitlab}`
+      )
 
-      const githubData = await githubRes.json();
-      const gitlabData = await gitlabRes.json();
+      const githubData = await githubRes.json()
+      const gitlabData = await gitlabRes.json()
 
       const allContributions: Contributions = {
         github: Array.isArray(githubData) ? parseGitHubData(githubData) : [],
         gitlab: Array.isArray(gitlabData) ? parseGitLabData(gitlabData) : [],
-      };
+      }
 
-      setContributions(allContributions);
-      setFilteredContributions(combineContributions(allContributions));
-      localStorage.setItem(CACHE_KEY, JSON.stringify(allContributions));
-      setLoading(false);
+      setContributions(allContributions)
+      setFilteredContributions(combineContributions(allContributions))
+      localStorage.setItem(CACHE_KEY, JSON.stringify(allContributions))
+      setLoading(false)
     } catch (error) {
-      console.error('Failed to fetch contributions:', error);
-      setLoading(false);
+      console.error("Failed to fetch contributions:", error)
+      setLoading(false)
     }
-  };
+  }
 
   const handleFilterChange = (value: string) => {
-    setFilter(value);
-  };
+    setFilter(value)
+  }
 
   return (
       <TooltipProvider>
@@ -154,7 +147,8 @@ export default function Home() {
                       >
                         {filteredContributions.map((week, weekIndex) =>
                             week.map((day, dayIndex) => {
-                              const tooltipContent = generateTooltipContent(day);
+                              const githubCount = contributions.github[weekIndex][dayIndex].count;
+                              const gitlabCount = contributions.gitlab[weekIndex][dayIndex].count;
                               return (
                                   <Tooltip key={`${weekIndex}-${dayIndex}`}>
                                     <TooltipTrigger asChild>
@@ -170,10 +164,13 @@ export default function Home() {
                                       ></div>
                                     </TooltipTrigger>
                                     <TooltipContent>
-                                      {tooltipContent}
+                                      <p>{day.date}</p>
+                                      {githubCount > 0 && <p>GitHub: {githubCount} contribution{githubCount > 1 ? 's' : ''}</p>}
+                                      {gitlabCount > 0 && <p>GitLab: {gitlabCount} contribution{gitlabCount > 1 ? 's' : ''}</p>}
+                                      {githubCount === 0 && gitlabCount === 0 && <p>0 contribution</p>}
                                     </TooltipContent>
                                   </Tooltip>
-                              );
+                              )
                             })
                         )}
                       </div>
@@ -185,104 +182,89 @@ export default function Home() {
           </Tabs>
         </div>
       </TooltipProvider>
-  );
+  )
 }
 
 // 각 플랫폼에서 가져온 데이터를 일관된 형식으로 변환하는 함수들
-function parseGitHubData(data: any): ContributionDay[][] {
+function parseGitHubData(data: any): Contribution[][] {
   return data.map((week: any) =>
       week.contributionDays.map((day: any) => ({
         date: day.date,
-        githubCount: day.contributionCount,
-        gitlabCount: 0,
+        count: day.contributionCount,
         color: day.color,
       }))
-  );
+  )
 }
 
-function parseGitLabData(data: any): ContributionDay[][] {
+function parseGitLabData(data: any): Contribution[][] {
   const contributions = Array.from({ length: 53 }, (_, weekIndex) =>
       Array.from({ length: 7 }, (_, dayIndex) => {
-        const date = getDateByWeekAndDay(weekIndex, dayIndex);
+        const date = getDateByWeekAndDay(weekIndex, dayIndex)
         return {
-          date: date.toISOString().split('T')[0],
-          githubCount: 0,
-          gitlabCount: 0,
-          color: '#ebedf0',
-        };
+          date: date.toISOString().split("T")[0],
+          count: 0,
+          color: "#ebedf0",
+        }
       })
-  );
+  )
 
   data.forEach((event: any) => {
-    const date = new Date(event.created_at.split('T')[0]);
-    const dayOfWeek = date.getDay();
-    const weekNumber = getWeekNumber(date);
+    const date = new Date(event.created_at.split("T")[0])
+    const dayOfWeek = date.getDay()
+    const weekNumber = getWeekNumber(date)
 
     contributions[weekNumber][dayOfWeek] = {
       ...contributions[weekNumber][dayOfWeek],
-      gitlabCount: contributions[weekNumber][dayOfWeek].gitlabCount + 1,
-      color: '#216e39',
-    };
-  });
+      count: contributions[weekNumber][dayOfWeek].count + 1,
+      color: "#216e39",
+    }
+  })
 
-  return contributions;
+  return contributions
 }
 
 // 각 플랫폼의 기여도를 병합하는 함수
-function combineContributions(contributions: Contributions): ContributionDay[][] {
+function combineContributions(
+    contributions: Contributions
+): Contribution[][] {
   const combined = Array.from({ length: 53 }, (_, weekIndex) =>
-      Array.from({ length: 7 }, (_, dayIndex) => {
-        const date = getDateByWeekAndDay(weekIndex, dayIndex);
-        return {
-          date: date.toISOString().split('T')[0],
-          githubCount: 0,
-          gitlabCount: 0,
-          color: '#ebedf0',
-        };
-      })
-  );
+          Array.from({ length: 7 }, (_, dayIndex) => {
+            const date = getDateByWeekAndDay(weekIndex, dayIndex)
+            return {
+              date: date.toISOString().split("T")[0],
+              count: 0,
+              color: "#ebedf0",
+            }
+          })
+      )
 
-  ['github', 'gitlab'].forEach((platform) => {
-    contributions[platform as keyof Contributions].forEach((week, weekIndex) => {
-      week.forEach((day, dayIndex) => {
-        combined[weekIndex][dayIndex].githubCount += day.githubCount;
-        combined[weekIndex][dayIndex].gitlabCount += day.gitlabCount;
-        if (day.color !== '#ebedf0') {
-          combined[weekIndex][dayIndex].color = day.color;
+  ;["github", "gitlab"].forEach((platform) => {
+    contributions[platform as keyof Contributions].forEach(
+        (week, weekIndex) => {
+          week.forEach((day, dayIndex) => {
+            combined[weekIndex][dayIndex].count += day.count
+            if (day.color !== "#ebedf0") {
+              combined[weekIndex][dayIndex].color = day.color
+            }
+          })
         }
-      });
-    });
-  });
+    )
+  })
 
-  return combined;
+  return combined
 }
 
 function getWeekNumber(date: Date): number {
-  const startOfYear = new Date(date.getFullYear(), 0, 1);
-  const pastDaysOfYear = (date.getTime() - startOfYear.getTime()) / 86400000;
-  return Math.floor((pastDaysOfYear + startOfYear.getDay() + 1) / 7);
+  const startOfYear = new Date(date.getFullYear(), 0, 1)
+  const pastDaysOfYear = (date.getTime() - startOfYear.getTime()) / 86400000
+  return Math.floor((pastDaysOfYear + startOfYear.getDay() + 1) / 7)
 }
 
 function getDateByWeekAndDay(weekNumber: number, dayIndex: number): Date {
-  const startOfYear = new Date(new Date().getFullYear(), 0, 1);
-  return new Date(startOfYear.getTime() + weekNumber * 7 * 86400000 + dayIndex * 86400000);
-}
-
-function generateTooltipContent(day: ContributionDay) {
-  return (
-      <>
-        <p>{day.date}</p>
-        {day.githubCount > 0 && (
-            <p>GitHub : {day.githubCount} contributions</p>
-        )}
-        {day.gitlabCount > 0 && (
-            <p>GitLab : {day.gitlabCount} contributions</p>
-        )}
-        {day.githubCount === 0 && day.gitlabCount === 0 && (
-            <p>0 contribution</p>
-        )}
-      </>
-  );
+  const startOfYear = new Date(new Date().getFullYear(), 0, 1)
+  return new Date(
+      startOfYear.getTime() + weekNumber * 7 * 86400000 + dayIndex * 86400000
+  )
 }
 
 const StyledTabsList = styled(TabsList)`
