@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import styled from "@emotion/styled"
 import { CONFIG } from 'site.config';
 
 import {
@@ -11,17 +12,18 @@ import {
   ScrollArea,
   ScrollBar
 } from "@/components/ui/scroll-area";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface ContributionDay {
   date: string | null;
-  contributionCount: number;
+  githubCount: number;
+  gitlabCount: number;
   color: string;
 }
 
@@ -89,97 +91,101 @@ export default function Home() {
     setFilter(value);
   };
 
-  if (loading) {
-    return (
-        <div className="w-96 h-32">
-          <Skeleton className="h-32 w-full rounded-md" />
-        </div>
-    );
-  }
-
   return (
-      <div>
-        {/* 필터 Tabs */}
-        <Tabs
-            defaultValue="all"
-            value={filter}
-            onValueChange={handleFilterChange}
-        >
-          <TabsList className="space-x-2 bg-body">
-            <TabsTrigger
-                value="all"
-                className="px-4 py-2 rounded-full hover:bg-gray-300 dark:hover:bg-gray-900 focus:outline-none data-[state=active]:bg-gray-200 dark:data-[state=active]:bg-gray-800 data-[state=active]:shadow-none"
-            >
-              <FaLayerGroup className="me-1" /> All
-            </TabsTrigger>
-            <TabsTrigger
-                value="github"
-                className="px-4 py-2 rounded-full hover:bg-gray-300 dark:hover:bg-gray-900 focus:outline-none data-[state=active]:bg-black data-[state=active]:text-white"
-            >
-              <FaGithubAlt className="me-1" /> GitHub
-              <a
-                  href={`https://github.com/${CONFIG.profile.github}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="ml-2 text-blue-600 hover:underline"
+      <TooltipProvider>
+        <div>
+          <Tabs
+              defaultValue="all"
+              value={filter}
+              onValueChange={handleFilterChange}
+          >
+            <StyledTabsList className="space-x-2 bg-body">
+              <TabsTrigger
+                  value="all"
+                  className="px-4 py-2 rounded-full hover:bg-gray-300 dark:hover:bg-black focus:outline-none data-[state=active]:bg-gray-200 dark:data-[state=active]:bg-gray-800 data-[state=active]:shadow-none"
               >
-                <TbExternalLink />
-              </a>
-            </TabsTrigger>
-            <TabsTrigger
-                value="gitlab"
-                className="px-4 py-2 rounded-full hover:bg-orange-300 dark:hover:bg-orange-900 focus:outline-none data-[state=active]:bg-orange-600 data-[state=active]:text-white"
-            >
-              <FaGitlab className="me-1" /> GitLab
-              <a
-                  href={`https://gitlab.com/${CONFIG.profile.gitlab}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="ml-2 text-blue-600 hover:underline"
+                <FaLayerGroup className="me-1" /> All
+              </TabsTrigger>
+              <TabsTrigger
+                  value="github"
+                  className="px-4 py-2 rounded-full hover:bg-gray-300 dark:hover:bg-black focus:outline-none data-[state=active]:bg-black data-[state=active]:text-white"
               >
-                <TbExternalLink />
-              </a>
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value={filter}>
-            {/* 기여도 그리드 */}
-            <ScrollArea className="p-2 whitespace-nowrap rounded-md border">
-              <div style={{ overflowX: "auto", width: "100%" }}>
-                <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: `repeat(53, 11px)`, // 53주는 가로로 배치
-                      gridTemplateRows: `repeat(7, 11px)`, // 7일은 세로로 배치
-                      gap: "4px",
-                      minWidth: "750px", // 최소 너비 설정
-                    }}
+                <FaGithubAlt className="me-1" /> GitHub
+                <a
+                    href={`https://github.com/${CONFIG.profile.github}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-2 text-blue-600 hover:underline"
                 >
-                  {filteredContributions.map((week, weekIndex) =>
-                      week.map((day, dayIndex) => (
-                          <div
-                              key={`${weekIndex}-${dayIndex}`}
-                              title={`${day.date || ""}: ${
-                                  day.contributionCount || 0
-                              } contributions`}
-                              style={{
-                                gridColumnStart: weekIndex + 1, // 주는 가로로 배치
-                                gridRowStart: dayIndex + 1, // 요일은 세로로 배치
-                                width: "10px",
-                                height: "10px",
-                                backgroundColor: day.color || "#ebedf0",
-                                borderRadius: "3px",
-                              }}
-                          ></div>
-                      ))
-                  )}
-                </div>
-              </div>
-              <ScrollBar orientation="horizontal" />
-            </ScrollArea>
-          </TabsContent>
-        </Tabs>
-      </div>
-  )
+                  <TbExternalLink />
+                </a>
+              </TabsTrigger>
+              <TabsTrigger
+                  value="gitlab"
+                  className="px-4 py-2 rounded-full hover:bg-orange-300 dark:hover:bg-orange-900 focus:outline-none data-[state=active]:bg-orange-600 data-[state=active]:text-white"
+              >
+                <FaGitlab className="me-1" /> GitLab
+                <a
+                    href={`https://gitlab.com/${CONFIG.profile.gitlab}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-2 text-blue-600 hover:underline"
+                >
+                  <TbExternalLink />
+                </a>
+              </TabsTrigger>
+            </StyledTabsList>
+            <TabsContent value={filter}>
+              {loading ? (
+                  <ScrollArea className="w-96 h-32">
+                    <div className="h-32 w-full rounded-md bg-gray-200 animate-pulse"></div>
+                  </ScrollArea>
+              ) : (
+                  <ScrollArea className="p-2 whitespace-nowrap rounded-md border">
+                    <div style={{ overflowX: "auto", width: "100%" }}>
+                      <div
+                          style={{
+                            display: "grid",
+                            gridTemplateColumns: `repeat(53, 11px)`,
+                            gridTemplateRows: `repeat(7, 11px)`,
+                            gap: "4px",
+                            minWidth: "750px",
+                          }}
+                      >
+                        {filteredContributions.map((week, weekIndex) =>
+                            week.map((day, dayIndex) => {
+                              const tooltipContent = generateTooltipContent(day);
+                              return (
+                                  <Tooltip key={`${weekIndex}-${dayIndex}`}>
+                                    <TooltipTrigger asChild>
+                                      <div
+                                          style={{
+                                            gridColumnStart: weekIndex + 1,
+                                            gridRowStart: dayIndex + 1,
+                                            width: "10px",
+                                            height: "10px",
+                                            backgroundColor: day.color || "#ebedf0",
+                                            borderRadius: "3px",
+                                          }}
+                                      ></div>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      {tooltipContent}
+                                    </TooltipContent>
+                                  </Tooltip>
+                              );
+                            })
+                        )}
+                      </div>
+                    </div>
+                    <ScrollBar orientation="horizontal" />
+                  </ScrollArea>
+              )}
+            </TabsContent>
+          </Tabs>
+        </div>
+      </TooltipProvider>
+  );
 }
 
 // 각 플랫폼에서 가져온 데이터를 일관된 형식으로 변환하는 함수들
@@ -187,50 +193,104 @@ function parseGitHubData(data: any): ContributionDay[][] {
   return data.map((week: any) =>
       week.contributionDays.map((day: any) => ({
         date: day.date,
-        contributionCount: day.contributionCount,
+        githubCount: day.contributionCount,
+        gitlabCount: 0,
         color: day.color,
       }))
   );
 }
 
 function parseGitLabData(data: any): ContributionDay[][] {
-  const contributions = Array.from({ length: 53 }, () => Array(7).fill({ date: null, contributionCount: 0, color: '#ebedf0' }));
+  const contributions = Array.from({ length: 53 }, (_, weekIndex) =>
+      Array.from({ length: 7 }, (_, dayIndex) => {
+        const date = getDateByWeekAndDay(weekIndex, dayIndex);
+        return {
+          date: date.toISOString().split('T')[0],
+          githubCount: 0,
+          gitlabCount: 0,
+          color: '#ebedf0',
+        };
+      })
+  );
+
   data.forEach((event: any) => {
-    const date = event.created_at.split('T')[0];
-    const dayOfWeek = new Date(date).getDay();
-    const weekNumber = getWeekNumber(new Date(date));
+    const date = new Date(event.created_at.split('T')[0]);
+    const dayOfWeek = date.getDay();
+    const weekNumber = getWeekNumber(date);
 
     contributions[weekNumber][dayOfWeek] = {
-      date: date,
-      contributionCount: (contributions[weekNumber][dayOfWeek].contributionCount || 0) + 1,
+      ...contributions[weekNumber][dayOfWeek],
+      gitlabCount: contributions[weekNumber][dayOfWeek].gitlabCount + 1,
       color: '#216e39',
     };
   });
+
   return contributions;
 }
 
 // 각 플랫폼의 기여도를 병합하는 함수
 function combineContributions(contributions: Contributions): ContributionDay[][] {
-  const combined = Array.from({ length: 53 }, () => Array(7).fill({ date: null, contributionCount: 0, color: '#ebedf0' }));
+  const combined = Array.from({ length: 53 }, (_, weekIndex) =>
+      Array.from({ length: 7 }, (_, dayIndex) => {
+        const date = getDateByWeekAndDay(weekIndex, dayIndex);
+        return {
+          date: date.toISOString().split('T')[0],
+          githubCount: 0,
+          gitlabCount: 0,
+          color: '#ebedf0',
+        };
+      })
+  );
+
   ['github', 'gitlab'].forEach((platform) => {
-    if (contributions[platform as keyof Contributions]) {
-      contributions[platform as keyof Contributions].forEach((week, weekIndex) => {
-        week.forEach((day, dayIndex) => {
-          if (day.contributionCount > 0) {
-            combined[weekIndex][dayIndex].contributionCount += day.contributionCount;
-            combined[weekIndex][dayIndex].color = day.color;
-            combined[weekIndex][dayIndex].date = day.date;
-          }
-        });
+    contributions[platform as keyof Contributions].forEach((week, weekIndex) => {
+      week.forEach((day, dayIndex) => {
+        combined[weekIndex][dayIndex].githubCount += day.githubCount;
+        combined[weekIndex][dayIndex].gitlabCount += day.gitlabCount;
+        if (day.color !== '#ebedf0') {
+          combined[weekIndex][dayIndex].color = day.color;
+        }
       });
-    }
+    });
   });
+
   return combined;
 }
 
-// 주 번호를 계산하는 함수
 function getWeekNumber(date: Date): number {
   const startOfYear = new Date(date.getFullYear(), 0, 1);
   const pastDaysOfYear = (date.getTime() - startOfYear.getTime()) / 86400000;
   return Math.floor((pastDaysOfYear + startOfYear.getDay() + 1) / 7);
 }
+
+function getDateByWeekAndDay(weekNumber: number, dayIndex: number): Date {
+  const startOfYear = new Date(new Date().getFullYear(), 0, 1);
+  return new Date(startOfYear.getTime() + weekNumber * 7 * 86400000 + dayIndex * 86400000);
+}
+
+function generateTooltipContent(day: ContributionDay) {
+  return (
+      <>
+        <p>{day.date}</p>
+        {day.githubCount > 0 && (
+            <p>GitHub : {day.githubCount} contributions</p>
+        )}
+        {day.gitlabCount > 0 && (
+            <p>GitLab : {day.gitlabCount} contributions</p>
+        )}
+        {day.githubCount === 0 && day.gitlabCount === 0 && (
+            <p>0 contribution</p>
+        )}
+      </>
+  );
+}
+
+const StyledTabsList = styled(TabsList)`
+  button {
+    :first-child {
+      &[data-state="active"] {
+        background: var(--card-link);
+      }
+    }
+  }
+`

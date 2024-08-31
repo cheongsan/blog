@@ -30,10 +30,10 @@ const ProfileCard: React.FC<Props> = () => {
           </div>
           <div className="role">{CONFIG.profile.role}</div>
           <Tabs defaultValue="contact">
-            <TabsList>
+            <StyledTabsList>
               <TabsTrigger value="contact">Contact</TabsTrigger>
               <TabsTrigger value="contribution">Contribution</TabsTrigger>
-            </TabsList>
+            </StyledTabsList>
             <TabsContent value="contact">
               <ContactCard />
             </TabsContent>
@@ -82,4 +82,19 @@ const StyledWrapper = styled.div`
             color: var(--gray-11);
         }
     }
+`
+
+const StyledTabsList = styled(TabsList)`
+  .dark & {
+    background: var(--card-link);
+    button {
+      background: var(--card-link);
+      color: var(--gray-10);
+
+      &[data-state="active"] {
+        background: black;
+        color: white;
+      }
+    }
+  }
 `

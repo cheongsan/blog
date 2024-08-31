@@ -46,8 +46,8 @@ const TagList: React.FC<Props> = () => {
               onClick={() => handleClickTag(key)}
               onMouseEnter={() => setHoveredTag(key)}
               onMouseLeave={() => setHoveredTag(null)}
-              className="flex rounded-full hover:bg-stone-300 text-stone-500
-                  data-[active=true]:bg-stone-500 data-[active=true]:hover:bg-stone-400 data-[active=true]:text-white"
+              className="flex rounded-full hover:bg-stone-300 text-stone-500 border-stone-300 dark:border-stone-800
+                  data-[active=true]:bg-stone-500 dark:data-[active=true]:bg-stone-700 data-[active=true]:hover:bg-stone-400 data-[active=true]:text-white"
             >
               {key === currentTag ? (
                 hoveredTag === key ? (
