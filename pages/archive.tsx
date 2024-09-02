@@ -54,7 +54,7 @@ const FeedPage: NextPageWithLayout = () => {
           <div className="grow">
             <SearchInput value={q} onChange={(e) => setQ(e.target.value)} />
           </div>
-          <StyledTabsList className="flex space-x-2 ms-2 bg-body">
+          <StyledTabsList className="flex space-x-2 md:ms-2 p-0 bg-body">
             <TabsTrigger
               value="tag"
               className="sm:px-4 sm:py-2 rounded-full bg-gray-200 hover:bg-gray-300 focus:outline-none"
@@ -75,9 +75,7 @@ const FeedPage: NextPageWithLayout = () => {
             </TabsTrigger>
           </StyledTabsList>
         </div>
-        <TabsContent value="tag">
-          <TagList />
-        </TabsContent>
+        <TabsContent value="tag"><TagList /></TabsContent>
         <TabsContent value="book"></TabsContent>
         <TabsContent value="event"></TabsContent>
       </Tabs>
