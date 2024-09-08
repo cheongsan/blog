@@ -1,4 +1,3 @@
-import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
 import styled from "@emotion/styled"
 import PostCard from "./PostCard"
@@ -12,25 +11,24 @@ type Props = {
 }
 
 const RecentPosts: React.FC<Props> = ({ q }) => {
-  const router = useRouter()
   const data = usePostsQuery()
   const [filteredPosts, setFilteredPosts] = useState(data)
 
-  const currentTag = `${router.query.tag || ``}` || undefined
-  const currentCategory = `${router.query.category || ``}` || DEFAULT_CATEGORY
-  const currentOrder = `${router.query.order || ``}` || "desc"
+  const currentTag = undefined
+  const currentCategory = DEFAULT_CATEGORY
+  const currentStatus = "Public"
+  const currentOrder = "desc"
 
   useEffect(() => {
     setFilteredPosts(() => {
-      let newFilteredPosts = data
-      // order
-      if (currentOrder !== "desc") {
-        newFilteredPosts = newFilteredPosts.reverse()
-      }
+      let newFilteredPosts = data.filter(
+          (post) =>
+              post && post.status && post.status.includes(currentStatus)
+      )
 
       return newFilteredPosts
     })
-  }, [q, currentTag, currentCategory, currentOrder, setFilteredPosts])
+  }, [q, currentTag, currentCategory, currentStatus, currentOrder, setFilteredPosts])
 
   return (
     <>

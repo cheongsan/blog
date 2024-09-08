@@ -1,4 +1,3 @@
-import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
 import styled from "@emotion/styled"
 import PostCard from "./PostCard"
@@ -11,7 +10,6 @@ type Props = {
 }
 
 const PinnedPosts: React.FC<Props> = ({ q }) => {
-  const router = useRouter()
   const data = usePostsQuery()
   const [filteredPosts, setFilteredPosts] = useState(data)
 
