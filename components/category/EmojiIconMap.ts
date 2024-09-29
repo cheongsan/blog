@@ -11,6 +11,7 @@ import {
   TbChartHistogram,
   TbSpeakerphone
 } from "react-icons/tb"
+import { PiGearSixBold } from "react-icons/pi"
 
 export const EmojiIconMap: { [key: string]: React.ElementType } = {
   "📂": TbFolderOpen,
@@ -22,5 +23,6 @@ export const EmojiIconMap: { [key: string]: React.ElementType } = {
   "📑": TbFileZip,
   "💡": TbCpu,
   "📊": TbChartHistogram,
-  "📢": TbSpeakerphone
+  "📢": TbSpeakerphone,
+  "⚙": PiGearSixBold
 }
