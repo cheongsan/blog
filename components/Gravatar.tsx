@@ -1,26 +1,45 @@
+import React, { useState, useEffect } from 'react';
 import styled from "@emotion/styled"
-import React from 'react';
-import { CONFIG } from "site.config"
-import md5 from 'md5';
 
 const StyledImage = styled.img`
-    display: block;
-    margin-top: 0px;
-    margin-right: auto;
-    border-top-left-radius: 50%;
-    border-top-right-radius: 50%;
-    border-bottom-right-radius: 50%;
-    border-bottom-left-radius: 50%;
-`;
+  display: block;
+  margin-top: 0px;
+  margin-right: auto;
+  border-radius: 50%;
+`
 
 const Gravatar = ({ size = 200 }) => {
-    // 이메일 해시 생성 (사용자 이름을 이메일로 가정)
-    const hash = md5(CONFIG.profile.gravatar_email);
+  const localImageUrl = `gravatar-${size * 2}.png`;
+  const defaultImageUrl = 'avatar.svg';
 
-    // Gravatar 이미지 URL 생성
-    const imageUrl = `https://www.gravatar.com/avatar/${hash}?s=${size*2}&d=identicon`;
+  const [imgSrc, setImgSrc] = useState(defaultImageUrl);
+  const [isLoading, setIsLoading] = useState(true);
 
-    return <StyledImage src={imageUrl} alt={`${CONFIG.profile.gravatar}'s Gravatar`} width={size} height={size} />;
-};
+  useEffect(() => {
+    // 이미지 로딩을 처리하는 함수
+    const loadImage = async () => {
+      const img = new Image();
+      img.src = localImageUrl; // 로컬 이미지 경로
+      img.onload = () => {
+        setImgSrc(localImageUrl); // 이미지 로드 성공 시 프로필 이미지로 변경
+        setIsLoading(false); // 로딩 완료
+      };
+      img.onerror = () => {
+        setIsLoading(false); // 이미지 로드 실패 시에도 로딩 완료
+      };
+    };
 
-export default Gravatar;
+    loadImage(); // 컴포넌트 마운트 시 이미지 로드 시도
+  }, [localImageUrl]);
+
+  return (
+    <StyledImage
+      src={imgSrc}
+      alt="Gravatar"
+      width={size}
+      height={size}
+    />
+  )
+}
+
+export default Gravatar

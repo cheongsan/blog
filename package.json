@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node ./lib/downloadGravatar.js",
     "build": "next build",
     "start": "next start",
     "postbuild": "next-sitemap --config next-sitemap.config.js",

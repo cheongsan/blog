@@ -37,3 +37,6 @@ yarn-error.log*
 public/sitemap.xml
 
 /.firebase
+
+# 사용자 정의
+public/gravatar*.png
