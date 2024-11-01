@@ -5,6 +5,11 @@ import styled from "@emotion/styled"
 import { CardLink } from "@/components/CardLink"
 import { Tb3DCubeSphere } from "react-icons/tb"
 
+interface Project {
+    name: string;
+    href: string;
+}
+
 const ServiceCard: React.FC = () => {
   if (!CONFIG.projects) return null
   return (
@@ -13,7 +18,7 @@ const ServiceCard: React.FC = () => {
         <StyledTitle>
           < Tb3DCubeSphere size="24" /> {CONFIG.projects.length > 1 ? "Projects" : "Project"}
         </StyledTitle>
-          {CONFIG.projects.map((project, idx) => (
+          {CONFIG.projects.map((project: Project, idx:number) => (
             <CardLink
               key={idx}
               href={`${project.href}`}
