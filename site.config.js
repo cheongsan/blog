@@ -13,16 +13,9 @@ const CONFIG = {
     bitbucket: "cheongsan",
     instagram: "cheongsando_",
   },
-  projects: [
-    {
-      name: `VEGECRAFT`,
-      href: "/vegecraft",
-    },
-    {
-      name: `KOONGRAIL`,
-      href: "/koongrail",
-    },
-  ],
+  projects: process.env.NEXT_PUBLIC_PROJECTS
+      ? JSON.parse(process.env.NEXT_PUBLIC_PROJECTS)
+      : [],
   // blog setting (required)
   blog: {
     title: "CHEONGSANDO",
