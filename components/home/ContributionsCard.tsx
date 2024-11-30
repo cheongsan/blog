@@ -196,84 +196,139 @@ export default function Home() {
 
 // 각 플랫폼에서 가져온 데이터를 일관된 형식으로 변환하는 함수들
 function parseGitHubData(data: any): Contribution[][] {
-  return data.map((week: any) =>
-      week.contributionDays.map((day: any) => ({
-        date: day.date,
-        count: day.contributionCount,
-        color: day.color,
+  // 데이터 파싱 및 필터링 (현재 연도만 포함)
+  const currentYear = new Date().getFullYear();
+  const contributions = Array.from({ length: 53 }, () =>
+      Array.from({ length: 7 }, () => ({
+        date: null,
+        count: 0,
+        color: getColor(0),
       }))
-  )
+  );
+
+  data.forEach((week: any, weekIndex: number) => {
+    week.contributionDays.forEach((day: any, dayIndex: number) => {
+      const date = new Date(day.date);
+      if (date.getFullYear() === currentYear) {
+        contributions[weekIndex][dayIndex] = {
+          date: date.toISOString().split("T")[0],
+          count: day.contributionCount,
+          color: getColor(day.contributionCount),
+        };
+      }
+    });
+  });
+
+  return filterCurrentYear(contributions);
 }
 
 function parseGitLabData(data: any): Contribution[][] {
+  const currentYear = new Date().getFullYear();
+
+  // 기본 캘린더 데이터 생성
   const contributions = Array.from({ length: 53 }, (_, weekIndex) =>
       Array.from({ length: 7 }, (_, dayIndex) => {
-        const date = getDateByWeekAndDay(weekIndex, dayIndex)
-        return {
-          date: date.toISOString().split("T")[0],
-          count: 0,
-          color: "#ebedf0",
+        const date = getDateByIndex(weekIndex, dayIndex);
+        if (date.getFullYear() === currentYear) {
+          return {
+            date: date.toISOString().split("T")[0],
+            count: 0,
+            color: getColor(0),
+          };
         }
+        return { date: null, count: 0, color: getColor(0) };
       })
-  )
+  );
 
   data.forEach((event: any) => {
-    const date = new Date(event.created_at.split("T")[0])
-    const dayOfWeek = date.getDay()
-    const weekNumber = getWeekNumber(date)
-
-    contributions[weekNumber][dayOfWeek] = {
-      ...contributions[weekNumber][dayOfWeek],
-      count: contributions[weekNumber][dayOfWeek].count + 1,
-      color: "#216e39",
+    const date = new Date(event.created_at.split("T")[0]);
+    if (date.getFullYear() === currentYear) {
+      const { weekIndex, dayIndex } = getWeekAndDayIndex(date);
+      if (contributions[weekIndex] && contributions[weekIndex][dayIndex]) {
+        contributions[weekIndex][dayIndex].count += 1;
+        contributions[weekIndex][dayIndex].color = getColor(
+            contributions[weekIndex][dayIndex].count
+        );
+      }
     }
-  })
+  });
 
-  return contributions
+  return filterCurrentYear(contributions);
 }
 
-// 각 플랫폼의 기여도를 병합하는 함수
-function combineContributions(
-    contributions: Contributions
-): Contribution[][] {
-  const combined = Array.from({ length: 53 }, (_, weekIndex) =>
-          Array.from({ length: 7 }, (_, dayIndex) => {
-            const date = getDateByWeekAndDay(weekIndex, dayIndex)
-            return {
-              date: date.toISOString().split("T")[0],
-              count: 0,
-              color: "#ebedf0",
-            }
-          })
-      )
+// 날짜 계산 유틸리티 함수
+function getWeekAndDayIndex(date: Date): { weekIndex: number; dayIndex: number } {
+  const startOfYear = new Date(date.getFullYear(), 0, 1); // 1월 1일
+  const dayOfYear = Math.floor((date.getTime() - startOfYear.getTime()) / 86400000); // 연도 기준 일차
+  const weekIndex = Math.floor(dayOfYear / 7); // 주차 계산
+  const dayIndex = date.getDay(); // 요일 계산 (0: 일요일, 6: 토요일)
+  return { weekIndex, dayIndex };
+}
 
-  ;["github", "gitlab"].forEach((platform) => {
+function getDateByIndex(weekIndex: number, dayIndex: number): Date {
+  const currentYear = new Date().getFullYear();
+  const startOfYear = new Date(currentYear, 0, 1); // 1월 1일
+  const dayOffset = weekIndex * 7 + dayIndex; // 주차 및 요일 기준 일차 계산
+  return new Date(startOfYear.getTime() + dayOffset * 86400000); // 결과 날짜 반환
+}
+
+// 병합 로직 수정
+function combineContributions(contributions: Contributions): Contribution[][] {
+  const combined = Array.from({ length: 53 }, (_, weekIndex) =>
+      Array.from({ length: 7 }, (_, dayIndex) => {
+        const date = getDateByIndex(weekIndex, dayIndex);
+        if (date.getFullYear() === new Date().getFullYear()) {
+          return {
+            date: date.toISOString().split("T")[0], // ISO 형식 문자열로 변환
+            count: 0,
+            color: "#ebedf0",
+          };
+        }
+        return { date: null, count: 0, color: "#ebedf0" }; // 현재 연도가 아닌 데이터는 제외
+      })
+  );
+
+  ["github", "gitlab"].forEach((platform) => {
     contributions[platform as keyof Contributions].forEach(
         (week, weekIndex) => {
           week.forEach((day, dayIndex) => {
-            combined[weekIndex][dayIndex].count += day.count
-            if (day.color !== "#ebedf0") {
-              combined[weekIndex][dayIndex].color = day.color
+            if (day.date) {
+              const { weekIndex: combinedWeek, dayIndex: combinedDay } = getWeekAndDayIndex(new Date(day.date));
+              if (combined[combinedWeek] && combined[combinedWeek][combinedDay]) {
+                combined[combinedWeek][combinedDay].count += day.count;
+                if (day.color !== "#ebedf0") {
+                  combined[combinedWeek][combinedDay].color = day.color;
+                }
+              }
             }
-          })
+          });
         }
-    )
-  })
+    );
+  });
 
-  return combined
+  return filterCurrentYear(combined);
 }
 
-function getWeekNumber(date: Date): number {
-  const startOfYear = new Date(date.getFullYear(), 0, 1)
-  const pastDaysOfYear = (date.getTime() - startOfYear.getTime()) / 86400000
-  return Math.floor((pastDaysOfYear + startOfYear.getDay() + 1) / 7)
+// 현재 연도 데이터만 필터링
+function filterCurrentYear(contributions: Contribution[][]): Contribution[][] {
+  const currentYear = new Date().getFullYear();
+  return contributions.map((week) =>
+      week.map((day) => {
+        if (!day.date) return { ...day, date: null }; // 날짜가 없는 경우 무시
+        const date = new Date(day.date);
+        return date.getFullYear() === currentYear
+            ? day
+            : { ...day, date: null, count: 0, color: "#ebedf0" };
+      })
+  );
 }
 
-function getDateByWeekAndDay(weekNumber: number, dayIndex: number): Date {
-  const startOfYear = new Date(new Date().getFullYear(), 0, 1)
-  return new Date(
-      startOfYear.getTime() + weekNumber * 7 * 86400000 + dayIndex * 86400000
-  )
+function getColor(contributionCount: number): string {
+  if (contributionCount === 0) return "#ebedf0"
+  if (contributionCount <= 2) return "#c6e48b"
+  if (contributionCount <= 4) return "#7bc96f"
+  if (contributionCount <= 6) return "#239a3b"
+  return "#216e39"
 }
 
 const StyledTabsList = styled(TabsList)`
