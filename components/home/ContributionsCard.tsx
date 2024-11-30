@@ -32,13 +32,18 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
-    const cachedData = localStorage.getItem(CACHE_KEY)
-    if (cachedData) {
-      const parsedData: Contributions = JSON.parse(cachedData)
-      setContributions(parsedData)
-      setFilteredContributions(combineContributions(parsedData))
-      setLoading(false)
-    } else {
+    try {
+      const cachedData = localStorage.getItem(CACHE_KEY)
+      if (cachedData) {
+        const parsedData: Contributions = JSON.parse(cachedData)
+        setContributions(parsedData)
+        setFilteredContributions(combineContributions(parsedData))
+        setLoading(false)
+      } else {
+        fetchContributions()
+      }
+    } catch (error) {
+      console.warn("Failed to access localStorage or parse cached data:", error)
       fetchContributions()
     }
   }, [])
@@ -72,7 +77,11 @@ export default function Home() {
 
       setContributions(allContributions)
       setFilteredContributions(combineContributions(allContributions))
-      localStorage.setItem(CACHE_KEY, JSON.stringify(allContributions))
+      try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify(allContributions))
+      } catch (storageError) {
+        console.warn("Failed to save data in localStorage:", storageError)
+      }
       setLoading(false)
     } catch (error) {
       console.error("Failed to fetch contributions:", error)
@@ -147,8 +156,8 @@ export default function Home() {
                       >
                         {filteredContributions.map((week, weekIndex) =>
                             week.map((day, dayIndex) => {
-                              const githubCount = contributions.github[weekIndex][dayIndex].count;
-                              const gitlabCount = contributions.gitlab[weekIndex][dayIndex].count;
+                              const githubCount = contributions.github[weekIndex]?.[dayIndex]?.count || 0;
+                              const gitlabCount = contributions.gitlab[weekIndex]?.[dayIndex]?.count || 0;
                               return (
                                   <Tooltip key={`${weekIndex}-${dayIndex}`}>
                                     <TooltipTrigger asChild>
