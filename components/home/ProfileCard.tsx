@@ -18,7 +18,7 @@ const ProfileCard: React.FC<Props> = () => {
           <Gravatar size={150} />
         </div>
         <div className="col-span-12 sm:col-span-7 md:col-span-8 lg:col-span-9 mid">
-          <div className="name">
+          <div className="text-xl font-bold leading-7 name">
             {CONFIG.profile.name}
               <CardHotLink
                 href={`https://www.gravatar.com/${CONFIG.profile.gravatar}`}
@@ -28,7 +28,7 @@ const ProfileCard: React.FC<Props> = () => {
                 <span className="hidden lg:block">View on&nbsp;</span>Gravatar
               </CardHotLink>
           </div>
-          <div className="role">{CONFIG.profile.role}</div>
+          <div className="text-sm mb-4 role">{CONFIG.profile.role}</div>
           <Tabs defaultValue="contact">
             <StyledTabsList>
               <TabsTrigger value="contact">Contact</TabsTrigger>
@@ -63,10 +63,6 @@ const StyledWrapper = styled.div`
     .mid {
         .name {
             position: relative;
-            font-size: 1.25rem;
-            line-height: 1.75rem;
-            font-style: normal;
-            font-weight: 700;
 
             .card-hot-link {
               position: absolute;
@@ -76,9 +72,6 @@ const StyledWrapper = styled.div`
         }
 
         .role {
-            margin-bottom: 1rem;
-            font-size: 0.875rem;
-            line-height: 1.25rem;
             color: var(--gray-11);
         }
     }
