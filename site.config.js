@@ -3,8 +3,8 @@ const CONFIG = {
   profile: {
     name: "KIM, CHEONGSAN",
     image: "/avatar.svg", // If you want to create your own notion avatar, check out https://notion-avatar.vercel.app
-    role: "Cloud Engineer(SRE) | BE",
-    email: "cheongsan@cheongsan.com",
+    role: "Developer",
+    email: "bluemountains@cheongsan.do",
     gravatar_email: process.env.GRAVATAR_PROFILE_EMAIL || "",
     gravatar: "cheongsando",
     linkedin: "cheongsan",
