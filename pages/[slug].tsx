@@ -13,7 +13,7 @@ import usePostQuery from "@/lib/usePostQuery"
 import { FilterPostsOptions } from "@/lib/notion/filterPosts"
 
 const filter: FilterPostsOptions = {
-  acceptStatus: ["Public", "PublicOnDetail", "Pinned"],
+  acceptStatus: ["Public", "PublicOnDetail", "Pinned", "Archived"],
   acceptType: ["Paper", "Post", "Page"],
 }
 
