@@ -12,7 +12,7 @@ export type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout
 }
 
-export type TPostStatus = "Private" | "Public" | "PublicOnDetail" | "Pinned"
+export type TPostStatus = "Private" | "Public" | "PublicOnDetail" | "Pinned" | "Archived"
 export type TPostType = "Post" | "Paper" | "Page"
 
 export type TPost = {
