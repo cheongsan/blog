@@ -10,7 +10,7 @@ const CONFIG = {
     linkedin: "cheongsan",
     github: "cheongsan",
     gitlab: "cheongsan",
-    bitbucket: "cheongsan",
+    bitbucket: "cheongsan-do",
     instagram: "cheongsando_",
   },
   projects: process.env.NEXT_PUBLIC_PROJECTS
@@ -55,7 +55,7 @@ const CONFIG = {
     },
   },
   utterances: {
-    enable: true,
+    enable: false,
     config: {
       repo: process.env.NEXT_PUBLIC_UTTERANCES_REPO || "cheongsan/blog",
       "issue-term": "og:title",
