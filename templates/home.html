@@ -123,7 +123,7 @@
         </div>
         <div class="space-y-6">
             {% for post in pinned_posts %}
-            {% include "blog/post_card.html" with post=post %}
+            {% include "components/post_card.html" with post=post %}
             {% endfor %}
         </div>
     </div>
@@ -139,7 +139,7 @@
         {% if recent_posts %}
         <div class="space-y-6">
             {% for post in recent_posts %}
-            {% include "blog/post_card.html" with post=post %}
+            {% include "components/post_card.html" with post=post %}
             {% endfor %}
         </div>
         {% else %}

@@ -1,0 +1,41 @@
+<a href="/{{ post.slug }}/" class="block">
+    <article class="card-link overflow-hidden relative mb-6 flex flex-wrap rounded-2xl">
+        {% if post.thumbnail %}
+        <div class="relative w-full lg:w-[35%] bg-[var(--gray-2)] aspect-[2/1] lg:aspect-auto lg:h-auto">
+            <img src="{{ post.thumbnail }}" alt="{{ post.title }}" class="w-full h-full object-cover absolute inset-0">
+        </div>
+        {% endif %}
+        
+        <div class="w-full {% if post.thumbnail %}lg:w-[65%]{% endif %} p-4 flex flex-col justify-between">
+            <div class="relative">
+                {% if post.category %}
+                <div class="mb-2">
+                    {% include "components/category.html" with category=post.category.0 %}
+                </div>
+                {% endif %}
+                
+                <header class="mb-2">
+                    <h2 class="text-lg lg:text-xl font-bold leading-tight">{{ post.title }}</h2>
+                </header>
+                
+                <div class="flex items-center gap-2 text-xs text-[var(--gray-10)] mb-3">
+                    <span>{{ post.date|date:"Y.m.d" }}</span>
+                </div>
+                
+                <div class="hidden md:block mb-4 text-sm text-[var(--gray-11)] line-clamp-2">
+                    {{ post.summary }}
+                </div>
+                
+                <div class="flex flex-wrap gap-1.5">
+                    {% for tag in post.tags %}
+                        {% include "components/tag.html" with tag=tag %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--card-read-more)]">
+            <i class="ti ti-chevron-right text-3xl"></i>
+        </div>
+    </article>
+</a>

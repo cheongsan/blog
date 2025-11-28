@@ -37,7 +37,7 @@ def index(request):
         'gravatar_url': gravatar_url,
         'tags': tags,
     }
-    return render(request, 'blog/home.html', context)
+    return render(request, 'home.html', context)
 
 
 def home(request):

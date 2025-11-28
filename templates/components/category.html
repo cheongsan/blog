@@ -1,0 +1,14 @@
+{% load category_tags %}
+{% get_category_color category as bg_color %}
+{% get_category_icon category as icon_data %}
+
+<div 
+    class="flex items-center py-1 px-2 rounded-full w-fit text-sm opacity-90 {% if not read_only %}cursor-pointer{% else %}cursor-default{% endif %}"
+    style="background-color: {{ bg_color }};"
+    {% if not read_only %}onclick="event.preventDefault(); event.stopPropagation(); location.href='/archive?category={{ category }}'"{% endif %}
+>
+    <span class="mr-1 flex items-center text-lg">
+        {{ icon_data.icon }}
+    </span>
+    <span>{{ icon_data.text }}</span>
+</div>
