@@ -4,7 +4,7 @@ const CONFIG = {
     name: "KIM, CHEONGSAN",
     image: "/avatar.svg", // If you want to create your own notion avatar, check out https://notion-avatar.vercel.app
     role: "Developer",
-    email: "bluemountains@cheongsan.do",
+    email: "developer@cheongsan.kim",
     gravatar_email: process.env.GRAVATAR_PROFILE_EMAIL || "",
     gravatar: "cheongsando",
     linkedin: "cheongsan",
