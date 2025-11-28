@@ -17,6 +17,10 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load .env file
+from dotenv import load_dotenv
+load_dotenv(BASE_DIR / '.env')
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -45,6 +49,13 @@ SITE_PROFILE = {
 }
 
 # Site Configuration
+# Default projects for development
+DEFAULT_PROJECTS = [
+    {"name": "VEGECRAFT", "href": "/vegecraft"},
+    {"name": "KOONGRAIL", "href": "/koongrail"},
+    {"name": "Ansible Jupyter Kernel", "href": "/ansible-jupyter-kernel"},
+]
+
 SITE_CONFIG = {
     'title': os.environ.get('BLOG_TITLE', 'CHEONGSANDO'),
     'description': os.environ.get('BLOG_DESCRIPTION', 'desertisland'),
