@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{{ site_blog.title }} - {{ site_blog.description }}{% endblock %}</title>
     <meta name="robots" content="follow, index">
+    <link rel="stylesheet" href="{% static 'css/layout.css' %}">
     <link rel="stylesheet" href="{% static 'css/global.css' %}">
     <link rel="stylesheet" href="{% static 'css/theme.css' %}">
     <link rel="stylesheet" href="{% static 'css/colour.css' %}">
-    <link rel="stylesheet" href="{% static 'css/layout.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.35.0/tabler-icons.min.css" integrity="sha512-gzw5zNP2TRq+DKyAqZfDclaTG4dOrGJrwob2Fc8xwcJPDPVij0HowLIMZ8c1NefFM0OZZYUUUNoPfcoI5jqudw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -68,8 +68,6 @@
         :root {
             --background: 0 0% 100%;
             --foreground: 224 71.4% 4.1%;
-            --card: 0 0% 100%;
-            --card-foreground: 224 71.4% 4.1%;
             --popover: 0 0% 100%;
             --popover-foreground: 224 71.4% 4.1%;
             --primary: 220.9 39.3% 11%;
@@ -91,8 +89,6 @@
         .dark {
             --background: 224 71.4% 4.1%;
             --foreground: 210 20% 98%;
-            --card: 224 71.4% 4.1%;
-            --card-foreground: 210 20% 98%;
             --popover: 224 71.4% 4.1%;
             --popover-foreground: 210 20% 98%;
             --primary: 210 20% 98%;
@@ -120,7 +116,7 @@
     </script>
     {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-background text-foreground min-h-screen flex flex-col">
+<body class="text-[var(--gray-12)] min-h-screen flex flex-col">
     <!-- Header -->
     <header class="sticky top-0 z-30 bg-[var(--nav)] backdrop-blur-xl saturate-150 w-full">
         <div class="mx-auto flex w-full max-w-[1120px] items-center justify-between px-6 py-5 text-[1.3rem] leading-4">

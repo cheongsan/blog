@@ -1,170 +1,158 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="block md:grid md:grid-cols-12 gap-6">
-    <!-- Left Column (Profile & Service) -->
-    <div class="hidden lg:block lg:col-span-3 space-y-6 sticky top-[calc(var(--header-height)+10px)] h-fit overflow-y-auto no-scrollbar">
-        <!-- Profile Card -->
-        <div class="bg-[var(--card)] rounded-2xl p-4">
-            <div class="relative mb-4">
-                <img 
-                    src="{{ gravatar_url }}"
-                    alt="Avatar" 
-                    class="w-36 h-36 rounded-full mx-auto block"
-                >
-            </div>
-            <div class="text-center mb-4">
-                <div class="text-xl font-bold relative inline-block w-full">
-                    {{ site_profile.name }}
-                    <a 
-                        href="https://www.gravatar.com/{{ site_profile.gravatar }}" 
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="card-hot-link absolute top-0 right-0 text-[var(--gray-10)] hover:text-[var(--gray-12)]"
-                        title="View on Gravatar"
-                    >
-                        <i class="ti ti-brand-gravatar text-sm mr-1"></i>
-                        <span class="hidden lg:inline text-xs">View on Gravatar</span>
-                    </a>
-                </div>
-                <div class="text-sm text-[var(--gray-11)]">{{ site_profile.role }}</div>
-            </div>
+<div class="container-fluid">
+    <!-- Top Row: Profile Card + Service Card -->
+    <div class="grid grid-cols-12 gap-6 mb-6">
+        <!-- Profile Card (8 columns on md+, full on mobile) -->
+        <div class="col-span-12 md:col-span-8">
+            <div class="card bg-[var(--card)] rounded-2xl p-4">
+                <div class="grid grid-cols-12 row-auto gap-4">
+                    <!-- Avatar Column -->
+                    <div class="col-span-12 sm:col-span-5 md:col-span-4 lg:col-span-3">
+                        <img 
+                            src="{{ gravatar_url }}"
+                            alt="Avatar" 
+                            class="w-36 h-36 rounded-full mx-auto block"
+                        >
+                    </div>
+                    <!-- Info Column -->
+                    <div class="col-span-12 sm:col-span-7 md:col-span-8 lg:col-span-9">
+                        <div class="text-xl font-bold leading-7 relative">
+                            {{ site_profile.name }}
+                            <a 
+                                href="https://www.gravatar.com/{{ site_profile.gravatar }}" 
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="card-hot-link absolute top-0 right-0"
+                                title="View on Gravatar"
+                            >
+                                <i class="ti ti-brand-gravatar text-sm mr-1"></i>
+                                <span class="hidden lg:inline">View on&nbsp;</span>Gravatar
+                            </a>
+                        </div>
+                        <div class="text-sm mb-4 text-[var(--gray-11)]">{{ site_profile.role }}</div>
+                        
+                        <!-- Tabs -->
+                        <div class="w-full">
+                            <div class="tabs-list flex w-full mb-4">
+                                <button 
+                                    class="tabs-trigger flex-1"
+                                    data-state="active"
+                                    onclick="switchTab(this, 'contact')"
+                                >
+                                    Contact
+                                </button>
+                                <button 
+                                    class="tabs-trigger flex-1"
+                                    data-state="inactive"
+                                    onclick="switchTab(this, 'contribution')"
+                                >
+                                    Contribution
+                                </button>
+                            </div>
 
-            <!-- Tabs -->
-            <div class="w-full">
-                <div class="tabs-list flex w-full mb-4">
-                    <button 
-                        class="tabs-trigger flex-1"
-                        data-state="active"
-                        onclick="switchTab(this, 'contact')"
-                    >
-                        Contact
-                    </button>
-                    <button 
-                        class="tabs-trigger flex-1"
-                        data-state="inactive"
-                        onclick="switchTab(this, 'contribution')"
-                    >
-                        Contribution
-                    </button>
-                </div>
+                            <!-- Contact Tab -->
+                            <div id="contact-pane" class="tabs-content">
+                                <div class="flex flex-col rounded-2xl bg-[var(--card)]">
+                                    {% if site_profile.github %}
+                                    <a href="https://github.com/{{ site_profile.github }}" target="_blank" rel="noreferrer" class="card-link flex items-center gap-3 px-[0.65rem] py-2 rounded-[0.95rem] text-[var(--gray-11)] hover:text-[var(--gray-12)]">
+                                        <svg viewBox="64 64 896 896" focusable="false" data-icon="github" width="1.5rem" height="1.5rem" fill="currentColor" aria-hidden="true"><path d="M511.6 76.3C264.3 76.2 64 276.4 64 523.5 64 718.9 189.3 885 363.8 946c23.5 5.9 19.9-10.8 19.9-22.2v-77.5c-135.7 15.9-141.2-73.9-150.3-88.9C215 726 171.5 718 184.5 703c30.9-15.9 62.4 4 98.9 57.9 26.4 39.1 77.9 32.5 104 26 5.7-23.5 17.9-44.5 34.7-60.8-140.6-25.2-199.2-111-199.2-213 0-49.5 16.3-95 48.3-131.7-20.4-60.5 1.9-112.3 4.9-120 58.1-5.2 118.5 41.6 123.2 45.3 33-8.9 70.7-13.6 112.9-13.6 42.4 0 80.2 4.9 113.5 13.9 11.3-8.6 67.3-48.8 121.3-43.9 2.9 7.7 24.7 58.3 5.5 118 32.4 36.8 48.9 82.7 48.9 132.3 0 102.2-59 188.1-200 212.9a127.5 127.5 0 0138.1 91v112.5c.8 9 0 17.9 15 17.9 177.1-59.7 304.6-227 304.6-424.1 0-247.2-200.4-447.3-447.5-447.3z"></path></svg>
+                                        <span class="text-sm">{{ site_profile.github }}</span>
+                                    </a>
+                                    {% endif %}
+                                    {% if site_profile.instagram %}
+                                    <a href="https://www.instagram.com/{{ site_profile.instagram }}" target="_blank" rel="noreferrer" class="card-link flex items-center gap-3 px-[0.65rem] py-2 rounded-[0.95rem] text-[var(--gray-11)] hover:text-[var(--gray-12)]">
+                                        <svg viewBox="64 64 896 896" focusable="false" data-icon="instagram" width="1.5rem" height="1.5rem" fill="currentColor" aria-hidden="true"><path d="M512 306.9c-113.5 0-205.1 91.6-205.1 205.1S398.5 717.1 512 717.1 717.1 625.5 717.1 512 625.5 306.9 512 306.9zm0 338.4c-73.4 0-133.3-59.9-133.3-133.3S438.6 378.7 512 378.7 645.3 438.6 645.3 512 585.4 645.3 512 645.3zm213.5-394.6c-26.5 0-47.9 21.4-47.9 47.9s21.4 47.9 47.9 47.9 47.9-21.3 47.9-47.9a47.84 47.84 0 00-47.9-47.9zM911.8 512c0-55.2.5-109.9-2.6-165-3.1-64-17.7-120.8-64.5-167.6-46.9-46.9-103.6-61.4-167.6-64.5-55.2-3.1-109.9-2.6-165-2.6-55.2 0-109.9-.5-165 2.6-64 3.1-120.8 17.7-167.6 64.5C132.6 226.3 118.1 283 115 347c-3.1 55.2-2.6 109.9-2.6 165s-.5 109.9 2.6 165c3.1 64 17.7 120.8 64.5 167.6 46.9 46.9 103.6 61.4 167.6 64.5 55.2 3.1 109.9 2.6 165 2.6 55.2 0 109.9.5 165-2.6 64-3.1 120.8-17.7 167.6-64.5 46.9-46.9 61.4-103.6 64.5-167.6 3.2-55.1 2.6-109.8 2.6-165zm-88 235.8c-7.3 18.2-16.1 31.8-30.2 45.8-14.1 14.1-27.6 22.9-45.8 30.2C695.2 844.7 570.3 840 512 840c-58.3 0-183.3 4.7-235.9-16.1-18.2-7.3-31.8-16.1-45.8-30.2-14.1-14.1-22.9-27.6-30.2-45.8C179.3 695.2 184 570.3 184 512c0-58.3-4.7-183.3 16.1-235.9 7.3-18.2 16.1-31.8 30.2-45.8s27.6-22.9 45.8-30.2C328.7 179.3 453.7 184 512 184s183.3-4.7 235.9 16.1c18.2 7.3 31.8 16.1 45.8 30.2 14.1 14.1 22.9 27.6 30.2 45.8C844.7 328.7 840 453.7 840 512c0 58.3 4.7 183.2-16.2 235.8z"></path></svg>
+                                        <span class="text-sm">@{{ site_profile.instagram }}</span>
+                                    </a>
+                                    {% endif %}
+                                    {% if site_profile.email %}
+                                    <a href="mailto:{{ site_profile.email }}" rel="noreferrer" class="card-link flex items-center gap-3 px-[0.65rem] py-2 rounded-[0.95rem] text-[var(--gray-11)] hover:text-[var(--gray-12)] overflow-hidden">
+                                        <svg viewBox="64 64 896 896" focusable="false" data-icon="mail" width="1.5rem" height="1.5rem" fill="currentColor" aria-hidden="true"><path d="M928 160H96c-17.7 0-32 14.3-32 32v640c0 17.7 14.3 32 32 32h832c17.7 0 32-14.3 32-32V192c0-17.7-14.3-32-32-32zm-40 110.8V792H136V270.8l-27.6-21.5 39.3-50.5 42.8 33.3h643.1l42.8-33.3 39.3 50.5-27.7 21.5zM833.6 232L512 482 190.4 232l-42.8-33.3-39.3 50.5 27.6 21.5 341.6 265.6a55.99 55.99 0 0068.7 0L888 270.8l27.6-21.5-39.3-50.5-42.7 33.2z"></path></svg>
+                                        <span class="text-sm truncate">{{ site_profile.email }}</span>
+                                    </a>
+                                    {% endif %}
+                                    {% if site_profile.linkedin %}
+                                    <a href="https://www.linkedin.com/in/{{ site_profile.linkedin }}" target="_blank" rel="noreferrer" class="card-link flex items-center gap-3 px-[0.65rem] py-2 rounded-[0.95rem] text-[var(--gray-11)] hover:text-[var(--gray-12)]">
+                                        <svg viewBox="64 64 896 896" focusable="false" data-icon="linkedin" width="1.5rem" height="1.5rem" fill="currentColor" aria-hidden="true"><path d="M880 112H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM349.3 793.7H230.6V411.9h118.7v381.8zm-59.3-434a68.8 68.8 0 1 1 68.8-68.8c-.1 38-30.9 68.8-68.8 68.8zm503.7 434H675.1V608c0-44.3-.8-101.2-61.7-101.2-61.7 0-71.2 48.2-71.2 98v188.9H423.7V411.9h113.8v52.2h1.6c15.8-30 54.5-61.7 112.3-61.7 120.2 0 142.3 79.1 142.3 181.9v209.4z"></path></svg>
+                                        <span class="text-sm">{{ site_profile.linkedin }}</span>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
 
-                <!-- Contact Tab -->
-                <div id="contact-pane" class="tabs-content space-y-1">
-                    {% if site_profile.github %}
-                    <a href="https://github.com/{{ site_profile.github }}" target="_blank" rel="noreferrer" class="card-link flex items-center gap-3 px-3 py-2 rounded-xl text-[var(--gray-11)] hover:text-[var(--gray-12)]">
-                        <i class="ti ti-brand-github text-2xl"></i>
-                        <span class="text-sm">{{ site_profile.github }}</span>
-                    </a>
-                    {% endif %}
-                    {% if site_profile.instagram %}
-                    <a href="https://www.instagram.com/{{ site_profile.instagram }}" target="_blank" rel="noreferrer" class="card-link flex items-center gap-3 px-3 py-2 rounded-xl text-[var(--gray-11)] hover:text-[var(--gray-12)]">
-                        <i class="ti ti-brand-instagram text-2xl"></i>
-                        <span class="text-sm">@{{ site_profile.instagram }}</span>
-                    </a>
-                    {% endif %}
-                    {% if site_profile.email %}
-                    <a href="mailto:{{ site_profile.email }}" rel="noreferrer" class="card-link flex items-center gap-3 px-3 py-2 rounded-xl text-[var(--gray-11)] hover:text-[var(--gray-12)] overflow-hidden">
-                        <i class="ti ti-mail text-2xl"></i>
-                        <span class="text-sm truncate">{{ site_profile.email }}</span>
-                    </a>
-                    {% endif %}
-                    {% if site_profile.linkedin %}
-                    <a href="https://www.linkedin.com/in/{{ site_profile.linkedin }}" target="_blank" rel="noreferrer" class="card-link flex items-center gap-3 px-3 py-2 rounded-xl text-[var(--gray-11)] hover:text-[var(--gray-12)]">
-                        <i class="ti ti-brand-linkedin text-2xl"></i>
-                        <span class="text-sm">{{ site_profile.linkedin }}</span>
-                    </a>
-                    {% endif %}
-                </div>
-
-                <!-- Contribution Tab -->
-                <div id="contribution-pane" class="tabs-content hidden">
-                    <div class="text-center py-8 text-[var(--gray-10)] text-sm">
-                        <p>Contribution graph coming soon...</p>
+                            <!-- Contribution Tab -->
+                            <div id="contribution-pane" class="tabs-content hidden">
+                                <div class="text-center py-8 text-[var(--gray-10)] text-sm">
+                                    <p>Contribution graph coming soon...</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Service Card -->
+        <!-- Service Card (4 columns on md+, full on mobile) -->
         {% if site_config.projects %}
-        <div class="bg-[var(--card)] rounded-2xl p-4">
-            <h3 class="flex items-center text-[var(--gray-11)] mb-3 px-2 font-bold">
-                <i class="ti ti-box-model-2 mr-2 text-xl"></i>
-                {{ site_config.projects|length|pluralize:"Projects,Project" }}
-            </h3>
-            <div class="space-y-1">
-                {% for project in site_config.projects %}
-                <a href="{{ project.href }}" target="_blank" rel="noreferrer" class="card-link flex items-center gap-3 px-3 py-3 rounded-xl text-[var(--gray-11)] hover:text-[var(--gray-12)]">
-                    <i class="ti ti-box text-2xl"></i>
-                    <span class="text-sm">{{ project.name }}</span>
-                </a>
-                {% endfor %}
-            </div>
-        </div>
-        {% endif %}
-    </div>
-
-    <!-- Middle Column (Feed) -->
-    <div class="col-span-12 lg:col-span-7">
-        <!-- Mobile Profile (Visible only on mobile/tablet) -->
-        <div class="block lg:hidden mb-6">
-             <div class="bg-[var(--card)] rounded-2xl p-4">
-                <div class="flex items-center gap-4 mb-4">
-                    <img src="{{ gravatar_url }}" alt="Avatar" class="w-20 h-20 rounded-full">
-                    <div>
-                        <div class="text-xl font-bold">{{ site_profile.name }}</div>
-                        <div class="text-sm text-[var(--gray-11)]">{{ site_profile.role }}</div>
-                    </div>
+        <div class="col-span-12 md:col-span-4">
+            <div class="card bg-[var(--card)] rounded-2xl p-1 h-full">
+                <h3 class="flex items-center text-[var(--gray-11)] pt-[0.95rem] pl-3 mb-3 text-[1.17em]">
+                    <i class="ti ti-cube-3d-sphere mr-2 text-xl"></i>
+                    {% if site_config.projects|length > 1 %}Projects{% else %}Project{% endif %}
+                </h3>
+                <div class="flex flex-col">
+                    {% for project in site_config.projects %}
+                    <a href="{{ project.href }}" target="_blank" rel="noreferrer" class="card-link flex items-center gap-3 p-3 rounded-2xl text-[var(--gray-11)] hover:text-[var(--gray-12)]">
+                        <svg viewBox="64 64 896 896" focusable="false" data-icon="code-sandbox-circle" width="1.5rem" height="1.5rem" fill="currentColor" aria-hidden="true"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm243.7 589.2L512 794 268.3 653.2V371.8l110-63.6-.4-.2h.2L512 231l134 77h-.2l-.3.2 110.1 63.6v281.4zM307.9 536.7l87.6 49.9V681l96.7 55.9V524.8L307.9 418.4zm203.9-151.8L418 331l-91.1 52.6 185.2 107 185.2-106.9-91.4-52.8zm20 380l97.3-56.2v-94.1l87-49.5V418.5L531.8 525z"></path></svg>
+                        <span class="text-sm">{{ project.name }}</span>
+                    </a>
+                    {% endfor %}
                 </div>
-                <!-- Mobile Tabs & Content could go here if needed, simplified for now -->
-             </div>
-        </div>
-
-        <!-- Pinned Posts -->
-        {% if pinned_posts %}
-        <div class="mb-6">
-            <div class="flex items-center gap-2 mb-4 px-2 text-[var(--gray-11)] font-bold text-lg">
-                <i class="ti ti-pin text-xl"></i>
-                {{ pinned_posts|length|pluralize:"Pinned Posts,Pinned Post" }}
-            </div>
-            <div class="space-y-6">
-                {% for post in pinned_posts %}
-                {% include "blog/post_card.html" with post=post %}
-                {% endfor %}
             </div>
         </div>
         {% endif %}
-
-        <!-- Recent Posts -->
-        <div>
-            <div class="flex items-center gap-2 mb-4 px-2 text-[var(--gray-11)] font-bold text-lg">
-                <i class="ti ti-rotate-clockwise-2 text-xl"></i>
-                {{ recent_posts|length|pluralize:"Recent Posts,Recent Post" }}
-            </div>
-            
-            {% if recent_posts %}
-            <div class="space-y-6">
-                {% for post in recent_posts %}
-                {% include "blog/post_card.html" with post=post %}
-                {% endfor %}
-            </div>
-            {% else %}
-            <div class="text-center py-10 text-[var(--gray-10)]">
-                Nothing! 😺
-            </div>
-            {% endif %}
-            
-            <div class="mt-8 mb-4">
-                <a href="/archive" class="card-link flex justify-center items-center gap-1 py-3 px-4 rounded-2xl text-[var(--gray-10)] hover:text-[var(--gray-12)] mx-auto w-fit">
-                    View Archive <i class="ti ti-chevron-right text-xl"></i>
-                </a>
-            </div>
-        </div>
     </div>
 
-    <!-- Right Column (Table of Contents / Footer - Placeholder) -->
-    <div class="hidden lg:block lg:col-span-2 sticky top-[calc(var(--header-height)+10px)] h-fit">
-        <!-- Future TOC or other widgets -->
+    <!-- Pinned Posts -->
+    {% if pinned_posts %}
+    <div class="card mb-6">
+        <div class="flex items-center gap-2 mb-4 px-1 text-[var(--gray-11)] text-lg">
+            <i class="ti ti-pin text-xl"></i>
+            {% if pinned_posts|length > 1 %}Pinned Posts{% else %}Pinned Post{% endif %}
+        </div>
+        <div class="space-y-6">
+            {% for post in pinned_posts %}
+            {% include "blog/post_card.html" with post=post %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Recent Posts -->
+    <div class="card">
+        <div class="flex items-center gap-2 mb-4 px-1 text-[var(--gray-11)] font-bold text-lg">
+            <i class="ti ti-rotate-clockwise-2 text-xl"></i>
+            {% if recent_posts|length > 1 %}Recent Posts{% else %}Recent Post{% endif %}
+        </div>
+        
+        {% if recent_posts %}
+        <div class="space-y-6">
+            {% for post in recent_posts %}
+            {% include "blog/post_card.html" with post=post %}
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-10 text-[var(--gray-10)]">
+            Nothing! 😺
+        </div>
+        {% endif %}
+        
+        <hr class="my-4" />
+        
+        <a href="/archive" class="card-link flex justify-center items-center gap-1 py-2 px-4 rounded-2xl text-[var(--gray-10)] hover:text-[var(--gray-12)] mx-auto my-3 w-fit">
+            View Archive&nbsp;<i class="ti ti-chevron-right text-xl"></i>
+        </a>
     </div>
 </div>
 

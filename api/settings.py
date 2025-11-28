@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 import os
+import json
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -51,6 +52,7 @@ SITE_CONFIG = {
     'link': os.environ.get('SITE_LINK', 'https://cheongsando.vercel.app'),
     'since': int(os.environ.get('BLOG_SINCE', '2024')),
     'lang': os.environ.get('SITE_LANG', 'ko-KR'),
+    'projects': json.loads(os.environ.get('NEXT_PUBLIC_PROJECTS')) if os.environ.get('NEXT_PUBLIC_PROJECTS') else DEFAULT_PROJECTS,
 }
 
 # Notion Configuration

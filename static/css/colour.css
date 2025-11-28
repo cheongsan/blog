@@ -89,15 +89,15 @@ body {
 }
 
 .card-link {
-    background-color: var(--card-link);
+    background-color: var(--card);
+}
+
+.card-link:hover {
+    background-color: var(--card-click);
 }
 
 .card-link-click {
     background-color: var(--card-link-click);
-}
-
-.card-read-more {
-    color: var(--card-read-more);
 }
 
 .card-link-alt {
@@ -106,6 +106,18 @@ body {
 
 .card-link-alt-click {
     background-color: var(--card-link-alt-click);
+}
+
+.card-hot-link {
+  background-color: var(--card-link);
+}
+
+.card-hot-link:hover {
+  background-color: var(--card-link-click);
+}
+
+.card-read-more {
+    color: var(--card-read-more);
 }
 
 .category{
