@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="block md:grid md:grid-cols-12 gap-6">
+    <!-- Left Column (Profile & Service) -->
+    <div class="hidden lg:block lg:col-span-3 space-y-6 sticky top-[calc(var(--header-height)+10px)] h-fit overflow-y-auto no-scrollbar">
+        <!-- Profile Card -->
+        <div class="bg-[var(--card)] rounded-2xl p-4">
+            <div class="relative mb-4">
+                <img 
+                    src="{{ gravatar_url }}"
+                    alt="Avatar" 
+                    class="w-36 h-36 rounded-full mx-auto block"
+                >
+            </div>
+            <div class="text-center mb-4">
+                <div class="text-xl font-bold relative inline-block w-full">
+                    {{ site_profile.name }}
+                    <a 
+                        href="https://www.gravatar.com/{{ site_profile.gravatar }}" 
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="card-hot-link absolute top-0 right-0 text-[var(--gray-10)] hover:text-[var(--gray-12)]"
+                        title="View on Gravatar"
+                    >
+                        <i class="ti ti-brand-gravatar text-sm mr-1"></i>
+                        <span class="hidden lg:inline text-xs">View on Gravatar</span>
+                    </a>
+                </div>
+                <div class="text-sm text-[var(--gray-11)]">{{ site_profile.role }}</div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="w-full">
+                <div class="tabs-list flex w-full mb-4">
+                    <button 
+                        class="tabs-trigger flex-1"
+                        data-state="active"
+                        onclick="switchTab(this, 'contact')"
+                    >
+                        Contact
+                    </button>
+                    <button 
+                        class="tabs-trigger flex-1"
+                        data-state="inactive"
+                        onclick="switchTab(this, 'contribution')"
+                    >
+                        Contribution
+                    </button>
+                </div>
+
+                <!-- Contact Tab -->
+                <div id="contact-pane" class="tabs-content space-y-1">
+                    {% if site_profile.github %}
+                    <a href="https://github.com/{{ site_profile.github }}" target="_blank" rel="noreferrer" class="card-link flex items-center gap-3 px-3 py-2 rounded-xl text-[var(--gray-11)] hover:text-[var(--gray-12)]">
+                        <i class="ti ti-brand-github text-2xl"></i>
+                        <span class="text-sm">{{ site_profile.github }}</span>
+                    </a>
+                    {% endif %}
+                    {% if site_profile.instagram %}
+                    <a href="https://www.instagram.com/{{ site_profile.instagram }}" target="_blank" rel="noreferrer" class="card-link flex items-center gap-3 px-3 py-2 rounded-xl text-[var(--gray-11)] hover:text-[var(--gray-12)]">
+                        <i class="ti ti-brand-instagram text-2xl"></i>
+                        <span class="text-sm">@{{ site_profile.instagram }}</span>
+                    </a>
+                    {% endif %}
+                    {% if site_profile.email %}
+                    <a href="mailto:{{ site_profile.email }}" rel="noreferrer" class="card-link flex items-center gap-3 px-3 py-2 rounded-xl text-[var(--gray-11)] hover:text-[var(--gray-12)] overflow-hidden">
+                        <i class="ti ti-mail text-2xl"></i>
+                        <span class="text-sm truncate">{{ site_profile.email }}</span>
+                    </a>
+                    {% endif %}
+                    {% if site_profile.linkedin %}
+                    <a href="https://www.linkedin.com/in/{{ site_profile.linkedin }}" target="_blank" rel="noreferrer" class="card-link flex items-center gap-3 px-3 py-2 rounded-xl text-[var(--gray-11)] hover:text-[var(--gray-12)]">
+                        <i class="ti ti-brand-linkedin text-2xl"></i>
+                        <span class="text-sm">{{ site_profile.linkedin }}</span>
+                    </a>
+                    {% endif %}
+                </div>
+
+                <!-- Contribution Tab -->
+                <div id="contribution-pane" class="tabs-content hidden">
+                    <div class="text-center py-8 text-[var(--gray-10)] text-sm">
+                        <p>Contribution graph coming soon...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Service Card -->
+        {% if site_config.projects %}
+        <div class="bg-[var(--card)] rounded-2xl p-4">
+            <h3 class="flex items-center text-[var(--gray-11)] mb-3 px-2 font-bold">
+                <i class="ti ti-box-model-2 mr-2 text-xl"></i>
+                {{ site_config.projects|length|pluralize:"Projects,Project" }}
+            </h3>
+            <div class="space-y-1">
+                {% for project in site_config.projects %}
+                <a href="{{ project.href }}" target="_blank" rel="noreferrer" class="card-link flex items-center gap-3 px-3 py-3 rounded-xl text-[var(--gray-11)] hover:text-[var(--gray-12)]">
+                    <i class="ti ti-box text-2xl"></i>
+                    <span class="text-sm">{{ project.name }}</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Middle Column (Feed) -->
+    <div class="col-span-12 lg:col-span-7">
+        <!-- Mobile Profile (Visible only on mobile/tablet) -->
+        <div class="block lg:hidden mb-6">
+             <div class="bg-[var(--card)] rounded-2xl p-4">
+                <div class="flex items-center gap-4 mb-4">
+                    <img src="{{ gravatar_url }}" alt="Avatar" class="w-20 h-20 rounded-full">
+                    <div>
+                        <div class="text-xl font-bold">{{ site_profile.name }}</div>
+                        <div class="text-sm text-[var(--gray-11)]">{{ site_profile.role }}</div>
+                    </div>
+                </div>
+                <!-- Mobile Tabs & Content could go here if needed, simplified for now -->
+             </div>
+        </div>
+
+        <!-- Pinned Posts -->
+        {% if pinned_posts %}
+        <div class="mb-6">
+            <div class="flex items-center gap-2 mb-4 px-2 text-[var(--gray-11)] font-bold text-lg">
+                <i class="ti ti-pin text-xl"></i>
+                {{ pinned_posts|length|pluralize:"Pinned Posts,Pinned Post" }}
+            </div>
+            <div class="space-y-6">
+                {% for post in pinned_posts %}
+                {% include "blog/post_card.html" with post=post %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Recent Posts -->
+        <div>
+            <div class="flex items-center gap-2 mb-4 px-2 text-[var(--gray-11)] font-bold text-lg">
+                <i class="ti ti-rotate-clockwise-2 text-xl"></i>
+                {{ recent_posts|length|pluralize:"Recent Posts,Recent Post" }}
+            </div>
+            
+            {% if recent_posts %}
+            <div class="space-y-6">
+                {% for post in recent_posts %}
+                {% include "blog/post_card.html" with post=post %}
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-10 text-[var(--gray-10)]">
+                Nothing! 😺
+            </div>
+            {% endif %}
+            
+            <div class="mt-8 mb-4">
+                <a href="/archive" class="card-link flex justify-center items-center gap-1 py-3 px-4 rounded-2xl text-[var(--gray-10)] hover:text-[var(--gray-12)] mx-auto w-fit">
+                    View Archive <i class="ti ti-chevron-right text-xl"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column (Table of Contents / Footer - Placeholder) -->
+    <div class="hidden lg:block lg:col-span-2 sticky top-[calc(var(--header-height)+10px)] h-fit">
+        <!-- Future TOC or other widgets -->
+    </div>
+</div>
+
+<script>
+    function switchTab(btn, tabName) {
+        // Reset all buttons
+        document.querySelectorAll('.tabs-trigger').forEach(b => {
+            b.setAttribute('data-state', 'inactive');
+        });
+        
+        // Activate clicked button
+        btn.setAttribute('data-state', 'active');
+        
+        // Toggle panes
+        document.querySelectorAll('.tabs-content').forEach(p => p.classList.add('hidden'));
+        document.getElementById(tabName + '-pane').classList.remove('hidden');
+    }
+</script>
+{% endblock %}

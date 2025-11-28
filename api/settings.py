@@ -24,9 +24,71 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-=cldztbc4jg&xl0!x673!*v2_=p$$eu)=7*f#d0#zs$44xx-h^')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app']
+
+
+# Site Profile Configuration
+SITE_PROFILE = {
+    'name': os.environ.get('PROFILE_NAME', 'KIM, CHEONGSAN'),
+    'role': os.environ.get('PROFILE_ROLE', 'Developer'),
+    'email': os.environ.get('PROFILE_EMAIL', 'developer@cheongsan.kim'),
+    'gravatar_email': os.environ.get('GRAVATAR_PROFILE_EMAIL', ''),
+    'gravatar': os.environ.get('GRAVATAR_USERNAME', 'cheongsando'),
+    'linkedin': os.environ.get('LINKEDIN_USERNAME', 'cheongsan'),
+    'github': os.environ.get('GITHUB_USERNAME', 'cheongsan'),
+    'gitlab': os.environ.get('GITLAB_USERNAME', 'cheongsan'),
+    'bitbucket': os.environ.get('BITBUCKET_USERNAME', 'cheongsan-do'),
+    'instagram': os.environ.get('INSTAGRAM_USERNAME', 'cheongsando_'),
+}
+
+# Site Configuration
+SITE_CONFIG = {
+    'title': os.environ.get('BLOG_TITLE', 'CHEONGSANDO'),
+    'description': os.environ.get('BLOG_DESCRIPTION', 'desertisland'),
+    'scheme': os.environ.get('BLOG_SCHEME', 'system'),
+    'link': os.environ.get('SITE_LINK', 'https://cheongsando.vercel.app'),
+    'since': int(os.environ.get('BLOG_SINCE', '2024')),
+    'lang': os.environ.get('SITE_LANG', 'ko-KR'),
+}
+
+# Notion Configuration
+NOTION_CONFIG = {
+    'page_id': os.environ.get('NOTION_PAGE_ID', ''),
+    'access_token': os.environ.get('NOTION_ACCESS_TOKEN', ''),
+}
+
+# Plugin Configuration
+GOOGLE_ANALYTICS = {
+    'enabled': os.environ.get('GOOGLE_ANALYTICS_ENABLED', 'True') == 'True',
+    'measurement_id': os.environ.get('NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID', ''),
+}
+
+GOOGLE_SEARCH_CONSOLE = {
+    'enabled': os.environ.get('GOOGLE_SEARCH_CONSOLE_ENABLED', 'True') == 'True',
+    'site_verification': os.environ.get('NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION', ''),
+}
+
+NAVER_SEARCH_ADVISOR = {
+    'enabled': os.environ.get('NAVER_SEARCH_ADVISOR_ENABLED', 'True') == 'True',
+    'site_verification': os.environ.get('NEXT_PUBLIC_NAVER_SITE_VERIFICATION', ''),
+}
+
+UTTERANCES = {
+    'enabled': os.environ.get('UTTERANCES_ENABLED', 'False') == 'True',
+    'repo': os.environ.get('NEXT_PUBLIC_UTTERANCES_REPO', 'cheongsan/blog'),
+}
+
+CUSDIS = {
+    'enabled': os.environ.get('CUSDIS_ENABLED', 'False') == 'True',
+    'host': os.environ.get('CUSDIS_HOST', 'https://cusdis.com'),
+    'app_id': os.environ.get('CUSDIS_APP_ID', ''),
+}
+
+# Environment
+IS_PROD = os.environ.get('VERCEL_ENV') == 'production'
+REVALIDATE_TIME = int(os.environ.get('REVALIDATE_TIME', '151200'))
 
 
 # Application definition
@@ -38,7 +100,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'example'
+    'blog'
 ]
 
 MIDDLEWARE = [
@@ -56,7 +118,7 @@ ROOT_URLCONF = 'api.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -64,6 +126,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'blog.context_processors.site_info',
             ],
         },
     },
@@ -115,6 +178,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

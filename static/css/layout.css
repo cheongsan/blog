@@ -1,0 +1,201 @@
+/* Layout Variables */
+:root {
+    /* Z-Index */
+    --z-dialog: 32;
+    --z-dropdown-menu: 36;
+    --z-header: 30;
+    --z-hover-card: 28;
+    --z-dialog-hover-card: 34;
+
+    /* Breakpoints */
+    --breakpoint: 960px;
+    --breakpoint-mobile: 960px;
+
+    /* Heights */
+    --header-height: 56px;
+
+    /* Padding */
+    --padding-lg: 24px;
+    --padding-md: 20px;
+
+    /* Widths */
+    --width-lg: 1480px;
+    --width-md: 1280px;
+}
+
+/* Z-Index Utilities */
+.z-dialog {
+    z-index: var(--z-dialog);
+}
+
+.z-dropdown-menu {
+    z-index: var(--z-dropdown-menu);
+}
+
+.z-header {
+    z-index: var(--z-header);
+}
+
+.z-hover-card {
+    z-index: var(--z-hover-card);
+}
+
+.z-dialog-hover-card {
+    z-index: var(--z-dialog-hover-card);
+}
+
+/* Responsive Utilities */
+@media (max-width: 960px) {
+    .mobile-only {
+        display: block;
+    }
+
+    .desktop-only {
+        display: none;
+    }
+}
+
+@media (min-width: 961px) {
+    .mobile-only {
+        display: none;
+    }
+
+    .desktop-only {
+        display: block;
+    }
+}
+
+/* Container Utilities */
+.container-fluid {
+    width: 100%;
+    max-width: var(--width-lg);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--padding-lg);
+    padding-right: var(--padding-lg);
+}
+
+.container-lg {
+    max-width: var(--width-lg);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.container-md {
+    max-width: var(--width-md);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Padding Utilities */
+.px-lg {
+    padding-left: var(--padding-lg);
+    padding-right: var(--padding-lg);
+}
+
+.px-md {
+    padding-left: var(--padding-md);
+    padding-right: var(--padding-md);
+}
+
+.py-lg {
+    padding-top: var(--padding-lg);
+    padding-bottom: var(--padding-lg);
+}
+
+.py-md {
+    padding-top: var(--padding-md);
+    padding-bottom: var(--padding-md);
+}
+
+/* Header Sticky */
+.sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-header);
+    height: var(--header-height);
+}
+
+/* Layout Sections - React home.tsx 호환 */
+.lt {
+    display: none;
+    overflow: scroll;
+    position: sticky;
+    grid-column: span 2 / span 2;
+    top: calc(var(--header-height) + 17px);
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.lt::-webkit-scrollbar {
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .lt {
+        display: block;
+    }
+}
+
+.mid {
+    grid-column: span 12 / span 12;
+}
+
+@media (min-width: 1024px) {
+    .mid {
+        grid-column: span 7 / span 7;
+    }
+}
+
+.mid > .tags {
+    display: block;
+}
+
+@media (min-width: 1024px) {
+    .mid > .tags {
+        display: none;
+    }
+}
+
+.mid > .footer {
+    padding-bottom: 2rem;
+}
+
+@media (min-width: 1024px) {
+    .mid > .footer {
+        display: none;
+    }
+}
+
+.rt {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    display: none;
+    overflow: scroll;
+    position: sticky;
+    top: calc(var(--header-height) + 17px);
+}
+
+.rt::-webkit-scrollbar {
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .rt {
+        display: block;
+        grid-column: span 3 / span 3;
+    }
+}
+
+.rt .footer {
+    padding-top: 1rem;
+}
+
+/* Mobile Block Display */
+@media (max-width: 768px) {
+    .container-fluid {
+        display: block;
+        padding-left: var(--padding-md);
+        padding-right: var(--padding-md);
+    }
+}
