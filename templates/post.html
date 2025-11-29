@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% load static %}
+{% load category_tags %}
+
+{% block title %}{{ post.title }} - {{ site_config.title }}{% endblock %}
+
+{% block extra_head %}
+<!-- Open Graph / Meta Tags -->
+<meta name="description" content="{{ meta.description }}">
+<meta property="og:title" content="{{ meta.title }}">
+<meta property="og:description" content="{{ meta.description }}">
+<meta property="og:type" content="article">
+{% if meta.image %}
+<meta property="og:image" content="{{ meta.image }}">
+{% endif %}
+<meta property="article:published_time" content="{{ meta.date }}">
+
+<!-- Notion Renderer Styles -->
+<link rel="stylesheet" href="{% static 'css/notion.css' %}">
+
+<!-- Code Highlighting -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+<!-- KaTeX for Math -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="py-4">
+    <!-- Post Detail Container -->
+    <article class="max-w-4xl mx-auto">
+        <!-- Card Wrapper -->
+        <div class="bg-[var(--card)] rounded-2xl px-6 py-12">
+            <div class="max-w-2xl mx-auto">
+                <!-- Category -->
+                {% if category %}
+                <div class="mb-2">
+                    {% include "components/category.html" with category=category read_only=is_public_on_detail %}
+                </div>
+                {% endif %}
+
+                <!-- Post Header -->
+                <header class="mb-8">
+                    <!-- Title -->
+                    <h1 class="text-3xl font-bold text-[var(--gray-12)] mb-6">{{ post.title }}</h1>
+                    
+                    {% if meta.type != "Paper" %}
+                    <nav>
+                        <!-- Author & Date -->
+                        <div class="flex flex-wrap items-center gap-3 mb-3 text-[var(--gray-11)]">
+                            {% if post.author %}
+                            <div class="flex items-center gap-2">
+                                {% if gravatar_url %}
+                                <img src="{{ gravatar_url }}" alt="{{ post.author.0.name }}" 
+                                     class="w-6 h-6 rounded-full" />
+                                {% endif %}
+                                <span>{{ post.author.0.name }}</span>
+                            </div>
+                            <div class="w-px h-4 bg-[var(--gray-10)]"></div>
+                            {% endif %}
+                            <time datetime="{{ meta.date }}" class="text-sm">
+                                {{ meta.date_formatted }}
+                            </time>
+                        </div>
+                        
+                        <!-- Tags -->
+                        {% if tags %}
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            {% for tag in tags %}
+                            {% include "components/tag.html" with tag=tag %}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Thumbnail -->
+                        {% if post.thumbnail %}
+                        <div class="relative w-full rounded-2xl overflow-hidden bg-[var(--gray-4)] mb-7"
+                             style="padding-bottom: 55%;">
+                            <img src="{{ post.thumbnail }}" 
+                                 alt="{{ post.title }}"
+                                 class="absolute inset-0 w-full h-full object-cover"
+                                 loading="lazy" />
+                        </div>
+                        {% endif %}
+                    </nav>
+                    {% endif %}
+                </header>
+
+                <!-- Post Content (Notion Blocks) -->
+                <div class="notion-content prose dark:prose-invert prose-slate max-w-none">
+                    {{ post.content_html|safe }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="max-w-4xl mx-auto flex justify-between font-medium text-[var(--gray-10)]">
+            <a href="/" 
+               class="card-link-alt inline-flex items-center gap-1 mt-2 cursor-pointer
+                      hover:text-[var(--gray-12)] transition-colors">
+                <i class="ti ti-chevron-left"></i>
+                <span>Back</span>
+            </a>
+            <a onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+               class="card-link-alt inline-flex items-center gap-1 mt-2 cursor-pointer
+                      hover:text-[var(--gray-12)] transition-colors">
+                <i class="ti ti-arrow-up"></i>
+                <span>Back to Up</span>
+            </a>
+        </footer>
+    </article>
+</div>
+
+<script>
+    // KaTeX Auto-render
+    document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement !== 'undefined') {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError: false
+            });
+        }
+        
+        // Prism.js 하이라이팅
+        if (typeof Prism !== 'undefined') {
+            Prism.highlightAll();
+        }
+    });
+</script>
+{% endblock %}

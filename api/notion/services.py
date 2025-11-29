@@ -144,28 +144,66 @@ class NotionService:
             # 페이지 정보 가져오기
             page = self.client.get_page(post_id)
             
-            # 블록 자식들 가져오기
-            blocks = self.client.get_block_children(post_id)
+            # 모든 블록 (자식 포함) 재귀적으로 가져오기
+            blocks = self._get_all_blocks_recursive(post_id)
             
             # 포스트 기본 정보 가져오기
             posts = self.get_posts()
             post = next((p for p in posts if p.get('id') == post_id), None)
+            
+            # 블록을 HTML로 렌더링
+            from .renderer import render_notion_blocks
+            rendered_content = render_notion_blocks(blocks)
             
             if post:
                 result = {
                     **post,
                     'page': page,
                     'blocks': blocks,
+                    'content_html': rendered_content,
                 }
                 if cache:
                     cache.set(cache_key, result, self.POST_DETAIL_CACHE_TIMEOUT)
                 return result
             
-            return {'page': page, 'blocks': blocks}
+            return {'page': page, 'blocks': blocks, 'content_html': rendered_content}
         
         except NotionAPIError as e:
             print(f"Notion API 오류: {e}")
             return None
+    
+    def _get_all_blocks_recursive(self, block_id: str, depth: int = 0, max_depth: int = 5) -> List[Dict[str, Any]]:
+        """
+        블록과 자식 블록을 재귀적으로 모두 가져오기
+        
+        Args:
+            block_id: 블록 ID
+            depth: 현재 깊이
+            max_depth: 최대 깊이
+            
+        Returns:
+            모든 블록 리스트 (평탄화됨)
+        """
+        if depth > max_depth:
+            return []
+        
+        all_blocks = []
+        blocks = self.client.get_all_block_children(block_id)
+        
+        for block in blocks:
+            all_blocks.append(block)
+            
+            # 자식이 있는 블록인 경우 재귀적으로 가져오기
+            if block.get('has_children', False):
+                child_blocks = self._get_all_blocks_recursive(
+                    block.get('id', ''), 
+                    depth + 1, 
+                    max_depth
+                )
+                # 자식 블록들을 부모 블록에 첨부
+                block['children'] = child_blocks
+        
+        return all_blocks
     
     def filter_posts(
         self,

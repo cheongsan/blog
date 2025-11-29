@@ -3,6 +3,25 @@ import requests
 from django.conf import settings
 
 
+def get_gravatar_url_by_email(email, size=512):
+    """
+    이메일 주소를 사용하여 Gravatar 프로필 이미지 URL을 반환합니다.
+    
+    Args:
+        email: 이메일 주소
+        size: 이미지 크기 (기본값: 512px)
+    
+    Returns:
+        Gravatar 이미지 URL
+    """
+    if not email:
+        return None
+    
+    # 이메일 주소를 소문자로 변환하고 MD5 해시 생성
+    email_hash = hashlib.md5(email.lower().strip().encode()).hexdigest()
+    return f"https://www.gravatar.com/avatar/{email_hash}?s={size}&d=identicon&r=g"
+
+
 def get_gravatar_url(username, size=512):
     """
     Gravatar 프로필 이미지 고화질 URL을 반환합니다.

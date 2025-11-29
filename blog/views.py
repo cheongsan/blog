@@ -191,23 +191,87 @@ def feed(request):
 
 
 def post(request, slug):
-    """포스트 상세 페이지"""
+    """
+    포스트 상세 페이지
+    Next.js의 [slug].tsx와 동일한 기능
+    """
     notion = get_notion_service()
     
     # 슬러그로 포스트 찾기
-    post = notion.get_post_by_slug(slug)
+    # Next.js의 filterPosts 로직과 동일하게 처리
+    posts = notion.get_posts()
+    
+    # 상세 페이지에서 허용하는 상태: Public, PublicOnDetail, Pinned, Archived
+    accept_status = ["Public", "PublicOnDetail", "Pinned", "Archived"]
+    accept_type = ["Paper", "Post", "Page"]
+    
+    filtered_posts = notion.filter_posts(posts, accept_status=accept_status, accept_type=accept_type)
+    post = next((p for p in filtered_posts if p.get('slug') == slug), None)
     
     if not post:
         raise Http404("포스트를 찾을 수 없습니다.")
     
-    # 상세 정보 (RecordMap 포함) 가져오기
+    # 상세 정보 (블록 콘텐츠 및 HTML 포함) 가져오기
     post_detail = notion.get_post_detail(post['id'])
     
     if not post_detail:
         raise Http404("포스트 내용을 불러올 수 없습니다.")
     
+    # 메타 정보 구성 (Next.js의 meta 객체와 동일)
+    thumbnail = post_detail.get('thumbnail')
+    date_info = post_detail.get('date', {})
+    date = date_info.get('start_date') if date_info else post_detail.get('createdTime', '')
+    
+    # 날짜 포맷팅 (XXXX년 X월 X일)
+    date_formatted = ''
+    if date:
+        try:
+            from datetime import datetime as dt
+            date_obj = dt.fromisoformat(date.replace('Z', '+00:00'))
+            date_formatted = date_obj.strftime('%Y년 %m월 %d일').replace(' 0', ' ').replace('년 0', '년 ')
+        except (ValueError, AttributeError):
+            date_formatted = date[:10] if date else ''
+    
+    meta = {
+        'title': post_detail.get('title', ''),
+        'date': date,
+        'date_formatted': date_formatted,
+        'image': thumbnail,
+        'description': post_detail.get('summary', ''),
+        'type': post_detail.get('type', ['Post'])[0] if post_detail.get('type') else 'Post',
+    }
+    
+    # 카테고리 처리
+    category = None
+    categories = post_detail.get('category', [])
+    if categories and len(categories) > 0:
+        category = categories[0]
+    
+    # 태그 처리
+    tags = post_detail.get('tags', [])
+    
+    # PublicOnDetail 상태인지 확인 (카테고리 클릭 비활성화용)
+    status = post_detail.get('status', [])
+    is_public_on_detail = status[0] == 'PublicOnDetail' if status else False
+    
+    # 작성자 Gravatar URL 가져오기
+    gravatar_url = None
+    author = post_detail.get('author', [])
+    if author and len(author) > 0:
+        author_info = author[0]
+        # Notion의 person 객체에서 이메일 추출
+        author_email = author_info.get('email') if isinstance(author_info, dict) else None
+        if author_email:
+            from .utils import get_gravatar_url_by_email
+            gravatar_url = get_gravatar_url_by_email(author_email, size=48)
+    
     context = {
         'post': post_detail,
+        'meta': meta,
+        'category': category,
+        'tags': tags,
+        'is_public_on_detail': is_public_on_detail,
+        'gravatar_url': gravatar_url,
     }
     return render(request, 'post.html', context)
 
