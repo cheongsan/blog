@@ -3,9 +3,8 @@ from django.urls import path
 
 from blog.views import (
     index,
-    post_list,
-    post_detail,
-    archive,
+    feed,
+    post,
     api_posts,
     api_post_detail,
     api_tags,
@@ -17,9 +16,8 @@ from blog.views import (
 urlpatterns = [
     # Pages
     path('', index, name='index'),
-    path('posts/', post_list, name='post_list'),
-    path('posts/<slug:slug>/', post_detail, name='post_detail'),
-    path('archive/', archive, name='archive'),
+    path('archive', feed, name='archive'),
+    path('<slug:slug>', post, name='post_detail'),
     
     # API
     path('api/posts/', api_posts, name='api_posts'),

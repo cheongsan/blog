@@ -252,6 +252,34 @@
   box-shadow: 0 0 0 2px hsl(var(--ring)), 0 0 0 4px hsl(var(--background));
 }
 
+/* Tab Content Animation (Alpine.js compatible) */
+[x-cloak] {
+  display: none !important;
+}
+
+/* Ensure smooth transitions for tab content */
+.tab-content-enter {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+.tab-content-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 200ms ease-out, transform 200ms ease-out;
+}
+
+.tab-content-leave {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tab-content-leave-active {
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 150ms ease-in, transform 150ms ease-in;
+}
+
 /* Dropdown Menu */
 .dropdown-content {
   z-index: 50;
@@ -499,7 +527,6 @@ body,
 }
 
 body {
-  margin: 0;
   padding: 0;
   color: var(--gray-12);
   font-weight: 500;

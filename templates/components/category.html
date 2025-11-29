@@ -1,7 +1,6 @@
 {% load category_tags %}
 {% get_category_color category as bg_color %}
 {% get_category_icon category as icon_data %}
-
 <div 
     class="flex items-center py-1 px-2 rounded-full w-fit text-sm opacity-90 {% if not read_only %}cursor-pointer{% else %}cursor-default{% endif %}"
     style="background-color: {{ bg_color }};"

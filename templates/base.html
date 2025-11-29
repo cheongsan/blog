@@ -54,6 +54,13 @@
                             DEFAULT: "hsl(var(--card))",
                             foreground: "hsl(var(--card-foreground))",
                         },
+                        stone: {
+                            300: "var(--stone-300)",
+                            400: "var(--stone-400)",
+                            500: "var(--stone-500)",
+                            700: "var(--stone-700)",
+                            800: "var(--stone-800)",
+                        },
                     },
                     borderRadius: {
                         lg: "var(--radius)",
@@ -115,8 +122,12 @@
         }
     </script>
     {% block extra_head %}{% endblock %}
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 </head>
-<body class="text-[var(--gray-12)] min-h-screen flex flex-col">
+<body class="text-[var(--gray-12)] min-h-screen">
     <!-- Header -->
     <header class="sticky top-0 z-30 bg-[var(--nav)] backdrop-blur-xl saturate-150 w-full">
         <div class="mx-auto flex w-full max-w-[1120px] items-center justify-between px-6 py-5 text-[1.3rem] leading-4">
@@ -148,7 +159,7 @@
     </header>
 
     <!-- Main Content -->
-    <main class="mx-auto w-full max-w-[1120px] px-4 py-6 flex-grow">
+    <main class="mx-auto w-full max-w-[1120px] px-4 flex-grow">
         {% block content %}{% endblock %}
     </main>
 

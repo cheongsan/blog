@@ -128,6 +128,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'api.urls'
 
+# URL 끝에 슬래시 자동 추가 비활성화
+APPEND_SLASH = False
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

@@ -19,7 +19,13 @@
                 </header>
                 
                 <div class="flex items-center gap-2 text-xs text-[var(--gray-10)] mb-3">
-                    <span>{{ post.date|date:"Y.m.d" }}</span>
+                    <span>
+                        {% if post.date.start_date %}
+                            {{ post.date.start_date|slice:":4" }}년 {{ post.date.start_date|slice:"5:7"|add:"0"|slice:"-2:" }}월 {{ post.date.start_date|slice:"8:10"|add:"0"|slice:"-2:" }}일
+                        {% elif post.createdTime %}
+                            {{ post.createdTime|slice:":4" }}년 {{ post.createdTime|slice:"5:7" }}월 {{ post.createdTime|slice:"8:10" }}일
+                        {% endif %}
+                    </span>
                 </div>
                 
                 <div class="hidden md:block mb-4 text-sm text-[var(--gray-11)] line-clamp-2">

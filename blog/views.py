@@ -44,67 +44,7 @@ def home(request):
     """Home page view (alias for index)"""
     return index(request)
 
-
-def post_list(request):
-    """포스트 목록 페이지"""
-    notion = get_notion_service()
-    
-    # 필터 파라미터
-    tag = request.GET.get('tag')
-    category = request.GET.get('category')
-    
-    # 포스트 가져오기
-    if tag:
-        posts = notion.get_posts_by_tag(tag)
-    elif category:
-        posts = notion.get_posts_by_category(category)
-    else:
-        posts = notion.get_public_posts()
-    
-    # 태그 및 카테고리 목록
-    all_posts = notion.get_public_posts()
-    tags_dict = notion.get_all_tags(all_posts)
-    categories_dict = notion.get_all_categories(all_posts)
-    
-    tags = [{'name': name, 'count': count} for name, count in tags_dict.items()]
-    tags.sort(key=lambda x: x['count'], reverse=True)
-    
-    categories = [{'name': name, 'count': count} for name, count in categories_dict.items()]
-    categories.sort(key=lambda x: x['count'], reverse=True)
-    
-    context = {
-        'posts': posts,
-        'tags': tags,
-        'categories': categories,
-        'current_tag': tag,
-        'current_category': category,
-    }
-    return render(request, 'blog/post_list.html', context)
-
-
-def post_detail(request, slug):
-    """포스트 상세 페이지"""
-    notion = get_notion_service()
-    
-    # 슬러그로 포스트 찾기
-    post = notion.get_post_by_slug(slug)
-    
-    if not post:
-        raise Http404("포스트를 찾을 수 없습니다.")
-    
-    # 상세 정보 (RecordMap 포함) 가져오기
-    post_detail = notion.get_post_detail(post['id'])
-    
-    if not post_detail:
-        raise Http404("포스트 내용을 불러올 수 없습니다.")
-    
-    context = {
-        'post': post_detail,
-    }
-    return render(request, 'blog/post_detail.html', context)
-
-
-def archive(request):
+def feed(request):
     """
     아카이브 페이지 - 모든 공개 포스트 목록
     Next.js의 archive.tsx와 동일한 기능
@@ -123,6 +63,8 @@ def archive(request):
     q = request.GET.get('q', '').strip()
     tag = request.GET.get('tag', '').strip()
     category = request.GET.get('category', '').strip()
+    order = request.GET.get('order', 'desc').strip()
+    tab = request.GET.get('tab', 'tag').strip()
     
     # 원본 포스트 가져오기 (필터링 전)
     try:
@@ -171,6 +113,14 @@ def archive(request):
             or any(q_lower in t.lower() for t in (p.get('tags') or []))
         ]
     
+    # 정렬 (기본은 최신순 desc)
+    reverse_sort = True
+    if order == 'asc':
+        reverse_sort = False
+        
+    # 날짜 기준 정렬
+    posts.sort(key=lambda x: x.get('date', {}).get('start_date') or x.get('createdTime') or '', reverse=reverse_sort)
+    
     # 태그 목록 (전체 포스트 기준)
     tags_dict = notion.get_all_tags(all_posts)
     tags = [{'name': name, 'count': count} for name, count in tags_dict.items()]
@@ -195,19 +145,71 @@ def archive(request):
             posts_by_year[year] = []
         posts_by_year[year].append(post)
     
+    # 년도 정렬 (항상 최신 년도가 위로 오도록)
+    sorted_posts_by_year = dict(sorted(posts_by_year.items(), reverse=True))
+    
+    # 만약 오름차순(asc)이면 년도 내의 포스트 순서는 이미 위에서 정렬되었지만,
+    # 년도 자체의 순서는 어떻게 할지 결정해야 함. 보통 아카이브는 년도는 내림차순 유지하고 내부만 바꿀 수도 있고
+    # 전체를 뒤집을 수도 있음. 여기서는 전체 리스트 정렬 후 그룹화했으므로
+    # 그룹화 로직에 따라 순서가 결정됨.
+    # 하지만 dict 순서는 삽입 순서이므로, 위에서 posts를 정렬하고 순서대로 넣으면 됨.
+    # 다만 posts_by_year를 다시 정렬하면 섞일 수 있음.
+    
+    # 개선된 그룹화 로직: 정렬된 posts를 순회하며 그룹화하면 순서 유지됨
+    posts_by_year = {}
+    for post in posts:
+        date_info = post.get('date', {})
+        if date_info and date_info.get('start_date'):
+            year = date_info['start_date'][:4]
+        else:
+            created = post.get('createdTime', '')
+            year = created[:4] if created else 'Unknown'
+        
+        if year not in posts_by_year:
+            posts_by_year[year] = []
+        posts_by_year[year].append(post)
+        
     context = {
         'posts': posts,
-        'posts_by_year': dict(sorted(posts_by_year.items(), reverse=True)),
+        'posts_by_year': posts_by_year,
         'total_count': len(posts),
         'tags': tags,
         'categories': categories,
         'current_tag': tag,
         'current_category': category,
+        'current_order': order,
+        'current_tab': tab,
         'search_query': q,
-        'debug_info': debug_info,  # 디버그 정보 추가
+        'debug_info': debug_info,
     }
-    return render(request, 'blog/archive.html', context)
+    
+    # HTMX 요청인 경우 부분 템플릿만 렌더링
+    if request.headers.get('HX-Request'):
+        return render(request, 'components/feed_content.html', context)
+        
+    return render(request, 'feed.html', context)
 
+
+def post(request, slug):
+    """포스트 상세 페이지"""
+    notion = get_notion_service()
+    
+    # 슬러그로 포스트 찾기
+    post = notion.get_post_by_slug(slug)
+    
+    if not post:
+        raise Http404("포스트를 찾을 수 없습니다.")
+    
+    # 상세 정보 (RecordMap 포함) 가져오기
+    post_detail = notion.get_post_detail(post['id'])
+    
+    if not post_detail:
+        raise Http404("포스트 내용을 불러올 수 없습니다.")
+    
+    context = {
+        'post': post_detail,
+    }
+    return render(request, 'post.html', context)
 
 # === API Views ===
 

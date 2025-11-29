@@ -24,7 +24,29 @@
     --card-read-more: hsl(214, 10%, 72%);
     --card-link-alt: hsl(214, 16%, 91%);
     --card-link-alt-click: hsl(220, 14%, 87%);
+
+    /* Stone */
+    --stone-300: hsl(24, 6%, 83%);
+    --stone-400: hsl(24, 5%, 64%);
+    --stone-500: hsl(25, 5%, 45%);
+    --stone-700: hsl(30, 6%, 25%);
+    --stone-800: hsl(24, 5%, 15%);
 }
+
+/* Stone Background */
+.bg-stone-300 { background-color: var(--stone-300); }
+.bg-stone-400 { background-color: var(--stone-400); }
+.bg-stone-500 { background-color: var(--stone-500); }
+.bg-stone-700 { background-color: var(--stone-700); }
+.bg-stone-800 { background-color: var(--stone-800); }
+
+/* Stone Border */
+.border-stone-300 { border-color: var(--stone-300); }
+.border-stone-400 { border-color: var(--stone-400); }
+.border-stone-500 { border-color: var(--stone-500); }
+.border-stone-700 { border-color: var(--stone-700); }
+.border-stone-800 { border-color: var(--stone-800); }
+
 
 .dark {
     /* Radix Gray Dark */
