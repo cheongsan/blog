@@ -190,7 +190,7 @@ def feed(request):
     return render(request, 'feed.html', context)
 
 
-def post(request, slug):
+def detail(request, slug):
     """
     포스트 상세 페이지
     Next.js의 [slug].tsx와 동일한 기능
@@ -273,63 +273,4 @@ def post(request, slug):
         'is_public_on_detail': is_public_on_detail,
         'gravatar_url': gravatar_url,
     }
-    return render(request, 'post.html', context)
-
-# === API Views ===
-
-def api_posts(request):
-    """포스트 목록 API"""
-    notion = get_notion_service()
-    posts = notion.get_public_posts()
-    
-    # 필요한 필드만 반환
-    result = []
-    for post in posts:
-        result.append({
-            'id': post.get('id'),
-            'title': post.get('title'),
-            'slug': post.get('slug'),
-            'summary': post.get('summary'),
-            'date': post.get('date'),
-            'tags': post.get('tags', []),
-            'category': post.get('category', []),
-            'thumbnail': post.get('thumbnail'),
-        })
-    
-    return JsonResponse({'posts': result})
-
-
-def api_post_detail(request, slug):
-    """포스트 상세 API"""
-    notion = get_notion_service()
-    post = notion.get_post_by_slug(slug)
-    
-    if not post:
-        return JsonResponse({'error': '포스트를 찾을 수 없습니다.'}, status=404)
-    
-    return JsonResponse({'post': post})
-
-
-def api_tags(request):
-    """태그 목록 API"""
-    notion = get_notion_service()
-    tags = notion.get_all_tags()
-    return JsonResponse({'tags': tags})
-
-
-def api_categories(request):
-    """카테고리 목록 API"""
-    notion = get_notion_service()
-    categories = notion.get_all_categories()
-    return JsonResponse({'categories': categories})
-
-
-def api_revalidate(request):
-    """캐시 무효화 API"""
-    if request.method != 'POST':
-        return JsonResponse({'error': 'POST 메소드만 허용됩니다.'}, status=405)
-    
-    notion = get_notion_service()
-    notion.clear_cache()
-    
-    return JsonResponse({'revalidated': True})
+    return render(request, 'detail.html', context)

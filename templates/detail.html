@@ -45,8 +45,10 @@
 
                 <!-- Post Header -->
                 <header class="mb-8">
-                    <!-- Title -->
+                    <!-- Title (Post만 표시, Paper는 제목 숨김) -->
+                    {% if meta.type != "Paper" %}
                     <h1 class="text-3xl font-bold text-[var(--gray-12)] mb-6">{{ post.title }}</h1>
+                    {% endif %}
                     
                     {% if meta.type != "Paper" %}
                     <nav>
