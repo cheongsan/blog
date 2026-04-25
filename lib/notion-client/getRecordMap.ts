@@ -1,100 +1,214 @@
-import { notionClient } from "./client"
-import { withRetry, handleNotionError } from "./utils"
 import { ExtendedRecordMap } from "notion-types"
-import { getBlockCollectionId, getPageContentBlockIds } from "notion-utils"
-import { NotionAPI } from "notion-client"
+
+const FASTAPI_URL =
+  process.env.FASTAPI_URL ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:8000")
 
 /**
- * Normalize double-wrapped recordMap entries.
- * Notion API now returns { spaceId, value: { value: {...}, role } }
- * but react-notion-x expects { value: {...}, role }.
+ * Convert Notion official API block data to react-notion-x ExtendedRecordMap format.
  */
-function normalizeSection(data: Record<string, any>) {
-  if (!data) return
-  for (const key of Object.keys(data)) {
-    const entry = data[key]
-    if (entry?.value?.value && entry.value.role !== undefined) {
-      data[key] = { value: entry.value.value, role: entry.value.role }
+function blocksToRecordMap(pageId: string, page: any, blocks: any[]): ExtendedRecordMap {
+  const blockMap: Record<string, any> = {}
+  const cleanId = pageId.replace(/-/g, "")
+  const uuidId = cleanId.length === 32
+    ? `${cleanId.slice(0,8)}-${cleanId.slice(8,12)}-${cleanId.slice(12,16)}-${cleanId.slice(16,20)}-${cleanId.slice(20)}`
+    : pageId
+
+  // Build root page block
+  const childIds = blocks.map((b: any) => b.id)
+  blockMap[uuidId] = {
+    value: {
+      id: uuidId,
+      type: "page",
+      version: 1,
+      properties: {
+        title: [[page.properties?.title?.title?.[0]?.plain_text || page.properties?.Name?.title?.[0]?.plain_text || ""]],
+      },
+      content: childIds,
+      created_time: new Date(page.created_time).getTime(),
+      last_edited_time: new Date(page.last_edited_time).getTime(),
+      parent_id: page.parent?.database_id || page.parent?.page_id || "",
+      parent_table: "collection",
+      alive: true,
+      format: {
+        page_full_width: page.properties?.fullWidth?.checkbox || false,
+        page_cover: page.cover?.external?.url || page.cover?.file?.url || undefined,
+        page_icon: page.icon?.emoji || page.icon?.external?.url || undefined,
+      },
+    },
+    role: "reader",
+  }
+
+  // Convert each block
+  function addBlock(block: any, parentId: string) {
+    const blockId = block.id
+    const type = mapBlockType(block.type)
+    const children = block.children || []
+    const childContentIds = children.map((c: any) => c.id)
+
+    const value: any = {
+      id: blockId,
+      type,
+      version: 1,
+      parent_id: parentId,
+      parent_table: "block",
+      alive: true,
+      created_time: new Date(block.created_time).getTime(),
+      last_edited_time: new Date(block.last_edited_time).getTime(),
+      properties: {},
+      format: {},
     }
-  }
-}
 
-function normalizeRecordMap(rm: ExtendedRecordMap): ExtendedRecordMap {
-  for (const section of ['block', 'collection', 'collection_view', 'notion_user'] as const) {
-    normalizeSection((rm as any)[section])
-  }
-  return rm
-}
+    if (childContentIds.length > 0) {
+      value.content = childContentIds
+    }
 
-/**
- * After normalization, re-fetch collection data and missing blocks
- * that notion-client couldn't fetch due to double-wrapping.
- */
-async function patchRecordMap(rm: ExtendedRecordMap, api: NotionAPI): Promise<ExtendedRecordMap> {
-  // 1. Fetch missing blocks
-  const contentBlockIds = getPageContentBlockIds(rm)
-  const missingBlockIds = contentBlockIds.filter(id => !rm.block[id])
+    // Extract text content
+    const data = block[block.type]
+    if (data) {
+      if (data.rich_text) {
+        value.properties.title = richTextToNotionFormat(data.rich_text)
+      }
+      if (data.caption) {
+        value.properties.caption = richTextToNotionFormat(data.caption)
+      }
+      if (data.language) {
+        value.properties.language = [[data.language]]
+      }
+      if (data.url) {
+        value.properties.source = [[data.url]]
+        value.format.display_source = data.url
+      }
+      if (data.checked !== undefined) {
+        value.properties.checked = [[data.checked ? "Yes" : "No"]]
+      }
+      if (data.color && data.color !== "default") {
+        value.format.block_color = data.color
+      }
+      if (data.is_toggleable) {
+        value.format.toggleable = true
+      }
 
-  if (missingBlockIds.length > 0) {
-    const raw = await (api as any).getBlocks(missingBlockIds)
-    const newBlocks = raw.recordMap?.block || {}
-    normalizeSection(newBlocks)
-    rm.block = { ...rm.block, ...newBlocks }
-  }
+      // Image/file/video
+      if (data.type === "external" && data.external?.url) {
+        value.properties.source = [[data.external.url]]
+        value.format.display_source = data.external.url
+      }
+      if (data.type === "file" && data.file?.url) {
+        value.properties.source = [[data.file.url]]
+        value.format.display_source = data.file.url
+      }
 
-  // 2. Fetch collection data for collection_view blocks
-  const allBlockIds = getPageContentBlockIds(rm)
-  for (const blockId of allBlockIds) {
-    const block = rm.block[blockId]?.value as any
-    if (!block) continue
-    if (block.type !== 'collection_view' && block.type !== 'collection_view_page') continue
+      // Icon for callout
+      if (data.icon) {
+        value.format.page_icon = data.icon.emoji || data.icon.external?.url || ""
+      }
 
-    const collectionId = getBlockCollectionId(block, rm as any)
-    if (!collectionId) continue
-
-    const viewIds: string[] = block.view_ids || []
-    for (const viewId of viewIds) {
-      if (rm.collection_query?.[collectionId]?.[viewId]) continue
-
-      try {
-        const collectionView = (rm.collection_view as any)[viewId]?.value
-        const colData = await (api as any).getCollectionData(collectionId, viewId, collectionView)
-
-        if (colData.recordMap?.block) {
-          normalizeSection(colData.recordMap.block)
-          rm.block = { ...rm.block, ...colData.recordMap.block }
-        }
-        if (colData.recordMap?.collection) {
-          normalizeSection(colData.recordMap.collection)
-          rm.collection = { ...rm.collection, ...colData.recordMap.collection }
-        }
-        if (colData.recordMap?.collection_view) {
-          normalizeSection(colData.recordMap.collection_view)
-          rm.collection_view = { ...rm.collection_view, ...colData.recordMap.collection_view }
-        }
-
-        if (!rm.collection_query) rm.collection_query = {} as any
-        if (!rm.collection_query[collectionId]) rm.collection_query[collectionId] = {} as any
-        rm.collection_query[collectionId][viewId] = colData.result?.reducerResults
-      } catch (e) {
-        console.warn('Failed to fetch collection data:', collectionId, viewId, e)
+      // Table
+      if (block.type === "table") {
+        value.format.table_block_column_order = []
+        value.format.table_block_column_header = data.has_column_header
+        value.format.table_block_row_header = data.has_row_header
+      }
+      if (block.type === "table_row") {
+        const cells = data.cells || []
+        cells.forEach((cell: any, i: number) => {
+          const key = `col_${i}`
+          value.properties[key] = richTextToNotionFormat(cell)
+          if (!blockMap[parentId]?.value?.format?.table_block_column_order) {
+            // will be set by parent
+          }
+        })
       }
     }
+
+    blockMap[blockId] = { value, role: "reader" }
+
+    // Recurse children
+    for (const child of children) {
+      addBlock(child, blockId)
+    }
   }
 
-  return rm
+  for (const block of blocks) {
+    addBlock(block, uuidId)
+  }
+
+  return {
+    block: blockMap,
+    collection: {},
+    collection_view: {},
+    notion_user: {},
+    collection_query: {},
+    signed_urls: {},
+  } as any
 }
 
-export const getRecordMap = async (pageId: string) => {
-  try {
-    const recordMap = await withRetry(async () => {
-      return await notionClient.getPage(pageId)
-    })
-    if (!recordMap) return undefined
+function mapBlockType(type: string): string {
+  const map: Record<string, string> = {
+    paragraph: "text",
+    heading_1: "header",
+    heading_2: "sub_header",
+    heading_3: "sub_sub_header",
+    bulleted_list_item: "bulleted_list",
+    numbered_list_item: "numbered_list",
+    to_do: "to_do",
+    toggle: "toggle",
+    code: "code",
+    quote: "quote",
+    callout: "callout",
+    divider: "divider",
+    image: "image",
+    video: "video",
+    audio: "audio",
+    file: "file",
+    pdf: "pdf",
+    bookmark: "bookmark",
+    embed: "embed",
+    equation: "equation",
+    table: "table",
+    table_row: "table_row",
+    column_list: "column_list",
+    column: "column",
+    synced_block: "transclusion_container",
+    child_page: "page",
+    child_database: "collection_view",
+    table_of_contents: "table_of_contents",
+    breadcrumb: "breadcrumb",
+    link_to_page: "alias",
+  }
+  return map[type] || type
+}
 
-    normalizeRecordMap(recordMap)
-    return await patchRecordMap(recordMap, notionClient)
-  } catch (error) {
-    handleNotionError(error)
+function richTextToNotionFormat(richText: any[]): any[][] {
+  if (!richText || richText.length === 0) return [[""]]
+  return richText.map((rt: any) => {
+    const text = rt.plain_text || ""
+    const annotations = rt.annotations || {}
+    const decorations: any[] = []
+
+    if (annotations.bold) decorations.push(["b"])
+    if (annotations.italic) decorations.push(["i"])
+    if (annotations.strikethrough) decorations.push(["s"])
+    if (annotations.underline) decorations.push(["_"])
+    if (annotations.code) decorations.push(["c"])
+    if (annotations.color && annotations.color !== "default") {
+      decorations.push(["h", annotations.color])
+    }
+    if (rt.href) decorations.push(["a", rt.href])
+
+    return decorations.length > 0 ? [text, decorations] : [text]
+  })
+}
+
+export const getRecordMap = async (pageId: string): Promise<ExtendedRecordMap | undefined> => {
+  try {
+    const res = await fetch(`${FASTAPI_URL}/py-api/pages/${pageId}/blocks`)
+    if (!res.ok) throw new Error(`API error: ${res.status}`)
+    const { page, blocks } = await res.json()
+    return blocksToRecordMap(pageId, page, blocks)
+  } catch (e) {
+    console.error("Failed to fetch recordMap:", e)
+    return undefined
   }
 }

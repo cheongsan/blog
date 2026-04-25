@@ -1,3 +1,22 @@
+@router.get("/pages/{page_id}/blocks")
+async def get_page_blocks(page_id: str):
+    """페이지의 모든 블록을 재귀적으로 가져오기 (공식 API)"""
+    notion = get_notion_service()
+    page = await notion.client.get_page(page_id)
+    blocks = await notion.client.get_all_block_children(page_id)
+
+    # Recursively fetch children
+    async def fetch_children(block_list):
+        for block in block_list:
+            if block.get("has_children"):
+                children = await notion.client.get_all_block_children(block["id"])
+                block["children"] = children
+                await fetch_children(children)
+
+    await fetch_children(blocks)
+    return {"page": page, "blocks": blocks}
+
+
 import re
 from typing import Optional
 from fastapi import APIRouter, HTTPException
