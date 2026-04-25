@@ -12,7 +12,6 @@ import usePostQuery from "@/lib/usePostQuery"
 import { fetchAllPosts, fetchDetailPosts } from "@/lib/api-client"
 
 export const getStaticPaths = async () => {
-export const getStaticPaths = async () => {
   try {
     const posts = await fetchDetailPosts()
     return {
