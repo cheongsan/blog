@@ -12,15 +12,9 @@ import usePostQuery from "@/lib/usePostQuery"
 import { fetchAllPosts, fetchDetailPosts } from "@/lib/api-client"
 
 export const getStaticPaths = async () => {
-  try {
-    const posts = await fetchDetailPosts()
-    return {
-      paths: posts.map((row) => `/${row.slug}`),
-      fallback: "blocking",
-    }
-  } catch {
-    return { paths: [], fallback: "blocking" }
-  }
+  // All pages generated on-demand via fallback: "blocking"
+  // Avoids Notion API rate limits during build
+  return { paths: [], fallback: "blocking" }
 }
 
 export const getStaticProps: GetStaticProps = async (context) => {
