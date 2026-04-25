@@ -1,11 +1,4 @@
 {
-  "framework": "nextjs",
-  "builds": [
-    {
-      "src": "api/main.py",
-      "use": "@vercel/python"
-    }
-  ],
   "rewrites": [
     {
       "source": "/py-api/:path*",
