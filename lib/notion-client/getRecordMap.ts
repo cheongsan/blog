@@ -1,8 +1,8 @@
 import { ExtendedRecordMap } from "notion-types"
 
 const FASTAPI_URL =
-  process.env.FASTAPI_URL ||
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:8000")
+  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` :
+  process.env.FASTAPI_URL || "http://localhost:3000"
 
 /**
  * Convert Notion official API block data to react-notion-x ExtendedRecordMap format.
@@ -203,7 +203,7 @@ function richTextToNotionFormat(richText: any[]): any[][] {
 
 export const getRecordMap = async (pageId: string): Promise<ExtendedRecordMap | undefined> => {
   try {
-    const res = await fetch(`${FASTAPI_URL}/py-api/pages/${pageId}/blocks`)
+    const res = await fetch(`${FASTAPI_URL}/api/py/pages/${pageId}/blocks`)
     if (!res.ok) throw new Error(`API error: ${res.status}`)
     const { page, blocks } = await res.json()
     return blocksToRecordMap(pageId, page, blocks)

@@ -37,7 +37,7 @@ export default function ContributionsCard() {
   const fetchData = async () => {
     try {
       const res = await fetch(
-        `/py-api/contributions?github=${CONFIG.profile.github}&gitlab=${CONFIG.profile.gitlab}`
+        `/api/py/contributions?github=${CONFIG.profile.github}&gitlab=${CONFIG.profile.gitlab}`
       );
       const data = await res.json();
       const g = empty();
