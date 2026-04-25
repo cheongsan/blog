@@ -1,8 +1,10 @@
 import { ExtendedRecordMap } from "notion-types"
 
-const FASTAPI_URL =
-  process.env.FASTAPI_URL ||
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:8000")
+const NOTION_TOKEN = process.env.NOTION_ACCESS_TOKEN || ""
+const NOTION_HEADERS = {
+  Authorization: `Bearer ${NOTION_TOKEN}`,
+  "Notion-Version": "2022-06-28",
+}
 
 /**
  * Convert Notion official API block data to react-notion-x ExtendedRecordMap format.
@@ -89,7 +91,7 @@ function blocksToRecordMap(pageId: string, page: any, blocks: any[]): ExtendedRe
         value.format.toggleable = true
       }
 
-      // Image/file/video - URLs already cached by FastAPI
+      // Image/file/video - keep original URL, mapImageUrl will proxy at render
       const mediaUrl =
         (data.type === "external" && data.external?.url) ||
         (data.type === "file" && data.file?.url) || null
@@ -100,14 +102,14 @@ function blocksToRecordMap(pageId: string, page: any, blocks: any[]): ExtendedRe
 
       // Icon for callout
       if (data.icon) {
-        // Icon - URLs already cached by FastAPI
+        // Icon
         const iconUrl = data.icon?.external?.url || data.icon?.file?.url
         if (data.icon?.emoji) {
           value.format.page_icon = data.icon.emoji
         } else if (data.icon?.type === "icon" && data.icon?.icon) {
-          // Notion native colored icon → /icons/name_color.svg format
           value.format.page_icon = `/icons/${data.icon.icon.name}_${data.icon.icon.color}.svg`
         } else if (iconUrl) {
+          // Keep original URL - mapImageUrl will proxy S3 URLs at render time
           value.format.page_icon = iconUrl
         }
       }
@@ -209,11 +211,36 @@ function richTextToNotionFormat(richText: any[]): any[][] {
   })
 }
 
+async function fetchAllBlockChildren(blockId: string): Promise<any[]> {
+  const all: any[] = []
+  let cursor: string | undefined
+  while (true) {
+    const qs = cursor ? `?start_cursor=${cursor}&page_size=100` : "?page_size=100"
+    const res = await fetch(`https://api.notion.com/v1/blocks/${blockId}/children${qs}`, {
+      headers: NOTION_HEADERS,
+    })
+    if (!res.ok) break
+    const data = await res.json()
+    all.push(...data.results)
+    if (!data.has_more) break
+    cursor = data.next_cursor
+  }
+  for (const block of all) {
+    if (block.has_children) {
+      block.children = await fetchAllBlockChildren(block.id)
+    }
+  }
+  return all
+}
+
 export const getRecordMap = async (pageId: string): Promise<ExtendedRecordMap | undefined> => {
   try {
-    const res = await fetch(`${FASTAPI_URL}/py-api/pages/${pageId}/blocks`)
-    if (!res.ok) throw new Error(`API error: ${res.status}`)
-    const { page, blocks } = await res.json()
+    const res = await fetch(`https://api.notion.com/v1/pages/${pageId}`, {
+      headers: NOTION_HEADERS,
+    })
+    if (!res.ok) throw new Error(`Notion API error: ${res.status}`)
+    const page = await res.json()
+    const blocks = await fetchAllBlockChildren(pageId)
     return JSON.parse(JSON.stringify(blocksToRecordMap(pageId, page, blocks)))
   } catch (e) {
     console.error("Failed to fetch recordMap:", e)
