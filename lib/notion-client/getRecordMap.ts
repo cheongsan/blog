@@ -1,8 +1,8 @@
 import { ExtendedRecordMap } from "notion-types"
 
 const FASTAPI_URL =
-  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` :
-  process.env.FASTAPI_URL || "http://localhost:3000"
+  process.env.FASTAPI_URL ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:8000")
 
 /**
  * Convert Notion official API block data to react-notion-x ExtendedRecordMap format.
@@ -33,7 +33,7 @@ function blocksToRecordMap(pageId: string, page: any, blocks: any[]): ExtendedRe
       format: {
         page_full_width: page.properties?.fullWidth?.checkbox || false,
         page_cover: page.cover?.external?.url || page.cover?.file?.url || undefined,
-        page_icon: page.icon?.emoji || page.icon?.external?.url || undefined,
+        page_icon: page.icon?.emoji || page.icon?.external?.url || page.icon?.file?.url,
       },
     },
     role: "reader",
@@ -89,19 +89,27 @@ function blocksToRecordMap(pageId: string, page: any, blocks: any[]): ExtendedRe
         value.format.toggleable = true
       }
 
-      // Image/file/video
-      if (data.type === "external" && data.external?.url) {
-        value.properties.source = [[data.external.url]]
-        value.format.display_source = data.external.url
-      }
-      if (data.type === "file" && data.file?.url) {
-        value.properties.source = [[data.file.url]]
-        value.format.display_source = data.file.url
+      // Image/file/video - URLs already cached by FastAPI
+      const mediaUrl =
+        (data.type === "external" && data.external?.url) ||
+        (data.type === "file" && data.file?.url) || null
+      if (mediaUrl) {
+        value.properties.source = [[mediaUrl]]
+        value.format.display_source = mediaUrl
       }
 
       // Icon for callout
       if (data.icon) {
-        value.format.page_icon = data.icon.emoji || data.icon.external?.url || ""
+        // Icon - URLs already cached by FastAPI
+        const iconUrl = data.icon?.external?.url || data.icon?.file?.url
+        if (data.icon?.emoji) {
+          value.format.page_icon = data.icon.emoji
+        } else if (data.icon?.type === "icon" && data.icon?.icon) {
+          // Notion native colored icon → /icons/name_color.svg format
+          value.format.page_icon = `/icons/${data.icon.icon.name}_${data.icon.icon.color}.svg`
+        } else if (iconUrl) {
+          value.format.page_icon = iconUrl
+        }
       }
 
       // Table
@@ -203,10 +211,10 @@ function richTextToNotionFormat(richText: any[]): any[][] {
 
 export const getRecordMap = async (pageId: string): Promise<ExtendedRecordMap | undefined> => {
   try {
-    const res = await fetch(`${FASTAPI_URL}/api/py/pages/${pageId}/blocks`)
+    const res = await fetch(`${FASTAPI_URL}/py-api/pages/${pageId}/blocks`)
     if (!res.ok) throw new Error(`API error: ${res.status}`)
     const { page, blocks } = await res.json()
-    return blocksToRecordMap(pageId, page, blocks)
+    return JSON.parse(JSON.stringify(blocksToRecordMap(pageId, page, blocks)))
   } catch (e) {
     console.error("Failed to fetch recordMap:", e)
     return undefined

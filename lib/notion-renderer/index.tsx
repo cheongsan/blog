@@ -72,10 +72,28 @@ const NotionRenderer: FC<Props> = ({ recordMap }) => {
 
   if (!mounted) return null
 
+  const PROXY_BASE =
+    process.env.NEXT_PUBLIC_FASTAPI_URL ||
+    (typeof window !== 'undefined' ? '' : 'http://localhost:8000')
+
+  const mapImageUrl = (url: string) => {
+    if (!url) return url
+    if (url.startsWith('data:')) return url
+    if (url.startsWith('/py-api/')) return url
+    if (url.startsWith('https://www.notion.so/icons/')) return url
+    if (url.startsWith('https://www.notion.so/image/')) return url
+    // Only proxy S3/Notion file URLs
+    if (url.includes('secure.notion-static.com') || url.includes('s3.us-west-2.amazonaws.com')) {
+      return `${PROXY_BASE}/py-api/image?url=${encodeURIComponent(url)}`
+    }
+    return url
+  }
+
   return (
     <StyledWrapper suppressHydrationWarning>
       <_NotionRenderer
         recordMap={recordMap}
+        mapImageUrl={mapImageUrl}
         components={{
           Code,
           Collection,
