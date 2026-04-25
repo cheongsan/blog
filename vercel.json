@@ -1,8 +1,15 @@
 {
-  "routes": [
+  "framework": "nextjs",
+  "builds": [
     {
-      "src": "/(.*)",
-      "dest": "api/wsgi.py"
+      "src": "api/main.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/py-api/:path*",
+      "destination": "/api/main.py"
     }
   ]
 }

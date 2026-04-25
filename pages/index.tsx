@@ -1,17 +1,20 @@
 import Home from "@/pages/home"
 import { CONFIG } from "site.config"
 import { NextPageWithLayout } from "types"
-import { getPosts } from "lib/notion-client"
 import MetaConfig from "lib/meta-config"
 import { queryClient } from "lib/react-query"
 import { queryKey } from "@/constants"
 import { GetStaticProps } from "next"
 import { dehydrate } from "@tanstack/react-query"
-import { filterPosts } from "lib/notion"
+import { fetchAllPosts } from "@/lib/api-client"
 
 export const getStaticProps: GetStaticProps = async () => {
-  const posts = filterPosts(await getPosts())
-  await queryClient.prefetchQuery(queryKey.posts(), () => posts)
+  try {
+    const posts = await fetchAllPosts()
+    await queryClient.prefetchQuery(queryKey.posts(), () => posts)
+  } catch (e) {
+    console.error("Failed to fetch posts from FastAPI:", e)
+  }
 
   return {
     props: {

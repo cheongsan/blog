@@ -15,7 +15,7 @@ import "prismjs/themes/prism-tomorrow.css"
 // used for rendering equations (optional)
 
 import "katex/dist/katex.min.css"
-import { FC } from "react"
+import { FC, useState, useEffect } from "react"
 import styled from "@emotion/styled"
 
 const _NotionRenderer = dynamic(
@@ -54,16 +54,26 @@ type Props = {
 
 const NotionRenderer: FC<Props> = ({ recordMap }) => {
   const [scheme] = useScheme()
+  const router = useRouter();
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => { setMounted(true) }, [])
+
+  if (!recordMap || !recordMap.block || Object.keys(recordMap.block).length === 0) {
+    return null
+  }
 
   const MapPageUrl = (id: string) => {
-    const router = useRouter();
+    if (!id) return '';
     const currentPath = router.asPath.split("#")[0];
     const NotionPageID = Object.keys(recordMap.block)[0];
     return NotionPageID === id ? currentPath : "https://www.notion.so/" + id.replace(/-/g, '');
   }
 
+  if (!mounted) return null
+
   return (
-    <StyledWrapper>
+    <StyledWrapper suppressHydrationWarning>
       <_NotionRenderer
         recordMap={recordMap}
         components={{

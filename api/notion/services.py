@@ -3,7 +3,7 @@ Notion 서비스 레이어
 비즈니스 로직을 처리하는 서비스 클래스들
 공식 Notion API만 사용
 """
-import os
+import time
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
 
@@ -11,25 +11,34 @@ from .client import NotionClient, NotionAPIError, parse_notion_properties
 from .utils import id_to_uuid
 
 
-def get_cache():
-    """Django 캐시 가져오기 (lazy import)"""
-    try:
-        from django.core.cache import cache
-        return cache
-    except Exception:
+class TTLCache:
+    """간단한 TTL 기반 인메모리 캐시"""
+
+    def __init__(self):
+        self._cache: Dict[str, tuple] = {}
+
+    def get(self, key: str):
+        if key in self._cache:
+            value, expiry = self._cache[key]
+            if time.time() < expiry:
+                return value
+            del self._cache[key]
         return None
+
+    def set(self, key: str, value, timeout: int):
+        self._cache[key] = (value, time.time() + timeout)
+
+    def delete(self, key: str):
+        self._cache.pop(key, None)
+
+
+_cache = TTLCache()
 
 
 def get_notion_config():
     """Notion 설정 가져오기"""
-    try:
-        from django.conf import settings
-        return settings.NOTION_CONFIG
-    except Exception:
-        return {
-            'page_id': os.environ.get('NOTION_PAGE_ID', ''),
-            'access_token': os.environ.get('NOTION_ACCESS_TOKEN', ''),
-        }
+    from api.config import NOTION_CONFIG
+    return NOTION_CONFIG
 
 
 # 타입 정의
@@ -57,7 +66,7 @@ class NotionService:
         self.page_id = page_id or config.get('page_id', '')
         self.client = NotionClient()
     
-    def get_posts(self, use_cache: bool = True) -> List[Dict[str, Any]]:
+    async def get_posts(self, use_cache: bool = True) -> List[Dict[str, Any]]:
         """
         모든 포스트 목록 가져오기 (공식 API 사용)
         
@@ -67,17 +76,16 @@ class NotionService:
         Returns:
             포스트 목록 (날짜순 정렬)
         """
-        cache = get_cache()
         cache_key = f"notion_posts_{self.page_id}"
         
-        if use_cache and cache:
-            cached = cache.get(cache_key)
+        if use_cache:
+            cached = _cache.get(cache_key)
             if cached:
                 return cached
         
         try:
             # 데이터베이스 쿼리
-            pages = self.client.query_database_all(
+            pages = await self.client.query_database_all(
                 database_id=self.page_id,
                 sorts=[{'property': 'date', 'direction': 'descending'}]
             )
@@ -105,8 +113,8 @@ class NotionService:
             posts.sort(key=lambda x: self._get_post_date(x), reverse=True)
             
             # 캐시 저장
-            if use_cache and cache:
-                cache.set(cache_key, posts, self.POSTS_CACHE_TIMEOUT)
+            if use_cache:
+                _cache.set(cache_key, posts, self.POSTS_CACHE_TIMEOUT)
             
             return posts
         
@@ -114,15 +122,15 @@ class NotionService:
             print(f"Notion API 오류: {e}")
             return []
     
-    def get_post_by_slug(self, slug: str) -> Optional[Dict[str, Any]]:
+    async def get_post_by_slug(self, slug: str) -> Optional[Dict[str, Any]]:
         """슬러그로 포스트 조회"""
-        posts = self.get_posts()
+        posts = await self.get_posts()
         for post in posts:
             if post.get('slug') == slug:
                 return post
         return None
     
-    def get_post_detail(self, post_id: str) -> Optional[Dict[str, Any]]:
+    async def get_post_detail(self, post_id: str) -> Optional[Dict[str, Any]]:
         """
         포스트 상세 정보 가져오기 (블록 내용 포함)
         
@@ -132,47 +140,39 @@ class NotionService:
         Returns:
             포스트 상세 정보 및 블록 데이터
         """
-        cache = get_cache()
         cache_key = f"notion_post_detail_{post_id}"
         
-        if cache:
-            cached = cache.get(cache_key)
-            if cached:
-                return cached
+        cached = _cache.get(cache_key)
+        if cached:
+            return cached
         
         try:
             # 페이지 정보 가져오기
-            page = self.client.get_page(post_id)
+            page = await self.client.get_page(post_id)
             
             # 모든 블록 (자식 포함) 재귀적으로 가져오기
-            blocks = self._get_all_blocks_recursive(post_id)
+            blocks = await self._get_all_blocks_recursive(post_id)
             
             # 포스트 기본 정보 가져오기
-            posts = self.get_posts()
+            posts = await self.get_posts()
             post = next((p for p in posts if p.get('id') == post_id), None)
-            
-            # 블록을 HTML로 렌더링
-            from .renderer import render_notion_blocks
-            rendered_content = render_notion_blocks(blocks)
             
             if post:
                 result = {
                     **post,
                     'page': page,
                     'blocks': blocks,
-                    'content_html': rendered_content,
                 }
-                if cache:
-                    cache.set(cache_key, result, self.POST_DETAIL_CACHE_TIMEOUT)
+                _cache.set(cache_key, result, self.POST_DETAIL_CACHE_TIMEOUT)
                 return result
             
-            return {'page': page, 'blocks': blocks, 'content_html': rendered_content}
+            return {'page': page, 'blocks': blocks}
         
         except NotionAPIError as e:
             print(f"Notion API 오류: {e}")
             return None
     
-    def _get_all_blocks_recursive(self, block_id: str, depth: int = 0, max_depth: int = 5) -> List[Dict[str, Any]]:
+    async def _get_all_blocks_recursive(self, block_id: str, depth: int = 0, max_depth: int = 5) -> List[Dict[str, Any]]:
         """
         블록과 자식 블록을 재귀적으로 모두 가져오기
         
@@ -188,14 +188,14 @@ class NotionService:
             return []
         
         all_blocks = []
-        blocks = self.client.get_all_block_children(block_id)
+        blocks = await self.client.get_all_block_children(block_id)
         
         for block in blocks:
             all_blocks.append(block)
             
             # 자식이 있는 블록인 경우 재귀적으로 가져오기
             if block.get('has_children', False):
-                child_blocks = self._get_all_blocks_recursive(
+                child_blocks = await self._get_all_blocks_recursive(
                     block.get('id', ''), 
                     depth + 1, 
                     max_depth
@@ -262,27 +262,27 @@ class NotionService:
         
         return filtered
     
-    def get_public_posts(self) -> List[Dict[str, Any]]:
+    async def get_public_posts(self) -> List[Dict[str, Any]]:
         """공개 포스트만 가져오기 (Public, Pinned)"""
-        posts = self.get_posts()
+        posts = await self.get_posts()
         return self.filter_posts(posts, accept_status=["Public", "Pinned"])
     
-    def get_all_posts(self) -> List[Dict[str, Any]]:
+    async def get_all_posts(self) -> List[Dict[str, Any]]:
         """모든 공개 포스트 가져오기 (Public, Pinned, Archived)"""
-        posts = self.get_posts()
+        posts = await self.get_posts()
         return self.filter_posts(posts, accept_status=["Public", "Pinned", "Archived"])
     
-    def get_pinned_posts(self) -> List[Dict[str, Any]]:
+    async def get_pinned_posts(self) -> List[Dict[str, Any]]:
         """고정 포스트만 가져오기"""
-        posts = self.get_posts()
+        posts = await self.get_posts()
         return self.filter_posts(posts, accept_status=["Pinned"])
     
-    def get_archived_posts(self) -> List[Dict[str, Any]]:
+    async def get_archived_posts(self) -> List[Dict[str, Any]]:
         """아카이브 포스트 가져오기"""
-        posts = self.get_posts()
+        posts = await self.get_posts()
         return self.filter_posts(posts, accept_status=["Archived"])
     
-    def get_all_tags(self, posts: Optional[List[Dict[str, Any]]] = None) -> Dict[str, int]:
+    async def get_all_tags(self, posts: Optional[List[Dict[str, Any]]] = None) -> Dict[str, int]:
         """
         모든 태그와 개수 가져오기
         
@@ -290,10 +290,10 @@ class NotionService:
             {태그명: 포스트 수} 딕셔너리
         """
         if posts is None:
-            posts = self.get_public_posts()
+            posts = await self.get_public_posts()
         return self._get_all_select_items(posts, 'tags')
     
-    def get_all_categories(self, posts: Optional[List[Dict[str, Any]]] = None) -> Dict[str, int]:
+    async def get_all_categories(self, posts: Optional[List[Dict[str, Any]]] = None) -> Dict[str, int]:
         """
         모든 카테고리와 개수 가져오기
         
@@ -301,17 +301,17 @@ class NotionService:
             {카테고리명: 포스트 수} 딕셔너리
         """
         if posts is None:
-            posts = self.get_public_posts()
+            posts = await self.get_public_posts()
         return self._get_all_select_items(posts, 'category')
     
-    def get_posts_by_tag(self, tag: str) -> List[Dict[str, Any]]:
+    async def get_posts_by_tag(self, tag: str) -> List[Dict[str, Any]]:
         """특정 태그의 포스트 목록"""
-        posts = self.get_public_posts()
+        posts = await self.get_public_posts()
         return [p for p in posts if tag in (p.get('tags') or [])]
     
-    def get_posts_by_category(self, category: str) -> List[Dict[str, Any]]:
+    async def get_posts_by_category(self, category: str) -> List[Dict[str, Any]]:
         """특정 카테고리의 포스트 목록"""
-        posts = self.get_public_posts()
+        posts = await self.get_public_posts()
         return [p for p in posts if category in (p.get('category') or [])]
     
     # === Private Methods ===
@@ -358,9 +358,7 @@ class NotionService:
     
     def clear_cache(self):
         """캐시 초기화"""
-        cache = get_cache()
-        if cache:
-            cache.delete(f"notion_posts_{self.page_id}")
+        _cache.delete(f"notion_posts_{self.page_id}")
 
 
 # 싱글톤 인스턴스

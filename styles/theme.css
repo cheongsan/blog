@@ -523,7 +523,7 @@ body,
 .notion-text,
 .notion-h-title,
 .notion-callout-text {
-  font-family: 'Red Hat Display', 'Noto Color Emoji', 'Noto Sans KR', sans-serif;
+  font-family: 'Red Hat Display', 'Noto Sans KR', 'Noto Color Emoji', sans-serif;
 }
 
 body {

@@ -3,9 +3,9 @@ Notion 공식 API 클라이언트
 https://developers.notion.com/
 비공개 데이터베이스 접근을 위한 Integration 토큰 사용
 """
+import asyncio
 import os
-import time
-import requests
+import httpx
 from typing import Any, Dict, Optional, List
 from datetime import datetime
 
@@ -14,19 +14,13 @@ from .utils import id_to_uuid, uuid_to_id
 
 def get_notion_config():
     """Notion 설정 가져오기"""
-    try:
-        from django.conf import settings
-        return settings.NOTION_CONFIG
-    except Exception:
-        return {
-            'page_id': os.environ.get('NOTION_PAGE_ID', ''),
-            'access_token': os.environ.get('NOTION_ACCESS_TOKEN', ''),
-        }
+    from api.config import NOTION_CONFIG
+    return NOTION_CONFIG
 
 
 class NotionClient:
     """
-    Notion 공식 API 클라이언트
+    Notion 공식 API 비동기 클라이언트
     Integration 토큰을 사용하여 비공개 데이터베이스에 접근
     
     사용 전 설정:
@@ -45,18 +39,16 @@ class NotionClient:
     def __init__(self, token: Optional[str] = None):
         config = get_notion_config()
         self.token = token or config.get('access_token', '')
-        self.session = requests.Session()
-        self._setup_session()
+        self.client = httpx.AsyncClient(
+            headers={
+                'Authorization': f'Bearer {self.token}',
+                'Content-Type': 'application/json',
+                'Notion-Version': self.NOTION_VERSION,
+            },
+            timeout=30.0,
+        )
     
-    def _setup_session(self):
-        """세션 헤더 설정"""
-        self.session.headers.update({
-            'Authorization': f'Bearer {self.token}',
-            'Content-Type': 'application/json',
-            'Notion-Version': self.NOTION_VERSION,
-        })
-    
-    def _request(
+    async def _request(
         self,
         method: str,
         endpoint: str,
@@ -69,27 +61,27 @@ class NotionClient:
         for attempt in range(self.MAX_RETRIES + 1):
             try:
                 if method.upper() == 'POST':
-                    response = self.session.post(url, json=data, params=params, timeout=30)
+                    response = await self.client.post(url, json=data, params=params)
                 elif method.upper() == 'PATCH':
-                    response = self.session.patch(url, json=data, timeout=30)
+                    response = await self.client.patch(url, json=data)
                 else:
-                    response = self.session.get(url, params=params, timeout=30)
+                    response = await self.client.get(url, params=params)
                 
                 response.raise_for_status()
                 return response.json()
             
-            except requests.exceptions.RequestException as e:
+            except httpx.HTTPError as e:
                 if attempt < self.MAX_RETRIES:
-                    time.sleep(self.RETRY_DELAY * (attempt + 1))
+                    await asyncio.sleep(self.RETRY_DELAY * (attempt + 1))
                     continue
                 raise NotionAPIError(f"Notion API 요청 실패: {str(e)}")
     
-    def get_database(self, database_id: str) -> Dict[str, Any]:
+    async def get_database(self, database_id: str) -> Dict[str, Any]:
         """데이터베이스 정보 가져오기"""
         database_id = uuid_to_id(database_id)
-        return self._request('GET', f'databases/{database_id}')
+        return await self._request('GET', f'databases/{database_id}')
     
-    def query_database(
+    async def query_database(
         self,
         database_id: str,
         filter: Optional[Dict] = None,
@@ -119,9 +111,9 @@ class NotionClient:
         if page_size:
             data['page_size'] = min(page_size, 100)
         
-        return self._request('POST', f'databases/{database_id}/query', data=data)
+        return await self._request('POST', f'databases/{database_id}/query', data=data)
     
-    def query_database_all(
+    async def query_database_all(
         self,
         database_id: str,
         filter: Optional[Dict] = None,
@@ -134,7 +126,7 @@ class NotionClient:
         start_cursor = None
         
         while True:
-            response = self.query_database(
+            response = await self.query_database(
                 database_id=database_id,
                 filter=filter,
                 sorts=sorts,
@@ -150,12 +142,12 @@ class NotionClient:
         
         return all_results
     
-    def get_page(self, page_id: str) -> Dict[str, Any]:
+    async def get_page(self, page_id: str) -> Dict[str, Any]:
         """페이지 정보 가져오기"""
         page_id = uuid_to_id(page_id)
-        return self._request('GET', f'pages/{page_id}')
+        return await self._request('GET', f'pages/{page_id}')
     
-    def get_block_children(
+    async def get_block_children(
         self,
         block_id: str,
         start_cursor: Optional[str] = None,
@@ -167,15 +159,15 @@ class NotionClient:
         if start_cursor:
             params['start_cursor'] = start_cursor
         
-        return self._request('GET', f'blocks/{block_id}/children', params=params)
+        return await self._request('GET', f'blocks/{block_id}/children', params=params)
     
-    def get_all_block_children(self, block_id: str) -> List[Dict[str, Any]]:
+    async def get_all_block_children(self, block_id: str) -> List[Dict[str, Any]]:
         """블록의 모든 자식 블록 가져오기 (페이지네이션 자동 처리)"""
         all_blocks = []
         start_cursor = None
         
         while True:
-            response = self.get_block_children(block_id, start_cursor)
+            response = await self.get_block_children(block_id, start_cursor)
             all_blocks.extend(response.get('results', []))
             
             if not response.get('has_more'):
@@ -185,7 +177,7 @@ class NotionClient:
         
         return all_blocks
     
-    def search(
+    async def search(
         self,
         query: str = "",
         filter: Optional[Dict] = None,
@@ -204,7 +196,7 @@ class NotionClient:
         if start_cursor:
             data['start_cursor'] = start_cursor
         
-        return self._request('POST', 'search', data=data)
+        return await self._request('POST', 'search', data=data)
 
 
 class NotionAPIError(Exception):

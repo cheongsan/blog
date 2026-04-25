@@ -1,47 +1,57 @@
 import Detail from "components/detail"
-import { filterPosts } from "lib/notion"
 import { CONFIG } from "site.config"
 import { NextPageWithLayout } from "types"
 import CustomError from "@/pages/error"
-import { getRecordMap, getPosts } from "lib/notion-client"
+import { getRecordMap } from "lib/notion-client"
 import MetaConfig from "lib/meta-config"
 import { GetStaticProps } from "next"
 import { queryClient } from "lib/react-query"
 import { queryKey } from "@/constants"
 import { dehydrate } from "@tanstack/react-query"
 import usePostQuery from "@/lib/usePostQuery"
-import { FilterPostsOptions } from "@/lib/notion/filterPosts"
-
-const filter: FilterPostsOptions = {
-  acceptStatus: ["Public", "PublicOnDetail", "Pinned", "Archived"],
-  acceptType: ["Paper", "Post", "Page"],
-}
+import { fetchAllPosts, fetchDetailPosts } from "@/lib/api-client"
 
 export const getStaticPaths = async () => {
-  const posts = await getPosts()
-  const filteredPost = filterPosts(posts, filter)
-
-  return {
-    paths: filteredPost.map((row) => `/${row.slug}`),
-    fallback: true,
+  try {
+    const posts = await fetchDetailPosts()
+    return {
+      paths: posts.map((row) => `/${row.slug}`),
+      fallback: "blocking",
+    }
+  } catch {
+    return { paths: [], fallback: "blocking" }
   }
 }
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const slug = context.params?.slug
 
-  const posts = await getPosts()
-  const feedPosts = filterPosts(posts)
-  await queryClient.prefetchQuery(queryKey.posts(), () => feedPosts)
+  try {
+    const [feedPosts, detailPosts] = await Promise.all([
+      fetchAllPosts(),
+      fetchDetailPosts(),
+    ])
 
-  const detailPosts = filterPosts(posts, filter)
-  const postDetail = detailPosts.find((t: any) => t.slug === slug)
-  const recordMap = await getRecordMap(postDetail?.id!)
+    await queryClient.prefetchQuery(queryKey.posts(), () => feedPosts)
 
-  await queryClient.prefetchQuery(queryKey.post(`${slug}`), () => ({
-    ...postDetail,
-    recordMap,
-  }))
+    const postDetail = detailPosts.find((t: any) => t.slug === slug)
+    if (!postDetail) {
+      return { notFound: true }
+    }
+
+    const recordMap = await getRecordMap(postDetail.id.replace(/-/g, ''))
+    if (!recordMap) {
+      return { notFound: true }
+    }
+
+    await queryClient.prefetchQuery(queryKey.post(`${slug}`), () => ({
+      ...postDetail,
+      recordMap,
+    }))
+  } catch (e) {
+    console.error("Failed to fetch post data:", e)
+    return { notFound: true }
+  }
 
   return {
     props: {
