@@ -11,6 +11,11 @@ import { dehydrate } from "@tanstack/react-query"
 import usePostQuery from "@/lib/usePostQuery"
 import { fetchAllPosts, fetchDetailPosts } from "@/lib/api-client"
 
+// A notFound result is cached with no expiry unless it carries a revalidate,
+// so a post that only failed to fetch would 404 until the next deploy. Keep
+// that window short: the post exists, we just could not reach Notion.
+const TRANSIENT_FAILURE_REVALIDATE = 60
+
 export const getStaticPaths = async () => {
   try {
     const posts = await fetchDetailPosts()
@@ -18,7 +23,10 @@ export const getStaticPaths = async () => {
       paths: posts.map((row) => `/${row.slug}`),
       fallback: "blocking",
     }
-  } catch {
+  } catch (e) {
+    // Pre-generating nothing is survivable because fallback is "blocking",
+    // but it must not pass silently — it means the whole build lost Notion.
+    console.error("Failed to list post paths, pre-generating none:", e)
     return { paths: [], fallback: "blocking" }
   }
 }
@@ -36,12 +44,15 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
     const postDetail = detailPosts.find((t: any) => t.slug === slug)
     if (!postDetail) {
-      return { notFound: true }
+      // Genuinely absent from the database — 404 is the right answer, but
+      // recheck later so publishing it in Notion is enough to make it appear.
+      return { notFound: true, revalidate: CONFIG.revalidateTime }
     }
 
     const recordMap = await getRecordMap(postDetail.id.replace(/-/g, ''))
     if (!recordMap) {
-      return { notFound: true }
+      console.error(`Could not fetch recordMap for ${slug}, serving a temporary 404`)
+      return { notFound: true, revalidate: TRANSIENT_FAILURE_REVALIDATE }
     }
 
     await queryClient.prefetchQuery(queryKey.post(`${slug}`), () => ({
@@ -50,7 +61,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     }))
   } catch (e) {
     console.error("Failed to fetch post data:", e)
-    return { notFound: true }
+    return { notFound: true, revalidate: TRANSIENT_FAILURE_REVALIDATE }
   }
 
   return {

@@ -1,4 +1,5 @@
 import { ExtendedRecordMap } from "notion-types"
+import { notionFetch } from "./notionFetch"
 
 const NOTION_TOKEN = process.env.NOTION_ACCESS_TOKEN || ""
 const NOTION_HEADERS = {
@@ -216,10 +217,18 @@ async function fetchAllBlockChildren(blockId: string): Promise<any[]> {
   let cursor: string | undefined
   while (true) {
     const qs = cursor ? `?start_cursor=${cursor}&page_size=100` : "?page_size=100"
-    const res = await fetch(`https://api.notion.com/v1/blocks/${blockId}/children${qs}`, {
+    // notionFetch throws once rate-limit retries are exhausted, so a 429 can
+    // no longer silently drop the rest of a page's blocks: the caller sees the
+    // failure instead of publishing a half-rendered post.
+    const res = await notionFetch(`https://api.notion.com/v1/blocks/${blockId}/children${qs}`, {
       headers: NOTION_HEADERS,
     })
-    if (!res.ok) break
+    if (!res.ok) {
+      console.warn(
+        `Notion API ${res.status} listing children of ${blockId} — omitting the rest of this block`
+      )
+      break
+    }
     const data = await res.json()
     all.push(...data.results)
     if (!data.has_more) break
@@ -235,7 +244,7 @@ async function fetchAllBlockChildren(blockId: string): Promise<any[]> {
 
 export const getRecordMap = async (pageId: string): Promise<ExtendedRecordMap | undefined> => {
   try {
-    const res = await fetch(`https://api.notion.com/v1/pages/${pageId}`, {
+    const res = await notionFetch(`https://api.notion.com/v1/pages/${pageId}`, {
       headers: NOTION_HEADERS,
     })
     if (!res.ok) throw new Error(`Notion API error: ${res.status}`)
