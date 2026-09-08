@@ -38,9 +38,20 @@ function parsePage(page: any): TPost {
     if (p?.status) return [p.status.name]
     return []
   }
-  const getFile = (p: any) => {
+  const getFile = (p: any, property: string) => {
     const f = p?.files?.[0]
-    return f?.external?.url || f?.file?.url || null
+    if (!f) return null
+    // External files keep a permanent URL, but Notion-hosted ones come back as
+    // S3 URLs signed for an hour. Baking one into an ISR page cached for a day
+    // leaves a dead link, so point at the proxy route, which re-signs per
+    // request.
+    if (f.external?.url) return f.external.url
+    if (f.file?.url) {
+      return `/api/notion/image?pageId=${encodeURIComponent(
+        page.id
+      )}&property=${encodeURIComponent(property)}&kind=property`
+    }
+    return null
   }
   const titleKey = Object.keys(props).find((k) => props[k].type === "title") || "Name"
 
@@ -54,7 +65,7 @@ function parsePage(page: any): TPost {
     tags: props.tags?.multi_select?.map((s: any) => s.name) || [],
     category: getSelect(props.category),
     summary: getText(props.summary),
-    thumbnail: getFile(props.thumbnail),
+    thumbnail: getFile(props.thumbnail, "thumbnail"),
     createdTime: page.created_time,
     fullWidth: false,
   }

@@ -1,5 +1,4 @@
 import dynamic from "next/dynamic"
-import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from 'next/router';
 import { ExtendedRecordMap } from "notion-types"
@@ -17,6 +16,7 @@ import "prismjs/themes/prism-tomorrow.css"
 import "katex/dist/katex.min.css"
 import { FC, useState, useEffect } from "react"
 import styled from "@emotion/styled"
+import { NativeImageWithLoader } from "@/components/ui/native-image-with-loader"
 
 const _NotionRenderer = dynamic(
   () => import("react-notion-x").then((m) => m.NotionRenderer),
@@ -78,10 +78,21 @@ const NotionRenderer: FC<Props> = ({ recordMap }) => {
     if (url.startsWith('/api/')) return url
     if (url.startsWith('/icons/')) return url
     if (url.startsWith('https://www.notion.so/icons/')) return url
-    // Proxy S3 signed URLs through API route to avoid expiration
+    // Notion-hosted files are signed for an hour, so the URL captured in the
+    // recordMap is dead by the time an ISR-cached page is served. Route them
+    // through the proxy, which re-signs per request. Covers and icons share a
+    // page id, so tell the proxy which one is being asked for.
     if (url.includes('secure.notion-static.com') || url.includes('s3.us-west-2.amazonaws.com')) {
-      const blockId = block?.id || ''
-      return blockId ? `/api/notion/image?blockId=${blockId}` : url
+      const blockId = block?.id
+      if (!blockId) return url
+      const format = block?.format || {}
+      const kind =
+        format.page_cover === url
+          ? 'cover'
+          : format.page_icon === url
+          ? 'icon'
+          : 'auto'
+      return `/api/notion/image?blockId=${encodeURIComponent(blockId)}&kind=${kind}`
     }
     return url
   }
@@ -91,13 +102,14 @@ const NotionRenderer: FC<Props> = ({ recordMap }) => {
       <_NotionRenderer
         recordMap={recordMap}
         mapImageUrl={mapImageUrl}
+        forceCustomImages
         components={{
           Code,
           Collection,
           Equation,
           Modal,
           Pdf,
-          nextImage: Image,
+          Image: NativeImageWithLoader,
           nextLink: Link,
         }}
         mapPageUrl={MapPageUrl}

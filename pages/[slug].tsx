@@ -66,10 +66,13 @@ const DetailPage: NextPageWithLayout = () => {
 
   if (!post) return <CustomError />
 
-  const image =
-    post.thumbnail ??
-    CONFIG.ogImageGenerateURL ??
-    `${CONFIG.ogImageGenerateURL}/${encodeURIComponent(post.title)}.png`
+  // Thumbnails now resolve through a relative proxy path, and crawlers need an
+  // absolute og:image.
+  const image = post.thumbnail
+    ? post.thumbnail.startsWith("/")
+      ? `${CONFIG.link}${post.thumbnail}`
+      : post.thumbnail
+    : `${CONFIG.ogImageGenerateURL}/${encodeURIComponent(post.title)}.png`
 
   const date = post.date?.start_date || post.createdTime || ""
 
