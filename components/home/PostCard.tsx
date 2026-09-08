@@ -2,11 +2,11 @@ import Link from "next/link"
 import { CONFIG } from "site.config"
 import { TPost } from "types"
 import { formatDate } from "@/lib/utils"
-import Image from "next/image"
 import styled from "@emotion/styled"
 import Tag from "@/components/Tag"
 import Category from "@/components/category"
 import { TbChevronRight } from "react-icons/tb"
+import { ImageWithLoader } from "@/components/ui/image-with-loader"
 
 type Props = {
   data: TPost
@@ -20,7 +20,7 @@ const PostCard: React.FC<Props> = ({ data }) => {
       <article className="flex">
         {data.thumbnail && (
           <div className="thumbnail">
-            <Image
+            <ImageWithLoader
               src={data.thumbnail}
               fill
               alt={data.title}
