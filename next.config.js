@@ -6,4 +6,16 @@ module.exports = {
     // day so that only happens once per image.
     minimumCacheTTL: 86400,
   },
+  experimental: {
+    // Static generation forks one worker per CPU, each with its own module
+    // state, so a per-process rate limiter is multiplied by the worker count
+    // and Notion still returns 429. This build is bound by Notion's ~3
+    // requests/second, not by CPU, so a single worker costs nothing and lets
+    // the limiter in lib/notion-client/notionFetch.ts actually hold.
+    cpus: 1,
+  },
+  // Pacing Notion requests caps a page at ~3 requests/second, and the biggest
+  // posts walk well over a hundred blocks, so generating one can outlast the
+  // 60s default and get its worker SIGTERMed mid-page.
+  staticPageGenerationTimeout: 300,
 }
