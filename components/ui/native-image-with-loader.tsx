@@ -1,5 +1,6 @@
 import { CSSProperties, ImgHTMLAttributes, useState } from "react"
 import { ImageLoadingIndicator } from "@/components/ui/image-loading-indicator"
+import { useImageLoadingBeacon } from "@/lib/imageLoading"
 
 type NativeImageWithLoaderProps = Omit<
   ImgHTMLAttributes<HTMLImageElement>,
@@ -31,6 +32,7 @@ function NativeImageWithLoader({
   const isLoading = Boolean(src) && settledSrc !== src
   const isNotionIcon = className?.includes("notion-page-icon") ?? false
   const showIndicator = isLoading && !isNotionIcon
+  const beaconRef = useImageLoadingBeacon(isLoading)
   const needsLoadingHeight = showIndicator && !height && !width
 
   return (
@@ -40,6 +42,7 @@ function NativeImageWithLoader({
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         {...props}
+        ref={beaconRef}
         src={src}
         alt={alt}
         className={className}

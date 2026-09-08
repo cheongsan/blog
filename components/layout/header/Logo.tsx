@@ -3,14 +3,18 @@ import styled from "@emotion/styled"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
+import { useImagesLoading } from "@/lib/imageLoading"
 
 const Logo = () => {
   const router = useRouter()
-  const [loading, setLoading] = useState(false)
+  const [routeChanging, setRouteChanging] = useState(false)
+  const imagesLoading = useImagesLoading()
+  // The shimmer means "the page is still filling in", so images count too.
+  const loading = routeChanging || imagesLoading
 
   useEffect(() => {
-    const start = () => setLoading(true)
-    const end = () => setLoading(false)
+    const start = () => setRouteChanging(true)
+    const end = () => setRouteChanging(false)
     router.events.on("routeChangeStart", start)
     router.events.on("routeChangeComplete", end)
     router.events.on("routeChangeError", end)
