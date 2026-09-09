@@ -1,0 +1,10 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "append_nav_link",
+			"type": "shell",
+			"command": "echo \".nav-link {\n  transition-property: scale, background-color;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 300ms;\n}\n\n.nav-link:hover {\n  scale: 0.9;\n  background-color: var(--card-link-click);\n}\" >> static/css/theme.css"
+		}
+	]
+}

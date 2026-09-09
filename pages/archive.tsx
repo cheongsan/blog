@@ -7,8 +7,7 @@ import { queryKey } from "@/constants"
 import { NextPageWithLayout } from "types"
 
 import MetaConfig from "lib/meta-config"
-import { filterPosts } from "lib/notion"
-import { getPosts } from "lib/notion-client"
+import { fetchAllPosts } from "@/lib/api-client"
 
 import { queryClient } from "lib/react-query"
 import { dehydrate } from "@tanstack/react-query"
@@ -23,8 +22,12 @@ import PostList from "@/components/feed/list"
 import { TbSearch, TbTags, TbBooks, TbConfetti } from "react-icons/tb"
 
 export const getStaticProps: GetStaticProps = async () => {
-  const posts = filterPosts(await getPosts())
-  await queryClient.prefetchQuery(queryKey.posts(), () => posts)
+  try {
+    const posts = await fetchAllPosts()
+    await queryClient.prefetchQuery(queryKey.posts(), () => posts)
+  } catch (e) {
+    console.error("Failed to fetch posts from FastAPI:", e)
+  }
 
   return {
     props: {

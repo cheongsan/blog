@@ -6,16 +6,27 @@ import getAllPageIds from "@/lib/notion/getAllPageIds"
 import getPageProperties from "@/lib/notion/getPageProperties"
 import { TPosts } from "@/types"
 
-/**
- * @param {{ includePages: boolean }} - false: posts only / true: include pages
- */
+function normalizeSection(data: Record<string, any>) {
+  if (!data) return
+  for (const key of Object.keys(data)) {
+    const entry = data[key]
+    if (entry?.value?.value && entry.value.role !== undefined) {
+      data[key] = { value: entry.value.value, role: entry.value.role }
+    }
+  }
+}
 
-// TODO: react query를 사용해서 처음 불러온 뒤로는 해당데이터만 사용하도록 수정
 export const getPosts = async () => {
   let id = CONFIG.notionConfig.pageId as string
   const api = new NotionAPI()
 
   const response = await api.getPage(id)
+
+  // Normalize double-wrapped entries
+  for (const section of ['block', 'collection', 'collection_view', 'notion_user'] as const) {
+    normalizeSection((response as any)[section])
+  }
+
   id = idToUuid(id)
   const collection = Object.values(response.collection)[0]?.value
   const block = response.block
@@ -23,20 +34,17 @@ export const getPosts = async () => {
 
   const rawMetadata = block[id].value
 
-  // Check Type
   if (
     rawMetadata?.type !== "collection_view_page" &&
     rawMetadata?.type !== "collection_view"
   ) {
     return []
   } else {
-    // Construct Data
     const pageIds = getAllPageIds(response)
     const data = []
     for (let i = 0; i < pageIds.length; i++) {
       const id = pageIds[i]
       const properties = (await getPageProperties(id, block, schema)) || null
-      // Add fullwidth, createdtime to properties
       properties.createdTime = new Date(
         block[id].value?.created_time
       ).toString()
@@ -46,7 +54,6 @@ export const getPosts = async () => {
       data.push(properties)
     }
 
-    // Sort by date
     data.sort((a: any, b: any) => {
       const dateA: any = new Date(a?.date?.start_date || a.createdTime)
       const dateB: any = new Date(b?.date?.start_date || b.createdTime)

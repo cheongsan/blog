@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Force Noto Color Emoji for all emoji characters on all platforms */
+@font-face {
+  font-family: 'Noto Color Emoji';
+  src: url('https://fonts.gstatic.com/s/notocoloremoji/v30/Yq6P-KqIXTD0t4D9z1ESnKM3-HpFabsE4tq3luCC7p-aXxcn.0.woff2') format('woff2');
+  font-display: swap;
+  unicode-range: U+200D, U+2600-26FF, U+2700-27BF, U+FE00-FE0F, U+1F000-1FFFF, U+E0020-E007F;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

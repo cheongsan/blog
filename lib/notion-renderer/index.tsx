@@ -1,5 +1,4 @@
 import dynamic from "next/dynamic"
-import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from 'next/router';
 import { ExtendedRecordMap } from "notion-types"
@@ -15,8 +14,9 @@ import "prismjs/themes/prism-tomorrow.css"
 // used for rendering equations (optional)
 
 import "katex/dist/katex.min.css"
-import { FC } from "react"
+import { FC, useState, useEffect } from "react"
 import styled from "@emotion/styled"
+import { NativeImageWithLoader } from "@/components/ui/native-image-with-loader"
 
 const _NotionRenderer = dynamic(
   () => import("react-notion-x").then((m) => m.NotionRenderer),
@@ -54,25 +54,62 @@ type Props = {
 
 const NotionRenderer: FC<Props> = ({ recordMap }) => {
   const [scheme] = useScheme()
+  const router = useRouter();
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => { setMounted(true) }, [])
+
+  if (!recordMap || !recordMap.block || Object.keys(recordMap.block).length === 0) {
+    return null
+  }
 
   const MapPageUrl = (id: string) => {
-    const router = useRouter();
+    if (!id) return '';
     const currentPath = router.asPath.split("#")[0];
     const NotionPageID = Object.keys(recordMap.block)[0];
     return NotionPageID === id ? currentPath : "https://www.notion.so/" + id.replace(/-/g, '');
   }
 
+  if (!mounted) return null
+
+  const mapImageUrl = (url: string, block: any) => {
+    if (!url) return url
+    if (url.startsWith('data:')) return url
+    if (url.startsWith('/api/')) return url
+    if (url.startsWith('/icons/')) return url
+    if (url.startsWith('https://www.notion.so/icons/')) return url
+    // Notion-hosted files are signed for an hour, so the URL captured in the
+    // recordMap is dead by the time an ISR-cached page is served. Route them
+    // through the proxy, which re-signs per request. Covers and icons share a
+    // page id, so tell the proxy which one is being asked for.
+    if (url.includes('secure.notion-static.com') || url.includes('s3.us-west-2.amazonaws.com')) {
+      const blockId = block?.id
+      if (!blockId) return url
+      const format = block?.format || {}
+      const kind =
+        format.page_cover === url
+          ? 'cover'
+          : format.page_icon === url
+          ? 'icon'
+          : 'auto'
+      return `/api/notion/image?blockId=${encodeURIComponent(blockId)}&kind=${kind}`
+    }
+    return url
+  }
+
   return (
-    <StyledWrapper>
+    <StyledWrapper suppressHydrationWarning>
       <_NotionRenderer
         recordMap={recordMap}
+        mapImageUrl={mapImageUrl}
+        forceCustomImages
         components={{
           Code,
           Collection,
           Equation,
           Modal,
           Pdf,
-          nextImage: Image,
+          Image: NativeImageWithLoader,
           nextLink: Link,
         }}
         mapPageUrl={MapPageUrl}
